@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLOQ - Private Chat</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="page">
+  <h1 class="logo">CLOQ</h1>
+  <p>Private Chat & Earning</p>
+  <input id="usernameInput" placeholder="@username - jaise @ahmed123">
+  <input id="email" type="email" placeholder="Email likho">
+  <input id="password" type="password" placeholder="Password likho">
+  <button onclick="signup()">Signup</button>
+  <button onclick="login()" class="btn2">Login</button>
+  <p id="msg"></p>
+  <small>Signup pe username ek dafa banta hai, baad me usi se log add honge.</small>
+</div>
+
+<!-- HOME -->
+<div id="homePage" class="page hidden">
+  <div class="header">
+    <b>CLOQ</b>
+    <span id="myUsernameShow" style="font-size:13px;color:#00ff88"></span>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <!-- SEARCH BY USERNAME -->
+  <div class="addBox">
+    <input id="searchUserInput" placeholder="🔍 @username se dhoondo...">
+    <button onclick="searchUser()">Search</button>
+  </div>
+  <div id="searchResult" style="font-size:13px;margin-top:5px"></div>
+
+  <!-- GROUP CREATE BY USERNAME -->
+  <div class="addBox">
+    <input id="newGroupName" placeholder="Group ka naam...">
+    <input id="addUsernames" placeholder="Username likho - @ahmed, @ali">
+    <button onclick="createGroup()">+ Group</button>
+  </div>
+
+  <!-- GROUP LIST -->
+  <div id="groupList" class="groupList"></div>
+
+  <!-- ROOMS SECTION -->
+  <div style="background:#1a1a1a;padding:12px;border-radius:12px;margin-top:10px;text-align:left">
+    <h3 style="margin:0">🏠 Mera Room + Explore</h3>
+    <input id="roomTitle" placeholder="Room ka naam - jaise Cricket Talk">
+    <input id="roomDesc" placeholder="Room kis bare me hai?">
+    <select id="roomType" style="width:100%;padding:12px;border-radius:10px;margin-top:6px">
+      <option value="public">🌍 Public - Sab aa sakte hain</option>
+      <option value="private">🔒 Private - Sirf Link se</option>
+    </select>
+    <button onclick="createPublicRoom()">+ Mera Room Banao</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px">
+      <b>🔥 Explore Rooms</b>
+      <button onclick="loadExploreRooms()" style="width:auto;padding:6px 12px;background:#333;color:white">Refresh</button>
+    </div>
+    <input id="exploreSearch" placeholder="Room dhoondo - Cricket, Study..." oninput="loadExploreRooms()" style="margin-top:8px">
+    <div id="exploreList"></div>
+    <p id="myRoomsList" style="font-size:12px;color:#00ff88"></p>
+  </div>
+
+  <!-- CHAT HEADER + 3 DOT -->
+  <div class="chatHead">
+    <div><b id="roomName">General Group</b><br><small id="roomMembers">Members: Sab</small></div>
+    <div class="headBtns">
+      <button onclick="startCall()">📞</button>
+      <button onclick="toggleMenu()">⋮</button>
+    </div>
+  </div>
+
+  <!-- 3 DOT MENU -->
+  <div id="threeDotMenu" class="menu hidden">
+    <button onclick="changeTheme()">🎨 Theme Badlo</button>
+    <button onclick="searchInChat()">🔍 Chat Me Search</button>
+    <button onclick="blockUser()">🚫 User Block Karo</button>
+    <button onclick="setShortcut()">⚡ Shortcut Lagao</button>
+    <button onclick="openGroupSettings()">⚙️ Group Settings</button>
+    <button onclick="clearChat()">🗑️ Chat Clear Karo</button>
+    <button onclick="toggleMenu()">❌ Band Karo</button>
+  </div>
+
+  <!-- GROUP SETTINGS -->
+  <div id="groupSettings" class="menu hidden">
+    <h3>Group Settings</h3>
+    <label><input type="checkbox" id="onlyAdminMsg"> Sirf Admin Message Kare</label><br>
+    <label><input type="checkbox" id="noForwardSetting"> Forward Band Karo</label><br>
+    <label><input type="checkbox" id="vanishSetting"> Vanish Mode ON - 10 Sec Baad Delete</label><br>
+    <label><input type="checkbox" id="hideMembers"> Members Chupao</label><br>
+    <button onclick="saveGroupSettings()">Save Settings</button>
+    <button onclick="closeGroupSettings()" class="btn2">Band</button>
+  </div>
+
+  <div id="chatBox"></div>
+
+  <!-- SEND BOX -->
+  <div class="sendBox">
+    <label class="fileBtn">📎<input type="file" id="fileInput" hidden onchange="uploadFile()"></label>
+    <button id="voiceBtn" onclick="toggleVoice()">🎤</button>
+    <input id="msgInput" placeholder="Message likho...">
+    <button onclick="sendMsg()">➤</button>
+  </div>
+  <p id="uploadStatus" style="font-size:12px;color:#00ff88"></p>
+
+  <!-- CALL UI -->
+  <div id="callUI" class="hidden" style="background:#222;padding:15px;border-radius:12px;margin-top:10px">
+    <h3>📞 Call Chal Rahi Hai...</h3>
+    <p id="callStatus">Connecting...</p>
+    <button onclick="endCall()" style="background:red">Call Kaato</button>
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
