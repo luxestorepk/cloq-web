@@ -669,5 +669,104 @@ setTimeout(function(){
   if(l){ l.style.flexDirection="column"; }
 },1500);
 </script>
+  <!-- ===== PART 6C - LOCK CENTER + EYE + FORGOT PIN ===== -->
+<style>
+#cloqLockFix{
+  display:flex!important; flex-direction:column!important;
+  align-items:center!important; justify-content:center!important;
+  padding:20px!important; text-align:center!important;
+}
+#cloqLockFix > div:first-child{
+  background:#111b21!important; padding:28px 20px!important;
+  border-radius:28px!important; width:100%!important; max-width:340px!important;
+  box-shadow:0 20px 60px rgba(0,0,0,.6)!important;
+  display:flex!important; flex-direction:column!important; align-items:center!important;
+}
+#cloqPinWrap{ position:relative!important; width:100%!important; margin:16px 0 12px!important; }
+#cloqPinWrap input{
+  width:100%!important; padding:16px 48px 16px 16px!important;
+  font-size:22px!important; letter-spacing:8px!important; text-align:center!important;
+  border-radius:16px!important; background:#202c33!important; color:#fff!important;
+  border:none!important; outline:none!important; box-sizing:border-box!important;
+}
+#cloqEyeBtn{
+  position:absolute!important; right:12px!important; top:50%!important;
+  transform:translateY(-50%)!important; background:none!important; border:none!important;
+  font-size:22px!important; cursor:pointer!important; padding:4px!important;
+}
+#cloqForgotPin{
+  background:none!important; border:none!important; color:#00e676!important;
+  font-size:13px!important; font-weight:700!important; text-decoration:underline!important;
+  cursor:pointer!important; margin-top:12px!important;
+}
+</style>
+<script>
+function fixLockCenter(){
+  var lockBox=null;
+  document.querySelectorAll("div").forEach(function(d){
+    if(d.innerText && d.innerText.includes("CLOQ Locked") && !d._centerFixed){
+      // Sab se bahar wali lock div
+      lockBox=d;
+    }
+  });
+  // PIN input dhoondo
+  var pinInput=null;
+  document.querySelectorAll("input").forEach(function(inp){
+    var ph=(inp.placeholder||"").toLowerCase();
+    if(ph.includes("pin")) pinInput=inp;
+  });
+  if(!pinInput) return;
+  if(pinInput._eyeFixed) return;
+  pinInput._eyeFixed=true;
+  pinInput.type="password";
+
+  // 1. PIN ko wrap me daalo aur Eye lagao
+  var wrap=document.createElement("div");
+  wrap.id="cloqPinWrap";
+  pinInput.parentNode.insertBefore(wrap, pinInput);
+  wrap.appendChild(pinInput);
+  var eye=document.createElement("button");
+  eye.id="cloqEyeBtn"; eye.innerText="👁️"; eye.type="button";
+  eye.onclick=function(){
+    if(pinInput.type==="password"){ pinInput.type="text"; eye.innerText="🙈"; }
+    else { pinInput.type="password"; eye.innerText="👁️"; }
+  };
+  wrap.appendChild(eye);
+
+  // 2. Forgot PIN button lagao - Unlock ke neeche
+  var unlockBtn=null;
+  document.querySelectorAll("button").forEach(function(b){
+    if(b.innerText && b.innerText.trim()==="Unlock") unlockBtn=b;
+  });
+  if(unlockBtn && !document.getElementById("cloqForgotPin")){
+    var fb=document.createElement("button");
+    fb.id="cloqForgotPin"; fb.innerText="Forgot PIN? - Yahan Dabake Reset Karo"; fb.type="button";
+    fb.onclick=function(){
+      var email=prompt("Apna Email likho jisse account bana tha:");
+      if(!email) return;
+      email=email.trim().toLowerCase();
+      var users={}; try{ users=JSON.parse(localStorage.getItem("cloq_users")||"{}"); }catch(e){}
+      // Email check na bhi ho to bhi reset de do, taake lock na phanse
+      var newPin=prompt("Naya 4-Digit PIN likho (e.g. 1234):");
+      if(!newPin || newPin.length<4){ alert("❌ PIN 4 digit ka hona chahiye"); return; }
+      localStorage.setItem("cloq_pin", newPin);
+      // Agar purana pin kisi aur naam se save tha to bhi update karo
+      localStorage.setItem("cloq_lock_pin", newPin);
+      localStorage.setItem("app_pin", newPin);
+      pinInput.value=newPin;
+      pinInput.type="text";
+      alert("✅ Naya PIN save ho gaya: "+newPin+"\nAb Unlock dabao.");
+    };
+    unlockBtn.after(fb);
+  }
+
+  // 3. Center fix - lock wali div ko center me lao
+  var l=document.getElementById("cloqLockFix");
+  if(l){ l.style.display="flex"; l.style.flexDirection="column"; l.style.alignItems="center"; l.style.justifyContent="center"; }
+}
+setTimeout(fixLockCenter, 500);
+setTimeout(fixLockCenter, 1500);
+setTimeout(fixLockCenter, 2500);
+</script>
 </body>
 </html>
