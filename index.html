@@ -4,24 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>CLOQ - Luxury Chat</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%2300a884'/><text x='50' y='68' font-size='55' text-anchor='middle'>🔒</text></svg>">
+<script>
+// SPLASH KO ZABARDASTI BAND KARO - Chahe app.js chale ya na chale
+setTimeout(function(){
+  var s = document.getElementById("splash");
+  if(s) s.style.display = "none";
+}, 1800);
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:#0b141a;color:#e9edef;overflow:hidden;height:100dvh}
 button{cursor:pointer;border:none;outline:none} input,select,textarea{outline:none}
 .hidden{display:none!important}
 .page{height:100dvh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:#0b141a;position:relative;overflow:hidden}
+/* LUXURY ICON */
+.luxIcon{width:110px;height:110px;border-radius:32px;background:linear-gradient(135deg,#062a1f,#00a884 60%,#00d4a6);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 40px #00a88466, inset 0 0 0 2px #ffd70066;position:relative;overflow:hidden}
+.luxIcon::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 20%, #ffffff44, transparent 50%)}
+.luxIconInner{width:78px;height:78px;border-radius:50%;background:radial-gradient(circle at 35% 30%, #2e6b4a, #071a12 70%);border:3px solid #c9a227;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px #00ff8866}
+.luxIconInner span{font-size:36px;filter:drop-shadow(0 0 6px #00ff88)}
 /* SPLASH */
-#splash{position:fixed;inset:0;background:#0b141a;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
-.logoBig{width:110px;height:110px;background:linear-gradient(135deg,#00a884,#00d4a6);border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:64px;box-shadow:0 10px 40px #00a88466}
-/* AGREEMENT */
+#splash{position:fixed;inset:0;background:#0b141a;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 #agreement{position:fixed;inset:0;background:#000000b8;z-index:199;display:flex;align-items:flex-end;justify-content:center}
 .agreeBox{background:#233138;width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:24px}
-/* LOGIN */
 #loginPage{justify-content:center;padding:24px}
 #loginPage input{width:100%;background:#202c33;border:none;padding:14px 16px;border-radius:12px;color:#fff;font-size:15px;margin-bottom:10px}
 .btnMain{width:100%;background:#00a884;color:#fff;padding:14px;border-radius:30px;font-size:16px;font-weight:700;margin-top:6px}
 .btnSec{width:100%;background:#202c33;color:#00a884;padding:13px;border-radius:30px;font-size:15px;font-weight:600;margin-top:10px}
-/* HEADER */
 .header{background:#202c33;padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
 .header b{font-size:22px;letter-spacing:2px}.header b span{color:#00a884}
 .hIcons{display:flex;gap:16px;font-size:20px;align-items:center}
@@ -39,7 +48,6 @@ button{cursor:pointer;border:none;outline:none} input,select,textarea{outline:no
 .bottomNav{position:absolute;bottom:0;left:0;right:0;background:#202c33;display:flex;justify-content:space-around;padding:8px 0 10px;border-top:1px solid #2a3942;z-index:20}
 .bottomNav button{background:none;color:#8696a0;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
 .bottomNav button.active{color:#00ff88}
-/* CHAT VIEW */
 #chatView{position:absolute;inset:0;background:#0b141a;z-index:30;display:flex;flex-direction:column}
 .chatHead{background:#202c33;padding:10px;display:flex;align-items:center;gap:10px}
 .chatHead h3{flex:1;font-size:16px}.chatHead h3 small{display:block;font-size:11px;color:#00ff88;font-weight:400}
@@ -56,7 +64,6 @@ button{cursor:pointer;border:none;outline:none} input,select,textarea{outline:no
 .inputRow input{flex:1;background:#202c33;border:none;padding:12px 14px;border-radius:24px;color:#fff;font-size:15px}
 .iconBtn{width:44px;height:44px;border-radius:50%;background:#202c33;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}
 .sendBtn{background:#00a884!important}
-/* MENU / MODAL / SETTINGS PAGE */
 .menu{position:absolute;top:52px;right:10px;background:#233138;border-radius:12px;width:240px;z-index:40;overflow:hidden;box-shadow:0 10px 30px #000a}
 .menu button{display:block;width:100%;text-align:left;background:none;color:#e9edef;padding:13px 16px;font-size:14px;border-bottom:1px solid #ffffff0d}
 .modal{position:fixed;inset:0;background:#000000a8;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -78,10 +85,18 @@ button{cursor:pointer;border:none;outline:none} input,select,textarea{outline:no
 </head>
 <body>
 <div id="funWatermark" class="hidden">FUN MODE<br>🎉 CLOQ 🎉</div>
-<div id="splash"><div class="logoBig">💬</div><h1 style="font-size:42px;letter-spacing:6px">CLOQ</h1><p style="color:#8696a0;font-size:13px">LUXURY CHAT • FAST • SECURE</p><p style="color:#00a884;font-size:12px">Opening... Please wait</p></div>
-<div id="agreement" class="hidden"><div class="agreeBox"><div style="font-size:44px">💬</div><h2>Welcome to CLOQ</h2><p style="color:#aebac1;font-size:13px;line-height:1.6;margin:8px 0 14px">By continuing, you agree to respect everyone, no abuse, no spam. CLOQ is a safe luxury space. You can chat in any language - Urdu, English, Punjabi, Hindi.</p><label style="display:flex;gap:10px;font-size:13px"><input type="checkbox" id="agreeCheck"> I agree to CLOQ Rules</label><button class="btnMain" onclick="acceptAgreement()">Agree & Continue →</button></div></div>
 
-<div id="loginPage" class="page"><div style="text-align:center"><div style="width:80px;height:80px;background:linear-gradient(135deg,#00a884,#00d4a6);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 10px">💬</div><h1 style="font-size:36px;letter-spacing:5px">CLOQ</h1><p style="color:#8696a0;font-size:13px;margin-bottom:22px">Luxury Chat • Rooms • Calls • Status</p></div><input id="usernameInput" placeholder="@username - e.g @ahmed"><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password (6+ chars)"><p id="msg" style="text-align:center;color:#ff8a8a;font-size:13px;min-height:18px"></p><button class="btnMain" onclick="signup()">✨ Sign Up - New Account</button><button class="btnSec" onclick="login()">Login</button><p style="text-align:center;color:#8696a0;font-size:11px;margin-top:18px">Login once, CLOQ will auto-open next time • Chat in any language</p></div>
+<!-- SPLASH - AB KABHI NAHI RUKEGA -->
+<div id="splash">
+  <div class="luxIcon"><div class="luxIconInner"><span>▶️</span></div></div>
+  <h1 style="font-size:42px;letter-spacing:6px">CLOQ</h1>
+  <p style="color:#8696a0;font-size:13px">LUXURY CHAT • FAST • SECURE</p>
+  <p style="color:#00a884;font-size:12px">Opening... Please wait</p>
+</div>
+
+<div id="agreement" class="hidden"><div class="agreeBox"><div style="font-size:44px">🔒</div><h2>Welcome to CLOQ</h2><p style="color:#aebac1;font-size:13px;line-height:1.6;margin:8px 0 14px">By continuing, you agree to respect everyone, no abuse, no spam. CLOQ is a safe luxury space. You can chat in any language - Urdu, English, Punjabi, Hindi.</p><label style="display:flex;gap:10px;font-size:13px"><input type="checkbox" id="agreeCheck"> I agree to CLOQ Rules</label><button class="btnMain" onclick="acceptAgreement()">Agree & Continue →</button></div></div>
+
+<div id="loginPage" class="page"><div style="text-align:center"><div class="luxIcon" style="width:80px;height:80px;margin:0 auto 10px"><div class="luxIconInner" style="width:56px;height:56px"><span style="font-size:26px">▶️</span></div></div><h1 style="font-size:36px;letter-spacing:5px">CLOQ</h1><p style="color:#8696a0;font-size:13px;margin-bottom:22px">Luxury Chat • Rooms • Calls • Status</p></div><input id="usernameInput" placeholder="@username - e.g @ahmed"><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password (6+ chars)"><p id="msg" style="text-align:center;color:#ff8a8a;font-size:13px;min-height:18px"></p><button class="btnMain" onclick="signup()">✨ Sign Up - New Account</button><button class="btnSec" onclick="login()">Login</button><p style="text-align:center;color:#8696a0;font-size:11px;margin-top:18px">Login once, CLOQ will auto-open next time • Chat in any language</p></div>
 
 <div id="homePage" class="page hidden">
 <div class="header"><b>CLOQ<span>.</span></b><div class="hIcons"><span onclick="openSearch()">🔍</span><span onclick="toggleMainMenu()">⋮</span><div id="myAvatar" onclick="openSettings()">A</div></div>
@@ -103,7 +118,6 @@ button{cursor:pointer;border:none;outline:none} input,select,textarea{outline:no
 <div id="addContactModal" class="modal hidden"><div class="modalBox"><h3>➕ New Contact / Chat</h3><input id="searchUserInput" placeholder="@username"><div id="searchResult" style="font-size:13px;color:#aebac1;margin-bottom:10px"></div><div style="display:flex;gap:8px"><button class="btnMain" onclick="searchUser()">Search</button><button class="btnSec" onclick="closeAddContact()">Close</button></div><hr style="margin:14px 0;border-color:#ffffff22"><h3>👥 New Group</h3><input id="newGroupName" placeholder="Group name"><input id="addUsernames" placeholder="Members @ahmed, @ali"><button class="btnMain" onclick="createGroup()">Create Group</button></div></div>
 <div id="roomModal" class="modal hidden"><div class="modalBox"><h3>🏠 Create Room</h3><input id="roomTitle" placeholder="Room name"><input id="roomDesc" placeholder="About room"><select id="roomType"><option value="public">🌍 Public</option><option value="private">🔒 Private</option></select><div style="display:flex;gap:8px"><button class="btnMain" onclick="createPublicRoom()">Create</button><button class="btnSec" onclick="closeRoomModal()">Close</button></div></div></div>
 
-<!-- SETTINGS PAGE - WHATSAPP JAISE -->
 <div id="settingsPage" class="setPage hidden">
 <div class="setHead"><button onclick="closeSettings()">←</button> Settings</div>
 <div class="profileCard"><div class="avatar" style="width:64px;height:64px;font-size:28px" id="setAvatar" onclick="changeDP()">A</div><div style="flex:1"><b id="setName" style="font-size:18px">@username</b><p id="setBio" style="color:#8696a0;font-size:13px">Hey there! I am using CLOQ.</p><p id="setEmail" style="color:#8696a0;font-size:11px"></p></div><button style="background:#00a884;color:#fff;padding:8px 14px;border-radius:20px" onclick="editProfile()">Edit</button></div>
@@ -118,9 +132,8 @@ button{cursor:pointer;border:none;outline:none} input,select,textarea{outline:no
 <p style="text-align:center;color:#8696a0;font-size:11px;padding:10px">CLOQ v3.0 • Made with Love • Secure</p>
 </div>
 
-<!-- EDIT PROFILE -->
-<div id="editProfileModal" class="modal hidden"><div class="modalBox"><h3>✏️ Edit Profile</h3><p style="font-size:12px;color:#8696a0;margin-bottom:8px">Your Name (jo sabko dikhega)</p><input id="profileNameInput" placeholder="Your Name"><p style="font-size:12px;color:#8696a0;margin-bottom:8px">Bio</p><textarea id="profileBioInput" placeholder="Hey there! I am using CLOQ."></textarea><p style="font-size:12px;color:#8696a0;margin-bottom:8px">DP - Emoji Select Karo</p><div style="display:flex;gap:8px;font-size:26px;margin-bottom:12px" id="dpRow"><span onclick="pickDP('😎')">😎</span><span onclick="pickDP('🔥')">🔥</span><span onclick="pickDP('👑')">👑</span><span onclick="pickDP('🌹')">🌹</span><span onclick="pickDP('⚡')">⚡</span><span onclick="pickDP('🦁')">🦁</span><span onclick="pickDP('💎')">💎</span></div><div style="display:flex;gap:8px"><button class="btnMain" onclick="saveProfile()">Save</button><button class="btnSec" onclick="document.getElementById('editProfileModal').classList.add('hidden')">Close</button></div></div></div>
+<div id="editProfileModal" class="modal hidden"><div class="modalBox"><h3>✏️ Edit Profile</h3><p style="font-size:12px;color:#8696a0;margin-bottom:8px">Your Name</p><input id="profileNameInput" placeholder="Your Name"><p style="font-size:12px;color:#8696a0;margin-bottom:8px">Bio</p><textarea id="profileBioInput" placeholder="Hey there! I am using CLOQ."></textarea><p style="font-size:12px;color:#8696a0;margin-bottom:8px">DP - Emoji Select Karo</p><div style="display:flex;gap:8px;font-size:26px;margin-bottom:12px"><span onclick="pickDP('😎')">😎</span><span onclick="pickDP('🔥')">🔥</span><span onclick="pickDP('👑')">👑</span><span onclick="pickDP('🌹')">🌹</span><span onclick="pickDP('⚡')">⚡</span><span onclick="pickDP('🦁')">🦁</span><span onclick="pickDP('💎')">💎</span></div><div style="display:flex;gap:8px"><button class="btnMain" onclick="saveProfile()">Save</button><button class="btnSec" onclick="document.getElementById('editProfileModal').classList.add('hidden')">Close</button></div></div></div>
 </div>
 <script type="module" src="app.js"></script>
 </body>
-                                                                                                                                                                                                                                        </html>
+</html>
