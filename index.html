@@ -4,178 +4,123 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>CLOQ - Luxury Chat</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:#0b141a;color:#e9edef;overflow:hidden;height:100dvh}
-button{cursor:pointer;border:none;outline:none}
-input,select{outline:none}
+button{cursor:pointer;border:none;outline:none} input,select,textarea{outline:none}
 .hidden{display:none!important}
+.page{height:100dvh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:#0b141a;position:relative;overflow:hidden}
 /* SPLASH */
-#splash{position:fixed;inset:0;background:#0b141a;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.logoBig{width:110px;height:110px;background:linear-gradient(135deg,#00a884,#00d4a6);border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:64px;box-shadow:0 10px 40px #00a88466;animation:pop .6s}
-@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
-.logoBig+ h1{font-size:42px;letter-spacing:6px;font-weight:800}
-.logoBig+ h1+ p{color:#8696a0;font-size:13px;letter-spacing:1px}
+#splash{position:fixed;inset:0;background:#0b141a;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.logoBig{width:110px;height:110px;background:linear-gradient(135deg,#00a884,#00d4a6);border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:64px;box-shadow:0 10px 40px #00a88466}
 /* AGREEMENT */
-#agreement{position:fixed;inset:0;background:#000000b8;z-index:99;display:flex;align-items:flex-end;justify-content:center}
-.agreeBox{background:#233138;width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:24px;padding-bottom:30px}
-.agreeBox h2{font-size:20px;margin-bottom:8px}
-.agreeBox p{color:#aebac1;font-size:13px;line-height:1.6;margin-bottom:14px}
-.agreeBox label{display:flex;gap:10px;font-size:13px;color:#e9edef;margin-bottom:16px}
-.agreeBtn{width:100%;background:#00a884;color:#fff;padding:14px;border-radius:30px;font-size:16px;font-weight:700}
+#agreement{position:fixed;inset:0;background:#000000b8;z-index:199;display:flex;align-items:flex-end;justify-content:center}
+.agreeBox{background:#233138;width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:24px}
 /* LOGIN */
-.page{height:100dvh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:#0b141a;position:relative}
 #loginPage{justify-content:center;padding:24px}
-.loginLogo{width:80px;height:80px;background:linear-gradient(135deg,#00a884,#00d4a6);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 10px;box-shadow:0 8px 30px #00a88455}
-#loginPage h1{text-align:center;font-size:36px;letter-spacing:5px}
-#loginPage .sub{text-align:center;color:#8696a0;font-size:13px;margin-bottom:22px}
 #loginPage input{width:100%;background:#202c33;border:none;padding:14px 16px;border-radius:12px;color:#fff;font-size:15px;margin-bottom:10px}
-#loginPage input::placeholder{color:#8696a0}
 .btnMain{width:100%;background:#00a884;color:#fff;padding:14px;border-radius:30px;font-size:16px;font-weight:700;margin-top:6px}
 .btnSec{width:100%;background:#202c33;color:#00a884;padding:13px;border-radius:30px;font-size:15px;font-weight:600;margin-top:10px}
-#msg{text-align:center;color:#ff8a8a;font-size:13px;min-height:18px;margin-top:10px}
 /* HEADER */
 .header{background:#202c33;padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
-.header b{font-size:22px;letter-spacing:2px}
-.header b span{color:#00a884}
-.hIcons{display:flex;gap:14px;font-size:20px;align-items:center}
-.hIcons img{width:32px;height:32px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center}
-.tabs{display:flex;gap:8px;padding:10px 12px;background:#0b141a;overflow-x:auto;white-space:nowrap}
+.header b{font-size:22px;letter-spacing:2px}.header b span{color:#00a884}
+.hIcons{display:flex;gap:16px;font-size:20px;align-items:center}
+.hIcons div{width:32px;height:32px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.tabs{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;white-space:nowrap}
 .tabs button{background:#202c33;color:#aebac1;padding:7px 14px;border-radius:20px;font-size:13px}
 .tabs button.active{background:#00a88433;color:#00ff88}
-/* LIST */
-.list{flex:1;overflow-y:auto;padding-bottom:80px}
+.list{flex:1;overflow-y:auto;padding-bottom:85px;scroll-behavior:smooth}
 .chatItem{display:flex;gap:12px;padding:12px 14px;align-items:center;border-bottom:1px solid #222d34;cursor:pointer}
-.chatItem:active{background:#202c33}
-.avatar{width:48px;height:48px;min-width:48px;border-radius:50%;background:linear-gradient(135deg,#00a884,#025c48);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff}
+.avatar{width:48px;height:48px;min-width:48px;border-radius:50%;background:linear-gradient(135deg,#00a884,#025c48);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
 .chatItem h4{font-size:16px;display:flex;justify-content:space-between}
-.chatItem h4 span{font-size:11px;color:#00a884;font-weight:400}
-.chatItem p{font-size:13px;color:#8696a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
-.unread{background:#00a884;color:#111b21;font-size:11px;font-weight:700;min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-/* FAB */
+.chatItem p{font-size:13px;color:#8696a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:270px}
 .fab{position:absolute;right:16px;bottom:88px;width:56px;height:56px;border-radius:50%;background:#00a884;color:#fff;font-size:26px;box-shadow:0 6px 20px #0008;z-index:10}
-/* BOTTOM NAV */
 .bottomNav{position:absolute;bottom:0;left:0;right:0;background:#202c33;display:flex;justify-content:space-around;padding:8px 0 10px;border-top:1px solid #2a3942;z-index:20}
 .bottomNav button{background:none;color:#8696a0;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
-.bottomNav button span{font-size:22px}
 .bottomNav button.active{color:#00ff88}
 /* CHAT VIEW */
 #chatView{position:absolute;inset:0;background:#0b141a;z-index:30;display:flex;flex-direction:column}
 .chatHead{background:#202c33;padding:10px;display:flex;align-items:center;gap:10px}
-.chatHead .back{font-size:22px;background:none;color:#fff}
-.chatHead h3{flex:1;font-size:16px}
-.chatHead h3 small{display:block;font-size:11px;color:#00ff88;font-weight:400}
+.chatHead h3{flex:1;font-size:16px}.chatHead h3 small{display:block;font-size:11px;color:#00ff88;font-weight:400}
 .chatHead button{background:none;color:#fff;font-size:20px}
-#chatBox{flex:1;overflow-y:auto;padding:12px;background:#0b141a;background-image:radial-gradient(#ffffff08 1px,transparent 1px);background-size:22px 22px}
-.msgBubble{max-width:78%;padding:8px 10px;border-radius:12px;margin-bottom:8px;background:#202c33;font-size:14px;line-height:1.4;position:relative;word-break:break-word}
-.msgBubble.mine{margin-left:auto;background:#005c4b}
+#chatBox{flex:1;overflow-y:auto;padding:12px;scroll-behavior:smooth}
+.msgBubble{max-width:82%;padding:8px 10px 6px;border-radius:12px;margin-bottom:8px;background:#202c33;font-size:15px;line-height:1.4;position:relative;word-break:break-word;animation:slide .25s ease}
+@keyframes slide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msgBubble.mine{margin-left:auto;background:#005c4b;border-bottom-right-radius:4px}
 .msgBubble small{display:block;font-size:10px;color:#00ff88;margin-bottom:2px}
 .msgBubble img{width:100%;border-radius:8px;margin-top:6px}
+.tickRow{display:flex;justify-content:flex-end;gap:4px;align-items:center;font-size:11px;color:#aebac1;margin-top:4px}
+.tickRow .blue{color:#53bdeb}
 .inputRow{display:flex;gap:8px;padding:8px;background:#0b141a;align-items:center}
 .inputRow input{flex:1;background:#202c33;border:none;padding:12px 14px;border-radius:24px;color:#fff;font-size:15px}
 .iconBtn{width:44px;height:44px;border-radius:50%;background:#202c33;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}
 .sendBtn{background:#00a884!important}
-/* MENU / MODAL */
-.menu{position:absolute;top:52px;right:10px;background:#233138;border-radius:12px;width:230px;z-index:40;overflow:hidden;box-shadow:0 10px 30px #000a}
+/* MENU / MODAL / SETTINGS PAGE */
+.menu{position:absolute;top:52px;right:10px;background:#233138;border-radius:12px;width:240px;z-index:40;overflow:hidden;box-shadow:0 10px 30px #000a}
 .menu button{display:block;width:100%;text-align:left;background:none;color:#e9edef;padding:13px 16px;font-size:14px;border-bottom:1px solid #ffffff0d}
 .modal{position:fixed;inset:0;background:#000000a8;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
-.modalBox{background:#233138;width:100%;max-width:400px;border-radius:16px;padding:18px}
-.modalBox h3{margin-bottom:12px}
+.modalBox{background:#233138;width:100%;max-width:400px;border-radius:16px;padding:18px;max-height:85vh;overflow-y:auto}
 .modalBox input,.modalBox select,.modalBox textarea{width:100%;background:#0b141a;border:none;padding:12px;border-radius:10px;color:#fff;margin-bottom:10px;font-size:14px}
-.modalBox .row{display:flex;gap:8px}
+.setPage{position:absolute;inset:0;background:#0b141a;z-index:60;display:flex;flex-direction:column;overflow-y:auto}
+.setHead{background:#202c33;padding:12px;display:flex;gap:12px;align-items:center;font-size:18px;font-weight:700}
+.setHead button{background:none;color:#fff;font-size:22px}
+.profileCard{background:#202c33;margin:14px;border-radius:14px;padding:16px;display:flex;gap:14px;align-items:center}
+.setItem{background:#202c33;margin:0 14px 8px;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.setItem small{color:#8696a0;display:block;font-size:11px}
+.toggle{width:44px;height:24px;background:#374045;border-radius:20px;position:relative;cursor:pointer}
+.toggle.on{background:#00a884}.toggle.on:after{left:22px}.toggle:after{content:"";position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s}
+.funBanner{background:#7b2ff7;color:#fff;text-align:center;padding:6px;font-size:12px;font-weight:700;letter-spacing:1px}
+#funWatermark{position:fixed;inset:0;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:900;color:#ffffff0d;transform:rotate(-20deg);text-align:center;line-height:1.2}
 .statusCard{background:#202c33;padding:14px;border-radius:14px;margin:12px;display:flex;gap:12px;align-items:center}
-.vanish #chatBox .msgBubble{filter:blur(0px);border:1px dashed #00ff88}
-.fun .msgBubble{border-radius:20px 4px 20px 20px!important;background:linear-gradient(135deg,#5b2a86,#00a884)!important}
+.chCard{background:#202c33;padding:12px;border-radius:12px;margin:0 12px 8px;display:flex;gap:10px;align-items:center}
 </style>
 </head>
 <body>
+<div id="funWatermark" class="hidden">FUN MODE<br>🎉 CLOQ 🎉</div>
+<div id="splash"><div class="logoBig">💬</div><h1 style="font-size:42px;letter-spacing:6px">CLOQ</h1><p style="color:#8696a0;font-size:13px">LUXURY CHAT • FAST • SECURE</p><p style="color:#00a884;font-size:12px">Opening... Please wait</p></div>
+<div id="agreement" class="hidden"><div class="agreeBox"><div style="font-size:44px">💬</div><h2>Welcome to CLOQ</h2><p style="color:#aebac1;font-size:13px;line-height:1.6;margin:8px 0 14px">By continuing, you agree to respect everyone, no abuse, no spam. CLOQ is a safe luxury space. You can chat in any language - Urdu, English, Punjabi, Hindi.</p><label style="display:flex;gap:10px;font-size:13px"><input type="checkbox" id="agreeCheck"> I agree to CLOQ Rules</label><button class="btnMain" onclick="acceptAgreement()">Agree & Continue →</button></div></div>
 
-<!-- SPLASH -->
-<div id="splash"><div class="logoBig">💬</div><h1>CLOQ</h1><p>LUXURY CHAT • MADE FOR YOU</p></div>
+<div id="loginPage" class="page"><div style="text-align:center"><div style="width:80px;height:80px;background:linear-gradient(135deg,#00a884,#00d4a6);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto 10px">💬</div><h1 style="font-size:36px;letter-spacing:5px">CLOQ</h1><p style="color:#8696a0;font-size:13px;margin-bottom:22px">Luxury Chat • Rooms • Calls • Status</p></div><input id="usernameInput" placeholder="@username - e.g @ahmed"><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password (6+ chars)"><p id="msg" style="text-align:center;color:#ff8a8a;font-size:13px;min-height:18px"></p><button class="btnMain" onclick="signup()">✨ Sign Up - New Account</button><button class="btnSec" onclick="login()">Login</button><p style="text-align:center;color:#8696a0;font-size:11px;margin-top:18px">Login once, CLOQ will auto-open next time • Chat in any language</p></div>
 
-<!-- AGREEMENT -->
-<div id="agreement" class="hidden">
-  <div class="agreeBox">
-    <div style="font-size:44px">💬</div>
-    <h2>CLOQ me Khush Amdeed</h2>
-    <p>Continuing se tum agree karte ho ke tum <b>respect</b> se baat karoge, kisi ko tang nahi karoge, ghalat cheez nahi bhejoge. CLOQ ek safe aur luxury jagah hai. Agar koi ghalat kare to Report karo, hum action lenge.</p>
-    <label><input type="checkbox" id="agreeCheck"> Me CLOQ ke Rules se agree karta hun</label>
-    <button class="agreeBtn" onclick="acceptAgreement()">Agree & Continue →</button>
-  </div>
-</div>
-
-<!-- LOGIN -->
-<div id="loginPage" class="page">
-  <div class="loginLogo">💬</div>
-  <h1>CLOQ</h1><p class="sub">Luxury Chat • Rooms • Calls • Status</p>
-  <input id="usernameInput" placeholder="@username - jaise @ahmed">
-  <input id="email" type="email" placeholder="Email likho">
-  <input id="password" type="password" placeholder="Password (6+ lafz)">
-  <p id="msg"></p>
-  <button class="btnMain" type="button" onclick="signup()">✨ Signup - Naya Account</button>
-  <button class="btnSec" type="button" onclick="login()">Login Karo</button>
-  <p style="text-align:center;color:#8696a0;font-size:11px;margin-top:18px">CLOQ v2.0 • Secure • Fast • Luxury</p>
-</div>
-
-<!-- HOME -->
 <div id="homePage" class="page hidden">
-  <div class="header"><b>CLOQ<span>.</span></b><div class="hIcons"><span onclick="openSearch()">🔍</span><span onclick="toggleMenuHome()">⋮</span><span id="myAvatar" style="font-size:14px;width:32px;height:32px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center">A</span></div></div>
-  <div class="tabs" id="topTabs">
-    <button class="active" onclick="setTab(this,'all')">All</button><button onclick="setTab(this,'unread')">Unread</button><button onclick="setTab(this,'fav')">⭐ Fav</button><button onclick="setTab(this,'groups')">Groups</button>
-  </div>
-  <div class="list" id="mainList"></div>
-  <button class="fab" id="fabBtn" onclick="openAddContact()">＋</button>
-  <div class="bottomNav">
-    <button class="active" data-nav="chats" onclick="showSection('chats',this)"><span>💬</span>Chats</button>
-    <button data-nav="status" onclick="showSection('status',this)"><span>🔄</span>Status</button>
-    <button data-nav="rooms" onclick="showSection('rooms',this)"><span>🏠</span>Rooms</button>
-    <button data-nav="calls" onclick="showSection('calls',this)"><span>📞</span>Calls</button>
-  </div>
+<div class="header"><b>CLOQ<span>.</span></b><div class="hIcons"><span onclick="openSearch()">🔍</span><span onclick="toggleMainMenu()">⋮</span><div id="myAvatar" onclick="openSettings()">A</div></div>
+<div id="mainMenu" class="menu hidden"><button onclick="openAddContact()">➕ New Group</button><button onclick="openAddContact()">👥 New Community</button><button onclick="openSettings()">⭐ Starred Messages</button><button onclick="markAllRead()">✓ Read All</button><button onclick="openSettings()">⚙️ Settings</button><button onclick="switchAccount()">🔄 Switch Account</button><button onclick="logout()">🚪 Logout</button></div></div>
+<div id="funBanner" class="funBanner hidden">🎉 FUN MODE ON • This chat is in Fun Mode</div>
+<div class="tabs"><button class="active" onclick="setTab(this,'all')">All</button><button onclick="setTab(this,'unread')">Unread</button><button onclick="setTab(this,'fav')">⭐ Favourites</button><button onclick="setTab(this,'groups')">Groups</button></div>
+<div class="list" id="mainList"></div>
+<button class="fab" id="fabBtn" onclick="openAddContact()">＋</button>
+<div class="bottomNav"><button class="active" onclick="showSection('chats',this)"><span style="font-size:22px">💬</span>Chats</button><button onclick="showSection('status',this)"><span style="font-size:22px">🔄</span>Updates</button><button onclick="showSection('rooms',this)"><span style="font-size:22px">🏠</span>Rooms</button><button onclick="showSection('calls',this)"><span style="font-size:22px">📞</span>Calls</button></div>
 
-  <!-- CHAT VIEW -->
-  <div id="chatView" class="hidden">
-    <div class="chatHead">
-      <button class="back" onclick="closeChat()">←</button>
-      <div class="avatar" id="chatAvatar">G</div>
-      <h3 id="roomName">General Group <small id="roomMembers">Online • Luxury</small></h3>
-      <button onclick="startCall()">📞</button>
-      <button onclick="toggleMenu()">⋮</button>
-      <div id="threeDotMenu" class="menu hidden">
-        <button onclick="toggleVanish()">👻 Vanish Mode: <span id="vanishState">OFF</span></button>
-        <button onclick="toggleFun()">🎉 Fun Mode: <span id="funState">OFF</span></button>
-        <button onclick="blockUser()">🚫 Block Karo</button>
-        <button onclick="reportUser()">⚠️ Report Karo</button>
-        <button onclick="setShortcut()">⭐ Shortcut / Nickname</button>
-        <button onclick="searchInChat()">🔍 Chat me Dhoondo</button>
-        <button onclick="clearChat()">🗑️ Chat Clear Karo</button>
-        <button onclick="openGroupSettings()">⚙️ Group Settings</button>
-      </div>
-    </div>
-    <div id="chatBox"></div>
-    <div class="inputRow">
-      <button class="iconBtn" onclick="document.getElementById('fileInput').click()">📎</button>
-      <input id="fileInput" type="file" class="hidden" onchange="uploadFile()">
-      <input id="msgInput" placeholder="Message likho..." onkeydown="if(event.key==='Enter') sendMsg()">
-      <button class="iconBtn" id="voiceBtn" onclick="toggleVoice()">🎤</button>
-      <button class="iconBtn sendBtn" onclick="sendMsg()">➤</button>
-    </div>
-    <p id="uploadStatus" style="text-align:center;font-size:11px;color:#00ff88"></p>
-  </div>
+<div id="chatView" class="hidden">
+<div class="chatHead"><button onclick="closeChat()">←</button><div class="avatar" id="chatAvatar">G</div><h3 id="roomName">General Group <small id="roomMembers">Online • Luxury</small></h3><button onclick="startCall()">📞</button><button onclick="toggleMenu()">⋮</button>
+<div id="threeDotMenu" class="menu hidden"><button onclick="toggleVanish()">👻 Vanish Mode: <span id="vanishState">OFF</span></button><button onclick="toggleFun()">🎉 Fun Mode: <span id="funState">OFF</span></button><button onclick="blockUser()">🚫 Block</button><button onclick="reportUser()">⚠️ Report</button><button onclick="setShortcut()">⭐ Shortcut / Nickname</button><button onclick="searchInChat()">🔍 Search in Chat</button><button onclick="clearChat()">🗑️ Clear Chat</button><button onclick="openGroupSettings()">⚙️ Group Settings</button></div></div>
+<div id="chatBox"></div>
+<div class="inputRow"><button class="iconBtn" onclick="document.getElementById('fileInput').click()">📎</button><input id="fileInput" type="file" class="hidden" onchange="uploadFile()"><input id="msgInput" placeholder="Message... Chat in any language" onkeydown="if(event.key==='Enter') sendMsg()"><button class="iconBtn" id="voiceBtn" onclick="toggleVoice()">🎤</button><button class="iconBtn sendBtn" onclick="sendMsg()">➤</button></div><p id="uploadStatus" style="text-align:center;font-size:11px;color:#00ff88"></p></div>
 
-  <!-- CALL UI -->
-  <div id="callUI" class="modal hidden"><div class="modalBox" style="text-align:center"><div style="font-size:60px">📞</div><h3 id="callStatus">Call lag rahi hai...</h3><button class="btnMain" style="background:#ff3b30" onclick="endCall()">Call Band Karo</button></div></div>
+<div id="callUI" class="modal hidden"><div class="modalBox" style="text-align:center"><div style="font-size:60px">📞</div><h3 id="callStatus">Calling...</h3><button class="btnMain" style="background:#ff3b30" onclick="endCall()">End Call</button></div></div>
+<div id="groupSettings" class="modal hidden"><div class="modalBox"><h3>⚙️ Group Settings</h3><label style="display:block;margin-bottom:8px"><input type="checkbox" id="onlyAdminMsg"> Only Admins Can Send</label><label style="display:block;margin-bottom:8px"><input type="checkbox" id="noForwardSetting"> Disable Forward</label><label style="display:block;margin-bottom:8px"><input type="checkbox" id="vanishSetting"> Vanish Mode</label><label style="display:block;margin-bottom:12px"><input type="checkbox" id="hideMembers"> Hide Members</label><div style="display:flex;gap:8px"><button class="btnMain" onclick="saveGroupSettings()">Save</button><button class="btnSec" onclick="closeGroupSettings()">Close</button></div></div></div>
+<div id="addContactModal" class="modal hidden"><div class="modalBox"><h3>➕ New Contact / Chat</h3><input id="searchUserInput" placeholder="@username"><div id="searchResult" style="font-size:13px;color:#aebac1;margin-bottom:10px"></div><div style="display:flex;gap:8px"><button class="btnMain" onclick="searchUser()">Search</button><button class="btnSec" onclick="closeAddContact()">Close</button></div><hr style="margin:14px 0;border-color:#ffffff22"><h3>👥 New Group</h3><input id="newGroupName" placeholder="Group name"><input id="addUsernames" placeholder="Members @ahmed, @ali"><button class="btnMain" onclick="createGroup()">Create Group</button></div></div>
+<div id="roomModal" class="modal hidden"><div class="modalBox"><h3>🏠 Create Room</h3><input id="roomTitle" placeholder="Room name"><input id="roomDesc" placeholder="About room"><select id="roomType"><option value="public">🌍 Public</option><option value="private">🔒 Private</option></select><div style="display:flex;gap:8px"><button class="btnMain" onclick="createPublicRoom()">Create</button><button class="btnSec" onclick="closeRoomModal()">Close</button></div></div></div>
 
-  <!-- GROUP SETTINGS -->
-  <div id="groupSettings" class="modal hidden"><div class="modalBox"><h3>⚙️ Group Settings</h3><label style="display:block;margin-bottom:8px"><input type="checkbox" id="onlyAdminMsg"> Sirf Admin Message Kare</label><label style="display:block;margin-bottom:8px"><input type="checkbox" id="noForwardSetting"> Forward Band Karo</label><label style="display:block;margin-bottom:8px"><input type="checkbox" id="vanishSetting"> Vanish Mode ON</label><label style="display:block;margin-bottom:12px"><input type="checkbox" id="hideMembers"> Members Chupao</label><div class="row"><button class="btnMain" onclick="saveGroupSettings()">Save</button><button class="btnSec" onclick="closeGroupSettings()">Band Karo</button></div></div></div>
-
-  <!-- ADD CONTACT -->
-  <div id="addContactModal" class="modal hidden"><div class="modalBox"><h3>➕ New Contact / Chat</h3><input id="searchUserInput" placeholder="@username likho - jaise @ahmed"><div id="searchResult" style="font-size:13px;color:#aebac1;margin-bottom:10px"></div><div class="row"><button class="btnMain" onclick="searchUser()">Dhoondo</button><button class="btnSec" onclick="closeAddContact()">Band</button></div><hr style="margin:14px 0;border-color:#ffffff22"><h3>👥 New Group</h3><input id="newGroupName" placeholder="Group ka naam"><input id="addUsernames" placeholder="Members @ahmed, @ali"><button class="btnMain" onclick="createGroup()">Group Banao</button></div></div>
-
-  <!-- ROOM CREATE -->
-  <div id="roomModal" class="modal hidden"><div class="modalBox"><h3>🏠 Apna Room Banao</h3><input id="roomTitle" placeholder="Room ka naam - Cricket Talk"><input id="roomDesc" placeholder="Room kis bare me hai?"><select id="roomType"><option value="public">🌍 Public - Sab aa sakte hain</option><option value="private">🔒 Private - Sirf Invite</option></select><div class="row"><button class="btnMain" onclick="createPublicRoom()">Room Banao</button><button class="btnSec" onclick="closeRoomModal()">Band</button></div></div></div>
+<!-- SETTINGS PAGE - WHATSAPP JAISE -->
+<div id="settingsPage" class="setPage hidden">
+<div class="setHead"><button onclick="closeSettings()">←</button> Settings</div>
+<div class="profileCard"><div class="avatar" style="width:64px;height:64px;font-size:28px" id="setAvatar" onclick="changeDP()">A</div><div style="flex:1"><b id="setName" style="font-size:18px">@username</b><p id="setBio" style="color:#8696a0;font-size:13px">Hey there! I am using CLOQ.</p><p id="setEmail" style="color:#8696a0;font-size:11px"></p></div><button style="background:#00a884;color:#fff;padding:8px 14px;border-radius:20px" onclick="editProfile()">Edit</button></div>
+<div class="setItem"><div>🔔 Notifications <small>Message, group & call alerts</small></div><div class="toggle on" id="notifToggle" onclick="toggleSetting(this,'notif')"></div></div>
+<div class="setItem"><div>👁️ Last Seen <small id="lastSeenVal">Everyone</small></div><button style="background:#202c33;color:#00ff88;padding:6px 12px;border-radius:20px" onclick="changeLastSeen()">Change</button></div>
+<div class="setItem"><div>🟢 Online Status <small id="onlineVal">Show Online</small></div><div class="toggle on" id="onlineToggle" onclick="toggleSetting(this,'online')"></div></div>
+<div class="setItem"><div>✓✓ Read Receipts <small>Blue ticks on / off</small></div><div class="toggle on" id="readToggle" onclick="toggleSetting(this,'read')"></div></div>
+<div class="setItem"><div>🎨 Theme <small>Dark Luxury</small></div><button style="background:#202c33;color:#00ff88;padding:6px 12px;border-radius:20px" onclick="changeTheme()">Change</button></div>
+<div class="setItem"><div>🌍 Language <small>App Language: English • Chat in any language</small></div><span>English</span></div>
+<div class="setItem" onclick="logout()" style="color:#ff6b6b;justify-content:center">🚪 Logout</div>
+<div class="setItem" onclick="switchAccount()" style="justify-content:center">🔄 Switch Account</div>
+<p style="text-align:center;color:#8696a0;font-size:11px;padding:10px">CLOQ v3.0 • Made with Love • Secure</p>
 </div>
 
+<!-- EDIT PROFILE -->
+<div id="editProfileModal" class="modal hidden"><div class="modalBox"><h3>✏️ Edit Profile</h3><p style="font-size:12px;color:#8696a0;margin-bottom:8px">Your Name (jo sabko dikhega)</p><input id="profileNameInput" placeholder="Your Name"><p style="font-size:12px;color:#8696a0;margin-bottom:8px">Bio</p><textarea id="profileBioInput" placeholder="Hey there! I am using CLOQ."></textarea><p style="font-size:12px;color:#8696a0;margin-bottom:8px">DP - Emoji Select Karo</p><div style="display:flex;gap:8px;font-size:26px;margin-bottom:12px" id="dpRow"><span onclick="pickDP('😎')">😎</span><span onclick="pickDP('🔥')">🔥</span><span onclick="pickDP('👑')">👑</span><span onclick="pickDP('🌹')">🌹</span><span onclick="pickDP('⚡')">⚡</span><span onclick="pickDP('🦁')">🦁</span><span onclick="pickDP('💎')">💎</span></div><div style="display:flex;gap:8px"><button class="btnMain" onclick="saveProfile()">Save</button><button class="btnSec" onclick="document.getElementById('editProfileModal').classList.add('hidden')">Close</button></div></div></div>
+</div>
 <script type="module" src="app.js"></script>
 </body>
-</html>
+                                                                                                                                                                                                                                        </html>
