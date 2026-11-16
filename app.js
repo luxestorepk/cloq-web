@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, getDoc, getDocs, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// TUMHARI FIREBASE KEYS - DAAL DI GAYI HAIN
+// FIREBASE KEYS
 const firebaseConfig = {
   apiKey: "AIzaSyB7zPYGBy0sRrqqZ_WjxQikiEhGHESDHLM",
   authDomain: "cloq-ba2e7.firebaseapp.com",
@@ -22,24 +22,53 @@ let unsubscribe = null;
 let blockedUsers = [];
 let mediaRecorder = null, audioChunks = [];
 
-// --- SIGNUP WITH USERNAME ---
+// --- SIGNUP WITH USERNAME - FIXED ---
 window.signup = async function(){
-  let u = document.getElementById("usernameInput").value.trim().replace("@","").toLowerCase();
-  let e = document.getElementById("email").value;
-  let p = document.getElementById("password").value;
+  let uEl = document.getElementById("usernameInput");
+  let eEl = document.getElementById("email");
+  let pEl = document.getElementById("password");
+  let msgEl = document.getElementById("msg");
+  if(!uEl || !eEl || !pEl){
+    alert("HTML me ID ka masla hai - usernameInput / email / password nahi mila");
+    return;
+  }
+  let u = uEl.value.trim().replace("@","").toLowerCase();
+  let e = eEl.value.trim();
+  let p = pEl.value.trim();
+  if(msgEl) msgEl.innerText = "Account ban raha hai... ruk jao";
   if(!u) return alert("Username likho @ahmed jaisa");
-  let check = await getDoc(doc(db,"users",u));
-  if(check.exists()) return alert("Ye username pehle se hai, aur try karo");
+  if(!e || !e.includes("@")){ if(msgEl) msgEl.innerText=""; return alert("Sahi Email likho"); }
+  if(p.length < 6){ if(msgEl) msgEl.innerText=""; return alert("Password kam se kam 6 lafz ka likho"); }
   try{
+    let check = await getDoc(doc(db,"users",u));
+    if(check.exists()){ if(msgEl) msgEl.innerText=""; return alert("Ye username pehle se hai, aur try karo"); }
     let cred = await createUserWithEmailAndPassword(auth,e,p);
     await setDoc(doc(db,"users",u),{username:u,email:e,uid:cred.user.uid});
+    if(msgEl) msgEl.innerText = "Account ban gaya @"+u+" - Ab Login karo";
     alert("Account ban gaya @"+u);
-  }catch(err){ document.getElementById("msg").innerText=err.message; }
+  }catch(err){
+    console.log(err);
+    if(msgEl) msgEl.innerText = err.code + " : " + err.message;
+    alert(err.message);
+  }
 }
+
 window.login = async function(){
-  let e = document.getElementById("email").value;
-  let p = document.getElementById("password").value;
-  try{ await signInWithEmailAndPassword(auth,e,p); }catch(err){ document.getElementById("msg").innerText=err.message; }
+  let eEl = document.getElementById("email");
+  let pEl = document.getElementById("password");
+  let msgEl = document.getElementById("msg");
+  let e = eEl ? eEl.value.trim() : "";
+  let p = pEl ? pEl.value.trim() : "";
+  if(!e || !p) return alert("Email aur Password likho");
+  if(msgEl) msgEl.innerText = "Login ho raha hai...";
+  try{
+    await signInWithEmailAndPassword(auth,e,p);
+    if(msgEl) msgEl.innerText = "Login ho gaya!";
+  }catch(err){
+    console.log(err);
+    if(msgEl) msgEl.innerText = err.code + " : " + err.message;
+    alert(err.message);
+  }
 }
 window.logout = async function(){ await signOut(auth); }
 
@@ -72,6 +101,7 @@ window.createGroup = async function(){
 }
 function loadGroupList(){
   let list = document.getElementById("groupList");
+  if(!list) return;
   list.innerHTML = `<button onclick="openRoom('general')" class="${currentRoom==='general'?'active':''}">🌍 General</button>`;
   getDocs(collection(db,"rooms")).then(snap=>{
     snap.forEach(d=>{
@@ -209,7 +239,8 @@ window.loadExploreRooms = async function(){
     list.appendChild(div);
   });
   if(list.innerHTML === "") list.innerHTML = "<p>Abhi koi Room nahi hai. Tum pehla banao!</p>";
-  document.getElementById("myRoomsList").innerText = myRooms.length ? "Tumhare Rooms: " + myRooms.join(", ") : "";
+  let myRoomsEl = document.getElementById("myRoomsList");
+  if(myRoomsEl) myRoomsEl.innerText = myRooms.length ? "Tumhare Rooms: " + myRooms.join(", ") : "";
 }
 window.joinExploreRoom = async function(roomId, title){
   let ref = doc(db,"publicRooms",roomId);
@@ -243,7 +274,7 @@ function loadMessages(){
   if(unsubscribe) unsubscribe();
   const q = query(collection(db,"rooms",currentRoom,"messages"),orderBy("time","asc"));
   unsubscribe = onSnapshot(q,(snapshot)=>{
-    let box = document.getElementById("chatBox"); box.innerHTML="";
+    let box = document.getElementById("chatBox"); if(!box) return; box.innerHTML="";
     snapshot.forEach(doc=>{
       let d = doc.data();
       if(blockedUsers.includes(d.sender)) return;
@@ -266,7 +297,7 @@ onAuthStateChanged(auth,async(user)=>{
     let snap = await getDocs(query(collection(db,"users"),where("email","==",myEmail)));
     snap.forEach(d=>{ myUsername=d.data().username; });
     if(!myUsername) myUsername = myEmail.split("@")[0];
-    document.getElementById("myUsernameShow").innerText="@"+myUsername;
+    let show = document.getElementById("myUsernameShow"); if(show) show.innerText="@"+myUsername;
     document.getElementById("loginPage").classList.add("hidden");
     document.getElementById("homePage").classList.remove("hidden");
     loadGroupList(); loadMessages(); loadExploreRooms();
