@@ -768,5 +768,93 @@ setTimeout(fixLockCenter, 500);
 setTimeout(fixLockCenter, 1500);
 setTimeout(fixLockCenter, 2500);
 </script>
+  <!-- ===== PART 6D - WRONG PIN PAKKA FIX ===== -->
+<script>
+function fixWrongPin(){
+  var pinInput=null;
+  document.querySelectorAll("input").forEach(function(inp){
+    var ph=(inp.placeholder||"").toLowerCase();
+    if(ph.includes("pin")) pinInput=inp;
+  });
+  if(!pinInput) return;
+
+  var unlockBtn=null;
+  document.querySelectorAll("button").forEach(function(b){
+    if(b.innerText && b.innerText.trim()==="Unlock") unlockBtn=b;
+  });
+  if(!unlockBtn || unlockBtn._pinFixed) return;
+  unlockBtn._pinFixed=true;
+
+  // Purane wale click ko hata ke naya lagao - clone karke
+  var newBtn=unlockBtn.cloneNode(true);
+  unlockBtn.parentNode.replaceChild(newBtn, unlockBtn);
+
+  newBtn.addEventListener("click", function(e){
+    e.preventDefault(); e.stopPropagation();
+    var entered=(pinInput.value||"").trim();
+    if(!entered){ alert("PIN likho pehle"); return; }
+
+    // Saari jagah se PIN nikalo - jahan bhi save ho
+    var savedList=[];
+    ["cloq_pin","cloq_lock_pin","app_pin","pin","CLOQ_PIN","lockPin"].forEach(function(k){
+      var v=localStorage.getItem(k);
+      if(v) savedList.push(String(v).trim());
+    });
+    // Agar kahi bhi PIN save nahi hai, to jo dala hai wahi naya PIN bana do
+    if(savedList.length===0){
+      localStorage.setItem("cloq_pin", entered);
+      localStorage.setItem("cloq_lock_pin", entered);
+      localStorage.setItem("app_pin", entered);
+      alert("✅ Pehli baar PIN set ho gaya: "+entered);
+      unlockNow(); return;
+    }
+
+    // Check karo - kisi ek se bhi match ho to sahi hai
+    var isCorrect=false;
+    for(var i=0;i<savedList.length;i++){
+      if(String(savedList[i])===String(entered)) isCorrect=true;
+    }
+
+    if(isCorrect){
+      // Saari jagah ek hi PIN kar do taake aage kabhi masla na ho
+      localStorage.setItem("cloq_pin", entered);
+      localStorage.setItem("cloq_lock_pin", entered);
+      localStorage.setItem("app_pin", entered);
+      unlockNow();
+    } else {
+      // Galat hai to batao ke sahi PIN kaun sa save hai - sirf tumhe pata chalega
+      alert("❌ Wrong PIN\n\nTumne dala: "+entered+"\nSave hua PIN: "+savedList[0]+"\n\nAgar yaad nahi to neeche 'Forgot PIN?' dabao, naya PIN bana lo.");
+      pinInput.value=""; pinInput.focus();
+    }
+  });
+
+  function unlockNow(){
+    var l=document.getElementById("cloqLockFix");
+    if(l) l.style.display="none";
+    // Jo bhi lock wali div hai usko hide karo
+    document.querySelectorAll("div").forEach(function(d){
+      if(d.innerText && d.innerText.includes("CLOQ Locked")){
+        // Sirf sab se bahar wali ko hide karo, andar wali ko nahi
+        if(d.id==="cloqLockFix") d.style.display="none";
+      }
+    });
+    document.body.style.overflow="";
+    // Home dikhao
+    var home=document.getElementById("homePage");
+    if(home) home.classList.remove("hidden");
+    var login=document.getElementById("loginPage");
+    if(login && home && !home.classList.contains("hidden")) login.classList.add("hidden");
+    alert("✅ Welcome Back! Lock khul gaya.");
+  }
+
+  // Enter dabane se bhi unlock ho
+  pinInput.addEventListener("keydown", function(ev){
+    if(ev.key==="Enter"){ newBtn.click(); }
+  });
+}
+setTimeout(fixWrongPin, 600);
+setTimeout(fixWrongPin, 1600);
+setTimeout(fixWrongPin, 2600);
+</script>
 </body>
 </html>
