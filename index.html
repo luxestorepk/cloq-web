@@ -190,5 +190,126 @@ setTimeout(function(){ document.getElementById("splash").style.display="none";
   if(!localStorage.getItem("cloq_agree")) document.getElementById("agreement").classList.remove("hidden");
 },1500);
 </script>
+  <!-- ===== CLOQ V4 FEATURES ===== -->
+<div id="roomsPage" class="hidden" style="position:absolute;inset:0;background:#0b141a;z-index:65;display:flex;flex-direction:column">
+<div class="setHead"><button onclick="closeRooms()">←</button> 🏠 Rooms <span style="flex:1"></span><button onclick="openCreateRoom()" style="background:#00a884;padding:6px 12px;border-radius:20px;font-size:13px">+ New Room</button></div>
+<div style="padding:10px;display:flex;gap:8px"><input id="roomSearch" placeholder="Search rooms..." style="flex:1;background:#202c33;border:none;padding:11px;border-radius:20px;color:#fff" oninput="renderRooms()"><select id="roomFilter" onchange="renderRooms()" style="background:#202c33;color:#fff;border:none;padding:10px;border-radius:20px"><option value="all">All Rooms</option><option value="public">Public</option><option value="private">Private</option></select></div>
+<div id="roomsList" style="flex:1;overflow-y:auto;padding:0 10px 20px"></div>
+</div>
+
+<div id="createRoomModal" class="modal hidden"><div class="modalBox"><h3>🏠 Create Room</h3><input id="roomNameInput" placeholder="Room Name - e.g. Lahore Friends"><input id="roomTopicInput" placeholder="Topic - e.g. Cricket, Study"><select id="roomTypeInput"><option value="public">🌍 Public - Anyone can join</option><option value="private">🔒 Private - PIN needed</option></select><input id="roomPinInput" placeholder="Room PIN (only for Private) - e.g. 1234"><div style="display:flex;gap:8px"><button class="btnMain" onclick="createRoomNow()">Create Room</button><button class="btnSec" onclick="document.getElementById('createRoomModal').classList.add('hidden')">Cancel</button></div></div></div>
+
+<div id="vaultModal" class="modal hidden"><div class="modalBox"><h3>🔐 Secret Vault</h3><p style="color:#aebac1;font-size:12px">Your private notes. Only you can see.</p><textarea id="vaultText" placeholder="Write secret note here..." rows="4"></textarea><button class="btnMain" onclick="saveVault()">Save to Vault</button><button class="btnSec" onclick="document.getElementById('vaultModal').classList.add('hidden')">Close</button><p id="vaultSaved" style="color:#00ff88;font-size:12px;margin-top:8px"></p></div></div>
+
+<div id="fakeChatModal" class="modal hidden"><div class="modalBox"><h3>🎭 Fake Chat Creator</h3><input id="fakeName" placeholder="Fake person name - e.g. Ali"><input id="fakeMsg" placeholder="Fake message - e.g. Bhai 5000 bhej de"><button class="btnMain" onclick="createFakeChat()">Create Fake Chat</button><button class="btnSec" onclick="document.getElementById('fakeChatModal').classList.add('hidden')">Close</button></div></div>
+
+<div id="lockModal" class="modal hidden"><div class="modalBox" style="text-align:center"><h3>🔒 CLOQ Locked</h3><p style="color:#aebac1;font-size:13px">Enter your PIN to unlock</p><input id="lockPinInput" type="password" placeholder="PIN - e.g. 1234" style="text-align:center;font-size:20px;letter-spacing:8px"><button class="btnMain" onclick="unlockApp()">Unlock</button></div></div>
+
+<script>
+// ===== V4 ROOMS + FEATURES =====
+function getRooms(){ try{return JSON.parse(localStorage.getItem("cloq_rooms")||"[]")}catch(e){return []} }
+function saveRooms(r){ localStorage.setItem("cloq_rooms",JSON.stringify(r)) }
+function seedRooms(){
+  if(getRooms().length===0){
+    saveRooms([
+      {name:"🌍 General Lounge",topic:"Everyone • Chat in any language",type:"public",pin:"",members:124,icon:"🌍"},
+      {name:"🏏 Cricket Fans Lahore",topic:"Cricket • PSL • Live",type:"public",pin:"",members:89,icon:"🏏"},
+      {name:"📚 Study Group",topic:"Study • Notes • Help",type:"public",pin:"",members:56,icon:"📚"},
+      {name:"💰 Earning Ideas",topic:"Online Earning • Business",type:"public",pin:"",members:210,icon:"💰"},
+      {name:"🎮 Gaming Squad",topic:"PUBG • Free Fire",type:"private",pin:"1234",members:34,icon:"🎮"},
+      {name:"🔒 VIP Lounge",topic:"VIP Only • PIN: 9999",type:"private",pin:"9999",members:12,icon:"👑"}
+    ]);
+  }
+}
+function renderRooms(){
+  seedRooms(); var q=(document.getElementById("roomSearch").value||"").toLowerCase();
+  var f=document.getElementById("roomFilter").value; var list=document.getElementById("roomsList");
+  var rooms=getRooms().filter(function(r){ return (f==="all"||r.type===f) && r.name.toLowerCase().includes(q) });
+  list.innerHTML="";
+  if(rooms.length===0) list.innerHTML='<p style="text-align:center;color:#8696a0;padding:20px">No rooms found. Create one!</p>';
+  rooms.forEach(function(r){
+    var d=document.createElement("div"); d.style.cssText="background:#202c33;margin-bottom:10px;border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer";
+    d.innerHTML='<div style="font-size:32px">'+r.icon+'</div><div style="flex:1"><b>'+r.name+'</b><p style="color:#8696a0;font-size:12px">'+r.topic+'</p><p style="color:#00a884;font-size:11px">👥 '+r.members+' members • '+(r.type==="public"?"🌍 Public":"🔒 Private")+'</p></div><button style="background:#00a884;color:#fff;padding:8px 14px;border-radius:20px;font-size:13px">Join</button>';
+    d.onclick=function(){ joinRoom(r) }; list.appendChild(d);
+  });
+}
+function openRooms(){ document.getElementById("roomsPage").classList.remove("hidden"); renderRooms(); }
+function closeRooms(){ document.getElementById("roomsPage").classList.add("hidden"); }
+function openCreateRoom(){ document.getElementById("createRoomModal").classList.remove("hidden"); }
+function createRoomNow(){
+  var n=document.getElementById("roomNameInput").value.trim(); if(!n){alert("Room name likho");return}
+  var rooms=getRooms(); rooms.unshift({name:n,topic:document.getElementById("roomTopicInput").value||"New Room",type:document.getElementById("roomTypeInput").value,pin:document.getElementById("roomPinInput").value||"",members:1,icon:"🏠"});
+  saveRooms(rooms); document.getElementById("createRoomModal").classList.add("hidden"); renderRooms(); alert("✅ Room ban gaya: "+n);
+}
+function joinRoom(r){
+  if(r.type==="private"){ var pin=prompt("🔒 Private Room hai. PIN dalo (Hint: Gaming=1234, VIP=9999)"); if(pin!==r.pin){ alert("❌ Wrong PIN"); return; } }
+  closeRooms(); openChat("🏠 "+r.name); 
+  setTimeout(function(){ var b=document.getElementById("chatBox"); if(b){ var d=document.createElement("div"); d.className="msgBubble"; d.innerHTML="<small>🏠 Room</small>Welcome to "+r.name+"! "+r.topic; b.appendChild(d); } },300);
+}
+// Override bottom nav - Rooms button now opens real Rooms
+var _oldShowSection = window.showSection;
+window.showSection = function(name,btn){
+  document.querySelectorAll(".bottomNav button").forEach(function(b){b.classList.remove("active")}); if(btn) btn.classList.add("active");
+  if(name==="rooms"){ openRooms(); return; }
+  if(name==="chats"){ return; }
+  if(name==="status"){ openStatusV4(); return; }
+  if(name==="calls"){ alert("📞 Calls - Coming in V5 with Firebase. Abhi Rooms + Chat ready hai!"); return; }
+};
+// ===== STATUS / STORY V4 =====
+function openStatusV4(){
+  var s=prompt("📸 Status lagao - Apna status likho (e.g. Alhamdulillah ❤️):");
+  if(s){ localStorage.setItem("cloq_my_status",s); alert("✅ Status lag gaya! Sab ko nazar aayega: "+s); }
+}
+// ===== THEMES =====
+window.changeTheme=function(t){
+  var colors={green:"#00a884",gold:"#ffd700",purple:"#a855f7"};
+  document.documentElement.style.setProperty("--main",colors[t]||colors.green);
+  var btns=document.querySelectorAll(".btnMain"); btns.forEach(function(b){b.style.background=colors[t]});
+  localStorage.setItem("cloq_theme",t); alert("🎨 Theme change ho gaya: "+t);
+};
+// ===== VANISH + UNSEND =====
+window.vanishMode = localStorage.getItem("cloq_vanish")==="on";
+window.toggleVanish=function(){ window.vanishMode=!window.vanishMode; localStorage.setItem("cloq_vanish",window.vanishMode?"on":"off"); alert(window.vanishMode?"👻 Vanish Mode ON - Messages 10 sec me gayab honge":"👻 Vanish Mode OFF"); };
+var _oldSend = window.sendMsg;
+window.sendMsg=function(){
+  _oldSend();
+  if(window.vanishMode){ setTimeout(function(){ var b=document.getElementById("chatBox"); if(b) b.innerHTML='<div class="msgBubble"><small>👻 Vanish</small>Messages vanished 👻</div>'; },10000); }
+};
+// Long press to unsend - double click any message to delete
+document.addEventListener("dblclick",function(e){ var b=e.target.closest(".msgBubble"); if(b && confirm("↩️ Ye message unsend karna hai?")){ b.remove(); alert("✅ Message unsend ho gaya"); } });
+// ===== VAULT + FAKE CHAT + AUTO REPLY + SCHEDULER + APP LOCK =====
+window.openVault=function(){ document.getElementById("vaultModal").classList.remove("hidden"); document.getElementById("vaultText").value=localStorage.getItem("cloq_vault")||""; };
+window.saveVault=function(){ localStorage.setItem("cloq_vault",document.getElementById("vaultText").value); document.getElementById("vaultSaved").innerText="✅ Saved in Vault"; };
+window.openFakeChat=function(){ document.getElementById("fakeChatModal").classList.remove("hidden"); };
+window.createFakeChat=function(){
+  var n=document.getElementById("fakeName").value||"Ali"; var m=document.getElementById("fakeMsg").value||"Hi";
+  var chats=JSON.parse(localStorage.getItem("cloq_chats")||"[]"); chats.unshift({name:"🎭 "+n+" (Fake)",last:m,icon:"🎭"}); localStorage.setItem("cloq_chats",JSON.stringify(chats));
+  document.getElementById("fakeChatModal").classList.add("hidden"); renderChats(); alert("🎭 Fake Chat ban gaya!");
+};
+window.setAutoReply=function(){ var t=prompt("🤖 Auto-Reply message likho - Jab koi msg karega to ye auto jayega:"); if(t){ localStorage.setItem("cloq_autoreply",t); alert("✅ Auto-Reply ON: "+t); } };
+window.scheduleMsg=function(){ var t=prompt("⏰ Kitne second baad bhejna hai? e.g. 10"); var m=prompt("Kya message bhejna hai?"); if(t&&m){ setTimeout(function(){ var inp=document.getElementById("msgInput"); if(inp){ inp.value=m; sendMsg(); } alert("⏰ Scheduled message bhej diya!"); },parseInt(t)*1000); } };
+window.setAppLock=function(){ var p=prompt("🔒 App Lock PIN set karo - 4 digit e.g. 1234"); if(p){ localStorage.setItem("cloq_applock",p); alert("✅ App Lock ON. Agli baar app khologe to PIN mangega."); } };
+window.unlockApp=function(){ if(document.getElementById("lockPinInput").value===localStorage.getItem("cloq_applock")){ document.getElementById("lockModal").classList.add("hidden"); } else alert("❌ Wrong PIN"); };
+// Add quick features to Settings page
+setTimeout(function(){
+  var setPage=document.getElementById("settingsPage");
+  if(setPage && !document.getElementById("v4Settings")){
+    var div=document.createElement("div"); div.id="v4Settings";
+    div.innerHTML='<div class="setItem" onclick="openRooms()"><div>🏠 My Rooms</div><div>›</div></div>'
+    +'<div class="setItem" onclick="openVault()"><div>🔐 Secret Vault</div><div>›</div></div>'
+    +'<div class="setItem" onclick="openFakeChat()"><div>🎭 Fake Chat Creator</div><div>›</div></div>'
+    +'<div class="setItem" onclick="toggleVanish()"><div>👻 Vanish Mode</div><div>'+(window.vanishMode?"ON":"OFF")+'</div></div>'
+    +'<div class="setItem" onclick="setAutoReply()"><div>🤖 Auto-Reply</div><div>›</div></div>'
+    +'<div class="setItem" onclick="scheduleMsg()"><div>⏰ Message Scheduler</div><div>›</div></div>'
+    +'<div class="setItem" onclick="setAppLock()"><div>🔒 App Lock PIN</div><div>›</div></div>'
+    +'<div class="setItem"><div>🎨 Theme</div><div style="display:flex;gap:6px"><button onclick="changeTheme(\'green\')" style="background:#00a884;color:#fff;padding:6px 10px;border-radius:12px">Green</button><button onclick="changeTheme(\'gold\')" style="background:#ffd700;padding:6px 10px;border-radius:12px">Gold</button><button onclick="changeTheme(\'purple\')" style="background:#a855f7;color:#fff;padding:6px 10px;border-radius:12px">Purple</button></div></div>'
+    +'<div class="setItem"><div>🏅 My Badge</div><div><select onchange="localStorage.setItem(\'cloq_badge\',this.value);alert(\'Badge: \'+this.value)" style="background:#0b141a;color:#fff;border:none;padding:6px;border-radius:8px"><option>Simple User</option><option>✅ Blue Tick VIP</option><option>💗 Pink Badge</option><option>👑 Yellow Badge</option></select></div></div>';
+    var logoutBtn=setPage.querySelector(".setItem[onclick*=\'logout\']");
+    if(logoutBtn) setPage.insertBefore(div,logoutBtn); else setPage.appendChild(div);
+  }
+  // App Lock check on start
+  if(localStorage.getItem("cloq_applock")){ document.getElementById("lockModal").classList.remove("hidden"); }
+},800);
+</script>
 </body>
 </html>
