@@ -4,27 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>CLOQ - Luxury Chat</title>
-<link rel="icon" href="icon.png">
-<script>
-setTimeout(function(){ var s=document.getElementById("splash"); if(s) s.style.display="none"; }, 1800);
-</script>
+<link rel="icon" href="icon.jpg">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
 body{background:#0b141a;color:#e9edef;overflow:hidden;height:100dvh}
-button{cursor:pointer;border:none;outline:none} input,select,textarea{outline:none}
+button{cursor:pointer;border:none;outline:none}input,select,textarea{outline:none}
 .hidden{display:none!important}
 .page{height:100dvh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:#0b141a;position:relative;overflow:hidden}
-
-/* LIVE ICON - SAANS LETA HUA, GHOOMTA HUA */
 .liveIconWrap{position:relative;width:118px;height:118px;display:flex;align-items:center;justify-content:center}
 .liveIconWrap::before{content:"";position:absolute;inset:-8px;border-radius:38px;border:2px solid #00ff8855;animation:spinRing 4s linear infinite}
 .liveIconWrap::after{content:"";position:absolute;inset:0;border-radius:32px;background:#00a88433;filter:blur(20px);animation:breath 2s ease-in-out infinite}
 @keyframes spinRing{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes breath{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}}
-.liveIcon{width:110px;height:110px;border-radius:32px;object-fit:cover;position:relative;z-index:2;box-shadow:0 10px 40px #00a88466, 0 0 0 2px #ffd70066;animation:breath2 2s ease-in-out infinite}
+.liveIcon{width:110px;height:110px;border-radius:32px;object-fit:cover;position:relative;z-index:2;box-shadow:0 10px 40px #00a88466,0 0 0 2px #ffd70066;animation:breath2 2s ease-in-out infinite}
 @keyframes breath2{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
-.liveIconSmall{width:80px;height:80px;border-radius:24px;object-fit:cover;box-shadow:0 8px 30px #00a88466, 0 0 0 2px #ffd70066}
-
+.liveIconSmall{width:80px;height:80px;border-radius:24px;object-fit:cover;box-shadow:0 8px 30px #00a88466,0 0 0 2px #ffd70066}
 #splash{position:fixed;inset:0;background:#0b141a;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 #agreement{position:fixed;inset:0;background:#000000b8;z-index:199;display:flex;align-items:flex-end;justify-content:center}
 .agreeBox{background:#233138;width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:24px}
@@ -33,101 +27,168 @@ button{cursor:pointer;border:none;outline:none} input,select,textarea{outline:no
 .btnMain{width:100%;background:#00a884;color:#fff;padding:14px;border-radius:30px;font-size:16px;font-weight:700;margin-top:6px}
 .btnMain:disabled{opacity:.6}
 .btnSec{width:100%;background:#202c33;color:#00a884;padding:13px;border-radius:30px;font-size:15px;font-weight:600;margin-top:10px}
+#msg{text-align:center;font-size:14px;min-height:22px;margin:6px 0;padding:8px;border-radius:10px;display:none}
+#msg.err{display:block;background:#ff3b3022;color:#ff8a8a;border:1px solid #ff3b3055}
+#msg.ok{display:block;background:#00a88422;color:#00ff88;border:1px solid #00a88455}
+#msg.load{display:block;background:#202c33;color:#ffd700;border:1px solid #ffd70055}
 .header{background:#202c33;padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
 .header b{font-size:22px;letter-spacing:2px}.header b span{color:#00a884}
-.hIcons{display:flex;gap:16px;font-size:20px;align-items:center}
-.hIcons div{width:32px;height:32px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
-.tabs{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;white-space:nowrap}
-.tabs button{background:#202c33;color:#aebac1;padding:7px 14px;border-radius:20px;font-size:13px}
-.tabs button.active{background:#00a88433;color:#00ff88}
-.list{flex:1;overflow-y:auto;padding-bottom:85px;scroll-behavior:smooth}
-.chatItem{display:flex;gap:12px;padding:12px 14px;align-items:center;border-bottom:1px solid #222d34;cursor:pointer}
+.hIcons{display:flex;gap:16px;font-size:20px;align-items:center}.hIcons div{width:32px;height:32px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.tabs{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;white-space:nowrap}.tabs button{background:#202c33;color:#aebac1;padding:7px 14px;border-radius:20px;font-size:13px}.tabs button.active{background:#00a88433;color:#00ff88}
+.list{flex:1;overflow-y:auto;padding-bottom:85px}.chatItem{display:flex;gap:12px;padding:12px 14px;align-items:center;border-bottom:1px solid #222d34;cursor:pointer}
 .avatar{width:48px;height:48px;min-width:48px;border-radius:50%;background:linear-gradient(135deg,#00a884,#025c48);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;overflow:hidden}
-.chatItem h4{font-size:16px;display:flex;justify-content:space-between}
 .chatItem p{font-size:13px;color:#8696a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:270px}
-.fab{position:absolute;right:16px;bottom:88px;width:56px;height:56px;border-radius:50%;background:#00a884;color:#fff;font-size:26px;box-shadow:0 6px 20px #0008;z-index:10}
-.bottomNav{position:absolute;bottom:0;left:0;right:0;background:#202c33;display:flex;justify-content:space-around;padding:8px 0 10px;border-top:1px solid #2a3942;z-index:20}
-.bottomNav button{background:none;color:#8696a0;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
-.bottomNav button.active{color:#00ff88}
-#chatView{position:absolute;inset:0;background:#0b141a;z-index:30;display:flex;flex-direction:column}
-.chatHead{background:#202c33;padding:10px;display:flex;align-items:center;gap:10px}
-.chatHead h3{flex:1;font-size:16px}.chatHead h3 small{display:block;font-size:11px;color:#00ff88;font-weight:400}
-.chatHead button{background:none;color:#fff;font-size:20px}
-#chatBox{flex:1;overflow-y:auto;padding:12px;scroll-behavior:smooth}
-.msgBubble{max-width:82%;padding:8px 10px 6px;border-radius:12px;margin-bottom:8px;background:#202c33;font-size:15px;line-height:1.4;position:relative;word-break:break-word;animation:slide .25s ease}
-@keyframes slide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.msgBubble.mine{margin-left:auto;background:#005c4b;border-bottom-right-radius:4px}
-.msgBubble small{display:block;font-size:10px;color:#00ff88;margin-bottom:2px}
-.msgBubble img{width:100%;border-radius:8px;margin-top:6px}
-.tickRow{display:flex;justify-content:flex-end;gap:4px;align-items:center;font-size:11px;color:#aebac1;margin-top:4px}
-.tickRow .blue{color:#53bdeb}
-.inputRow{display:flex;gap:8px;padding:8px;background:#0b141a;align-items:center}
-.inputRow input{flex:1;background:#202c33;border:none;padding:12px 14px;border-radius:24px;color:#fff;font-size:15px}
-.iconBtn{width:44px;height:44px;border-radius:50%;background:#202c33;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}
-.sendBtn{background:#00a884!important}
-.menu{position:absolute;top:52px;right:10px;background:#233138;border-radius:12px;width:240px;z-index:40;overflow:hidden;box-shadow:0 10px 30px #000a}
-.menu button{display:block;width:100%;text-align:left;background:none;color:#e9edef;padding:13px 16px;font-size:14px;border-bottom:1px solid #ffffff0d}
-.modal{position:fixed;inset:0;background:#000000a8;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}
-.modalBox{background:#233138;width:100%;max-width:400px;border-radius:16px;padding:18px;max-height:85vh;overflow-y:auto}
-.modalBox input,.modalBox select,.modalBox textarea{width:100%;background:#0b141a;border:none;padding:12px;border-radius:10px;color:#fff;margin-bottom:10px;font-size:14px}
-.setPage{position:absolute;inset:0;background:#0b141a;z-index:60;display:flex;flex-direction:column;overflow-y:auto}
-.setHead{background:#202c33;padding:12px;display:flex;gap:12px;align-items:center;font-size:18px;font-weight:700}
-.setHead button{background:none;color:#fff;font-size:22px}
-.profileCard{background:#202c33;margin:14px;border-radius:14px;padding:16px;display:flex;gap:14px;align-items:center}
-.setItem{background:#202c33;margin:0 14px 8px;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;font-size:14px}
-.setItem small{color:#8696a0;display:block;font-size:11px}
-.toggle{width:44px;height:24px;background:#374045;border-radius:20px;position:relative;cursor:pointer}
-.toggle.on{background:#00a884}.toggle.on:after{left:22px}.toggle:after{content:"";position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s}
-.funBanner{background:#7b2ff7;color:#fff;text-align:center;padding:6px;font-size:12px;font-weight:700;letter-spacing:1px}
-#funWatermark{position:fixed;inset:0;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;font-size:52px;font-weight:900;color:#ffffff0d;transform:rotate(-20deg);text-align:center;line-height:1.2}
-.statusCard{background:#202c33;padding:14px;border-radius:14px;margin:12px;display:flex;gap:12px;align-items:center}
-.chCard{background:#202c33;padding:12px;border-radius:12px;margin:0 12px 8px;display:flex;gap:10px;align-items:center}
+.fab{position:absolute;right:16px;bottom:88px;width:56px;height:56px;border-radius:50%;background:#00a884;color:#fff;font-size:26px;z-index:10}
+.bottomNav{position:absolute;bottom:0;left:0;right:0;background:#202c33;display:flex;justify-content:space-around;padding:8px 0 10px;border-top:1px solid #2a3942;z-index:20}.bottomNav button{background:none;color:#8696a0;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}.bottomNav button.active{color:#00ff88}
+#chatView{position:absolute;inset:0;background:#0b141a;z-index:30;display:flex;flex-direction:column}.chatHead{background:#202c33;padding:10px;display:flex;align-items:center;gap:10px}.chatHead h3{flex:1;font-size:16px}.chatHead h3 small{display:block;font-size:11px;color:#00ff88;font-weight:400}.chatHead button{background:none;color:#fff;font-size:20px}
+#chatBox{flex:1;overflow-y:auto;padding:12px}.msgBubble{max-width:82%;padding:8px 10px 6px;border-radius:12px;margin-bottom:8px;background:#202c33;font-size:15px;word-break:break-word}.msgBubble.mine{margin-left:auto;background:#005c4b}.msgBubble small{display:block;font-size:10px;color:#00ff88;margin-bottom:2px}
+.inputRow{display:flex;gap:8px;padding:8px;background:#0b141a;align-items:center}.inputRow input{flex:1;background:#202c33;border:none;padding:12px 14px;border-radius:24px;color:#fff;font-size:15px}.iconBtn{width:44px;height:44px;border-radius:50%;background:#202c33;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}.sendBtn{background:#00a884!important}
+.menu{position:absolute;top:52px;right:10px;background:#233138;border-radius:12px;width:240px;z-index:40;overflow:hidden;box-shadow:0 10px 30px #000a}.menu button{display:block;width:100%;text-align:left;background:none;color:#e9edef;padding:13px 16px;font-size:14px;border-bottom:1px solid #ffffff0d}
+.modal{position:fixed;inset:0;background:#000000a8;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}.modalBox{background:#233138;width:100%;max-width:400px;border-radius:16px;padding:18px;max-height:85vh;overflow-y:auto}.modalBox input,.modalBox select,.modalBox textarea{width:100%;background:#0b141a;border:none;padding:12px;border-radius:10px;color:#fff;margin-bottom:10px;font-size:14px}
+.setPage{position:absolute;inset:0;background:#0b141a;z-index:60;display:flex;flex-direction:column;overflow-y:auto}.setHead{background:#202c33;padding:12px;display:flex;gap:12px;align-items:center;font-size:18px;font-weight:700}.setHead button{background:none;color:#fff;font-size:22px}.profileCard{background:#202c33;margin:14px;border-radius:14px;padding:16px;display:flex;gap:14px;align-items:center}.setItem{background:#202c33;margin:0 14px 8px;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;font-size:14px}.setItem small{color:#8696a0;display:block;font-size:11px}
 </style>
 </head>
 <body>
-<div id="funWatermark" class="hidden">FUN MODE<br>🎉 CLOQ 🎉</div>
-<div id="splash">
-  <div class="liveIconWrap"><img src="icon.png" class="liveIcon" onerror="this.src='https://via.placeholder.com/110/00a884/ffffff?text=CLOQ'"></div>
-  <h1 style="font-size:42px;letter-spacing:6px">CLOQ</h1>
-  <p style="color:#8696a0;font-size:13px">Luxury Chat • Rooms • Calls • Status</p>
-  <p style="color:#00a884;font-size:12px">Opening... Please wait</p>
+<div id="splash"><div class="liveIconWrap"><img src="icon.jpg" class="liveIcon"></div><h1 style="font-size:42px;letter-spacing:6px">CLOQ</h1><p style="color:#8696a0;font-size:13px">Luxury Chat • Rooms • Calls • Status</p><p style="color:#00a884;font-size:12px">Opening... Please wait</p></div>
+<div id="agreement" class="hidden"><div class="agreeBox"><div style="font-size:44px">🔒</div><h2>Welcome to CLOQ</h2><p style="color:#aebac1;font-size:13px;line-height:1.6;margin:8px 0 14px">By continuing, you agree to respect everyone, no abuse, no spam. CLOQ is a safe luxury space.</p><label style="display:flex;gap:10px;font-size:13px"><input type="checkbox" id="agreeCheck"> I agree to CLOQ Rules</label><button class="btnMain" onclick="acceptAgreement()">Agree & Continue →</button></div></div>
+<div id="loginPage" class="page"><div style="text-align:center"><img src="icon.jpg" class="liveIconSmall" style="margin:0 auto 10px"><h1 style="font-size:36px;letter-spacing:5px">CLOQ</h1><p style="color:#8696a0;font-size:13px;margin-bottom:22px">Luxury Chat • Rooms • Calls • Status</p></div>
+<input id="usernameInput" placeholder="Your Name - e.g. Waqas">
+<input id="email" type="email" placeholder="Email - e.g. abc@gmail.com">
+<div style="position:relative;margin-bottom:10px">
+<input id="password" type="password" placeholder="Password (6+ characters)" style="padding-right:48px;margin:0">
+<span id="eyeBtn" onclick="togglePass()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:20px;cursor:pointer">👁️</span>
 </div>
-<div id="agreement" class="hidden"><div class="agreeBox"><div style="font-size:44px">🔒</div><h2>Welcome to CLOQ</h2><p style="color:#aebac1;font-size:13px;line-height:1.6;margin:8px 0 14px">By continuing, you agree to respect everyone, no abuse, no spam. CLOQ is a safe luxury space. You can chat in any language - Urdu, English, Punjabi, Hindi.</p><label style="display:flex;gap:10px;font-size:13px"><input type="checkbox" id="agreeCheck"> I agree to CLOQ Rules</label><button class="btnMain" onclick="acceptAgreement()">Agree & Continue →</button></div></div>
-
-<div id="loginPage" class="page"><div style="text-align:center"><img src="icon.png" class="liveIconSmall" style="margin:0 auto 10px" onerror="this.src='https://via.placeholder.com/80/00a884/ffffff?text=CLOQ'"><h1 style="font-size:36px;letter-spacing:5px">CLOQ</h1><p style="color:#8696a0;font-size:13px;margin-bottom:22px">Luxury Chat • Rooms • Calls • Status</p></div><input id="usernameInput" placeholder="@username - Optional, khaali bhi chalega"><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password (6+ chars)"><p id="msg" style="text-align:center;color:#ff8a8a;font-size:13px;min-height:18px"></p><button class="btnMain" id="signupBtn" onclick="signup()">✨ Sign Up - New Account</button><button class="btnSec" id="loginBtn" onclick="login()">Login</button><p style="text-align:center;color:#8696a0;font-size:11px;margin-top:18px">Login once, CLOQ will auto-open next time • Chat in any language</p><p id="debug" style="text-align:center;color:#00ff88;font-size:11px;margin-top:8px"></p></div>
-
+<div id="msg"></div>
+<button class="btnMain" id="signupBtn" onclick="doSignup()">✨ Sign Up - New Account</button>
+<button class="btnSec" id="loginBtn" onclick="doLogin()">Login</button>
+<p style="text-align:center;color:#8696a0;font-size:11px;margin-top:18px">Login once, CLOQ will auto-open next time<br>Chat in any language - English, Urdu, Punjabi, Hindi</p></div>
 <div id="homePage" class="page hidden">
-<div class="header"><b>CLOQ<span>.</span></b><div class="hIcons"><span onclick="openSearch()">🔍</span><span onclick="toggleMainMenu()">⋮</span><div id="myAvatar" onclick="openSettings()">A</div></div>
-<div id="mainMenu" class="menu hidden"><button onclick="openAddContact()">➕ New Group</button><button onclick="openAddContact()">👥 New Community</button><button onclick="openSettings()">⭐ Starred Messages</button><button onclick="markAllRead()">✓ Read All</button><button onclick="openSettings()">⚙️ Settings</button><button onclick="switchAccount()">🔄 Switch Account</button><button onclick="logout()">🚪 Logout</button></div></div>
-<div id="funBanner" class="funBanner hidden">🎉 FUN MODE ON • This chat is in Fun Mode</div>
-<div class="tabs"><button class="active" onclick="setTab(this,'all')">All</button><button onclick="setTab(this,'unread')">Unread</button><button onclick="setTab(this,'fav')">⭐ Favourites</button><button onclick="setTab(this,'groups')">Groups</button></div>
-<div class="list" id="mainList"></div>
-<button class="fab" id="fabBtn" onclick="openAddContact()">＋</button>
+<div class="header"><b>CLOQ<span>.</span></b><div class="hIcons"><span onclick="alert('Search coming soon')">🔍</span><span onclick="toggleMainMenu()">⋮</span><div id="myAvatar" onclick="openSettings()">A</div></div>
+<div id="mainMenu" class="menu hidden"><button onclick="openAddContact()">➕ New Chat</button><button onclick="openSettings()">⚙️ Settings</button><button onclick="switchAccount()">🔄 Switch Account</button><button onclick="logout()">🚪 Logout</button></div></div>
+<div class="tabs"><button class="active" onclick="setTab(this)">All</button><button onclick="setTab(this)">Unread</button><button onclick="setTab(this)">⭐ Favourites</button><button onclick="setTab(this)">Groups</button></div>
+<div class="list" id="mainList"></div><button class="fab" onclick="openAddContact()">＋</button>
 <div class="bottomNav"><button class="active" onclick="showSection('chats',this)"><span style="font-size:22px">💬</span>Chats</button><button onclick="showSection('status',this)"><span style="font-size:22px">🔄</span>Updates</button><button onclick="showSection('rooms',this)"><span style="font-size:22px">🏠</span>Rooms</button><button onclick="showSection('calls',this)"><span style="font-size:22px">📞</span>Calls</button></div>
-<div id="chatView" class="hidden">
-<div class="chatHead"><button onclick="closeChat()">←</button><div class="avatar" id="chatAvatar">G</div><h3 id="roomName">General Group <small id="roomMembers">Online • Luxury</small></h3><button onclick="startCall()">📞</button><button onclick="toggleMenu()">⋮</button>
-<div id="threeDotMenu" class="menu hidden"><button onclick="toggleVanish()">👻 Vanish Mode: <span id="vanishState">OFF</span></button><button onclick="toggleFun()">🎉 Fun Mode: <span id="funState">OFF</span></button><button onclick="blockUser()">🚫 Block</button><button onclick="reportUser()">⚠️ Report</button><button onclick="setShortcut()">⭐ Shortcut / Nickname</button><button onclick="searchInChat()">🔍 Search in Chat</button><button onclick="clearChat()">🗑️ Clear Chat</button><button onclick="openGroupSettings()">⚙️ Group Settings</button></div></div>
-<div id="chatBox"></div>
-<div class="inputRow"><button class="iconBtn" onclick="document.getElementById('fileInput').click()">📎</button><input id="fileInput" type="file" class="hidden" onchange="uploadFile()"><input id="msgInput" placeholder="Message... Chat in any language" onkeydown="if(event.key==='Enter') sendMsg()"><button class="iconBtn" id="voiceBtn" onclick="toggleVoice()">🎤</button><button class="iconBtn sendBtn" onclick="sendMsg()">➤</button></div><p id="uploadStatus" style="text-align:center;font-size:11px;color:#00ff88"></p></div>
-<div id="callUI" class="modal hidden"><div class="modalBox" style="text-align:center"><div style="font-size:60px">📞</div><h3 id="callStatus">Calling...</h3><button class="btnMain" style="background:#ff3b30" onclick="endCall()">End Call</button></div></div>
-<div id="groupSettings" class="modal hidden"><div class="modalBox"><h3>⚙️ Group Settings</h3><label style="display:block;margin-bottom:8px"><input type="checkbox" id="onlyAdminMsg"> Only Admins Can Send</label><label style="display:block;margin-bottom:8px"><input type="checkbox" id="noForwardSetting"> Disable Forward</label><label style="display:block;margin-bottom:8px"><input type="checkbox" id="vanishSetting"> Vanish Mode</label><label style="display:block;margin-bottom:12px"><input type="checkbox" id="hideMembers"> Hide Members</label><div style="display:flex;gap:8px"><button class="btnMain" onclick="saveGroupSettings()">Save</button><button class="btnSec" onclick="closeGroupSettings()">Close</button></div></div></div>
-<div id="addContactModal" class="modal hidden"><div class="modalBox"><h3>➕ New Contact / Chat</h3><input id="searchUserInput" placeholder="@username"><div id="searchResult" style="font-size:13px;color:#aebac1;margin-bottom:10px"></div><div style="display:flex;gap:8px"><button class="btnMain" onclick="searchUser()">Search</button><button class="btnSec" onclick="closeAddContact()">Close</button></div><hr style="margin:14px 0;border-color:#ffffff22"><h3>👥 New Group</h3><input id="newGroupName" placeholder="Group name"><input id="addUsernames" placeholder="Members @ahmed, @ali"><button class="btnMain" onclick="createGroup()">Create Group</button></div></div>
-<div id="roomModal" class="modal hidden"><div class="modalBox"><h3>🏠 Create Room</h3><input id="roomTitle" placeholder="Room name"><input id="roomDesc" placeholder="About room"><select id="roomType"><option value="public">🌍 Public</option><option value="private">🔒 Private</option></select><div style="display:flex;gap:8px"><button class="btnMain" onclick="createPublicRoom()">Create</button><button class="btnSec" onclick="closeRoomModal()">Close</button></div></div></div>
-<div id="settingsPage" class="setPage hidden">
-<div class="setHead"><button onclick="closeSettings()">←</button> Settings</div>
-<div class="profileCard"><div class="avatar" style="width:64px;height:64px;font-size:28px" id="setAvatar" onclick="changeDP()">A</div><div style="flex:1"><b id="setName" style="font-size:18px">@username</b><p id="setBio" style="color:#8696a0;font-size:13px">Hey there! I am using CLOQ.</p><p id="setEmail" style="color:#8696a0;font-size:11px"></p></div><button style="background:#00a884;color:#fff;padding:8px 14px;border-radius:20px" onclick="editProfile()">Edit</button></div>
-<div class="setItem"><div>🔔 Notifications <small>Message, group & call alerts</small></div><div class="toggle on" id="notifToggle" onclick="toggleSetting(this,'notif')"></div></div>
-<div class="setItem"><div>👁️ Last Seen <small id="lastSeenVal">Everyone</small></div><button style="background:#202c33;color:#00ff88;padding:6px 12px;border-radius:20px" onclick="changeLastSeen()">Change</button></div>
-<div class="setItem"><div>🟢 Online Status <small id="onlineVal">Show Online</small></div><div class="toggle on" id="onlineToggle" onclick="toggleSetting(this,'online')"></div></div>
-<div class="setItem"><div>✓✓ Read Receipts <small>Blue ticks on / off</small></div><div class="toggle on" id="readToggle" onclick="toggleSetting(this,'read')"></div></div>
-<div class="setItem"><div>🎨 Theme <small>Dark Luxury</small></div><button style="background:#202c33;color:#00ff88;padding:6px 12px;border-radius:20px" onclick="changeTheme()">Change</button></div>
-<div class="setItem"><div>🌍 Language <small>App Language: English • Chat in any language</small></div><span>English</span></div>
-<div class="setItem" onclick="logout()" style="color:#ff6b6b;justify-content:center">🚪 Logout</div>
-<div class="setItem" onclick="switchAccount()" style="justify-content:center">🔄 Switch Account</div>
-<p style="text-align:center;color:#8696a0;font-size:11px;padding:10px">CLOQ v3.1 • Live Icon • Secure</p>
+
+<div id="chatView" class="hidden"><div class="chatHead"><button onclick="closeChat()">←</button><div class="avatar" id="chatAvatar">G</div><h3 id="roomName">General Group <small>Online • Luxury</small></h3><button onclick="alert('Calling...')">📞</button></div><div id="chatBox"></div><div class="inputRow"><button class="iconBtn" onclick="document.getElementById('fileInput').click()">📎</button><input id="fileInput" type="file" class="hidden" onchange="uploadFile()"><input id="msgInput" placeholder="Message in any language..." onkeydown="if(event.key==='Enter') sendMsg()"><button class="iconBtn sendBtn" onclick="sendMsg()">➤</button></div></div>
+
+<div id="addContactModal" class="modal hidden"><div class="modalBox"><h3>➕ New Chat</h3><input id="searchUserInput" placeholder="Enter name - e.g. Ali"><div style="display:flex;gap:8px"><button class="btnMain" onclick="createChat()">Start Chat</button><button class="btnSec" onclick="closeAddContact()">Close</button></div><hr style="margin:14px 0;border-color:#ffffff22"><h3>👥 New Group</h3><input id="newGroupName" placeholder="Group name"><button class="btnMain" onclick="createGroup()">Create Group</button></div></div>
+
+<div id="settingsPage" class="setPage hidden"><div class="setHead"><button onclick="closeSettings()">←</button> Settings</div><div class="profileCard"><div class="avatar" style="width:64px;height:64px;font-size:28px" id="setAvatar">A</div><div style="flex:1"><b id="setName">@username</b><p id="setBio" style="color:#8696a0;font-size:13px">Hey there! I am using CLOQ.</p><p id="setEmail" style="color:#8696a0;font-size:11px"></p></div></div><div class="setItem"><div>🔔 Notifications</div><div>ON</div></div><div class="setItem"><div>🌍 App Language</div><div>English</div></div><div class="setItem"><div>💬 Chat Language</div><div>Any Language</div></div><div class="setItem" onclick="logout()" style="color:#ff6b6b;justify-content:center">🚪 Logout</div><p style="text-align:center;color:#8696a0;font-size:11px;padding:10px">CLOQ v3.2 • Secure</p></div>
 </div>
-<div id="editProfileModal" class="modal hidden"><div class="modalBox"><h3>✏️ Edit Profile</h3><p style="font-size:12px;color:#8696a0;margin-bottom:8px">Your Name</p><input id="profileNameInput" placeholder="Your Name"><p style="font-size:12px;color:#8696a0;margin-bottom:8px">Bio</p><textarea id="profileBioInput" placeholder="Hey there! I am using CLOQ."></textarea><p style="font-size:12px;color:#8696a0;margin-bottom:8px">DP - Emoji Select Karo</p><div style="display:flex;gap:8px;font-size:26px;margin-bottom:12px"><span onclick="pickDP('😎')">😎</span><span onclick="pickDP('🔥')">🔥</span><span onclick="pickDP('👑')">👑</span><span onclick="pickDP('🌹')">🌹</span><span onclick="pickDP('⚡')">⚡</span><span onclick="pickDP('🦁')">🦁</span><span onclick="pickDP('💎')">💎</span></div><div style="display:flex;gap:8px"><button class="btnMain" onclick="saveProfile()">Save</button><button class="btnSec" onclick="document.getElementById('editProfileModal').classList.add('hidden')">Close</button></div></div></div>
-</div>
-<script type="module" src="app.js"></script>
+<script>
+function showMsg(text,type){
+  var m=document.getElementById("msg"); if(!m) return alert(text);
+  m.className=""; m.id="msg"; m.classList.add(type); m.innerText=text; m.style.display="block";
+}
+function togglePass(){
+  var p=document.getElementById("password"); var e=document.getElementById("eyeBtn");
+  if(p.type==="password"){ p.type="text"; e.innerText="🙈"; } else { p.type="password"; e.innerText="👁️"; }
+}
+function getUsers(){ try{ return JSON.parse(localStorage.getItem("cloq_users")||"{}"); }catch(e){ return {}; } }
+function saveUsers(u){ localStorage.setItem("cloq_users", JSON.stringify(u)); }
+function goHome(name,email){
+  localStorage.setItem("cloq_login", JSON.stringify({name:name,email:email}));
+  document.getElementById("loginPage").classList.add("hidden");
+  document.getElementById("homePage").classList.remove("hidden");
+  document.getElementById("setName").innerText=name||"@user";
+  document.getElementById("setEmail").innerText=email||"";
+  document.getElementById("myAvatar").innerText=(name||"A").charAt(0).toUpperCase();
+  document.getElementById("setAvatar").innerText=(name||"A").charAt(0).toUpperCase();
+  renderChats();
+}
+function validate(){
+  var e=document.getElementById("email").value.trim();
+  var p=document.getElementById("password").value;
+  if(!e || !e.includes("@") || !e.includes(".")){ showMsg("❌ Please enter a valid Email - like abc@gmail.com","err"); return null; }
+  if(!p || p.length<6){ showMsg("❌ Password is too short - Use 6 or more characters","err"); return null; }
+  return {e:e,p:p};
+}
+window.doSignup=function(){
+  var v=validate(); if(!v) return;
+  var name=document.getElementById("usernameInput").value.trim() || v.e.split("@")[0];
+  var b=document.getElementById("signupBtn"); b.disabled=true; b.innerText="⏳ Creating...";
+  showMsg("⏳ Creating your account, please wait...","load");
+  setTimeout(function(){
+    var users=getUsers();
+    if(users[v.e.toLowerCase()]){ showMsg("❌ This Email is already registered. Please press Login.","err"); b.disabled=false; b.innerText="✨ Sign Up - New Account"; return; }
+    users[v.e.toLowerCase()]={name:name,pass:v.p}; saveUsers(users);
+    showMsg("✅ Account created! Opening CLOQ...","ok");
+    setTimeout(function(){ goHome(name,v.e); b.disabled=false; b.innerText="✨ Sign Up - New Account"; },600);
+  },600);
+};
+window.doLogin=function(){
+  var v=validate(); if(!v) return;
+  var b=document.getElementById("loginBtn"); b.disabled=true; b.innerText="⏳ Logging in...";
+  showMsg("⏳ Checking your Email and Password...","load");
+  setTimeout(function(){
+    var users=getUsers(); var u=users[v.e.toLowerCase()];
+    if(!u){ showMsg("❌ No account found with this Email. Please press Sign Up first.","err"); b.disabled=false; b.innerText="Login"; return; }
+    if(u.pass!==v.p){ showMsg("❌ Wrong Password. Tap 👁️ to check your password, then try again.","err"); b.disabled=false; b.innerText="Login"; return; }
+    showMsg("✅ Welcome back! Opening CLOQ...","ok");
+    setTimeout(function(){ goHome(u.name,v.e); b.disabled=false; b.innerText="Login"; },600);
+  },600);
+};
+window.acceptAgreement=function(){
+  var c=document.getElementById("agreeCheck"); if(!c.checked){ alert("Please tick - I agree to CLOQ Rules"); return; }
+  localStorage.setItem("cloq_agree","yes"); document.getElementById("agreement").classList.add("hidden");
+};
+window.toggleMainMenu=function(){ document.getElementById("mainMenu").classList.toggle("hidden"); };
+window.openSettings=function(){ document.getElementById("settingsPage").classList.remove("hidden"); };
+window.closeSettings=function(){ document.getElementById("settingsPage").classList.add("hidden"); };
+window.openAddContact=function(){ document.getElementById("addContactModal").classList.remove("hidden"); };
+window.closeAddContact=function(){ document.getElementById("addContactModal").classList.add("hidden"); };
+window.setTab=function(btn){ document.querySelectorAll(".tabs button").forEach(function(b){b.classList.remove("active")}); btn.classList.add("active"); };
+window.showSection=function(name,btn){ document.querySelectorAll(".bottomNav button").forEach(function(b){b.classList.remove("active")}); if(btn) btn.classList.add("active"); if(name!=="chats") alert(name.charAt(0).toUpperCase()+name.slice(1)+" - Coming soon, Chats are ready!"); };
+window.logout=function(){ localStorage.removeItem("cloq_login"); location.reload(); };
+window.switchAccount=function(){ localStorage.removeItem("cloq_login"); location.reload(); };
+function getChats(){ try{ return JSON.parse(localStorage.getItem("cloq_chats")||"[]"); }catch(e){ return []; } }
+function renderChats(){
+  var list=document.getElementById("mainList"); var chats=getChats();
+  if(chats.length===0){
+    chats=[{name:"General Group",last:"Welcome to CLOQ! Say Hi 👋",icon:"🌍"},{name:"CLOQ Support",last:"Need help? Message here",icon:"💬"}];
+    localStorage.setItem("cloq_chats",JSON.stringify(chats));
+  }
+  list.innerHTML="";
+  chats.forEach(function(c){
+    var d=document.createElement("div"); d.className="chatItem";
+    d.innerHTML='<div class="avatar">'+c.icon+'</div><div style="flex:1"><b>'+c.name+'</b><p>'+c.last+'</p></div><span style="color:#00a884">›</span>';
+    d.onclick=function(){ openChat(c.name); }; list.appendChild(d);
+  });
+}
+window.createChat=function(){
+  var n=document.getElementById("searchUserInput").value.trim(); if(!n){ alert("Please enter a name"); return; }
+  var chats=getChats(); chats.unshift({name:n,last:"Say Hi 👋",icon:n.charAt(0).toUpperCase()}); localStorage.setItem("cloq_chats",JSON.stringify(chats));
+  closeAddContact(); renderChats(); openChat(n);
+};
+window.createGroup=function(){
+  var n=document.getElementById("newGroupName").value.trim(); if(!n){ alert("Please enter group name"); return; }
+  var chats=getChats(); chats.unshift({name:"👥 "+n,last:"Group created",icon:"👥"}); localStorage.setItem("cloq_chats",JSON.stringify(chats));
+  closeAddContact(); renderChats(); openChat("👥 "+n);
+};
+var currentChat="General Group";
+window.openChat=function(name){ currentChat=name; document.getElementById("roomName").innerHTML=name+" <small>Online • Luxury</small>"; document.getElementById("chatAvatar").innerText=name.charAt(0).toUpperCase(); document.getElementById("chatView").classList.remove("hidden"); renderMsgs(); };
+window.closeChat=function(){ document.getElementById("chatView").classList.add("hidden"); };
+function getMsgs(){ try{ return JSON.parse(localStorage.getItem("cloq_msgs_"+currentChat)||"[]"); }catch(e){ return []; } }
+function renderMsgs(){
+  var box=document.getElementById("chatBox"); var msgs=getMsgs();
+  if(msgs.length===0){ msgs=[{t:"Welcome to CLOQ! You can chat in any language - English, Urdu, Punjabi, Hindi.",mine:false,n:"CLOQ"}]; }
+  box.innerHTML=""; msgs.forEach(function(m){
+    var d=document.createElement("div"); d.className="msgBubble"+(m.mine?" mine":"");
+    d.innerHTML="<small>"+(m.mine?"You":m.n)+"</small>"+m.t; box.appendChild(d);
+  }); box.scrollTop=box.scrollHeight;
+}
+window.sendMsg=function(){
+  var inp=document.getElementById("msgInput"); var t=inp.value.trim(); if(!t) return;
+  var msgs=getMsgs(); msgs.push({t:t,mine:true,n:"You"}); localStorage.setItem("cloq_msgs_"+currentChat, JSON.stringify(msgs));
+  inp.value=""; renderMsgs();
+  var chats=getChats(); var f=chats.find(function(c){return c.name===currentChat}); if(f){ f.last=t; localStorage.setItem("cloq_chats",JSON.stringify(chats)); renderChats(); }
+};
+window.uploadFile=function(){ alert("Photo upload - Coming soon!"); };
+setTimeout(function(){ document.getElementById("splash").style.display="none";
+  var login=localStorage.getItem("cloq_login");
+  if(login){ try{ var u=JSON.parse(login); goHome(u.name,u.email); }catch(e){} }
+  if(!localStorage.getItem("cloq_agree")) document.getElementById("agreement").classList.remove("hidden");
+},1500);
+</script>
 </body>
 </html>
