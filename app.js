@@ -1,15 +1,16 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, getDoc, getDocs, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// TUMHARI FIREBASE KEYS - DAAL DI GAYI HAIN
 const firebaseConfig = {
-  apiKey: "YAHAN APNI API KEY DALO",
-  authDomain: "cloq-app.firebaseapp.com",
-  projectId: "cloq-app",
-  storageBucket: "cloq-app.appspot.com",
-  messagingSenderId: "YAHAN SENDER ID DALO",
-  appId: "YAHAN APP ID DALO"
+  apiKey: "AIzaSyB7zPYGBy0sRrqqZ_WjxQikiEhGHESDHLM",
+  authDomain: "cloq-ba2e7.firebaseapp.com",
+  projectId: "cloq-ba2e7",
+  storageBucket: "cloq-ba2e7.firebasestorage.app",
+  messagingSenderId: "57829575029",
+  appId: "1:57829575029:web:b9c1d99ab47eed63b56b3c",
+  measurementId: "G-F7QCXTYBNM"
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
