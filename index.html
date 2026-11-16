@@ -2,920 +2,417 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CLOQ - Luxury Chat</title>
-<link rel="icon" href="icon.jpg">
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif}
-body{background:#0b141a;color:#e9edef;overflow:hidden;height:100dvh}
-button{cursor:pointer;border:none;outline:none}input,select,textarea{outline:none}
-.hidden{display:none!important}
-.page{height:100dvh;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:#0b141a;position:relative;overflow:hidden}
-.liveIconWrap{position:relative;width:118px;height:118px;display:flex;align-items:center;justify-content:center}
-.liveIconWrap::before{content:"";position:absolute;inset:-8px;border-radius:38px;border:2px solid #00ff8855;animation:spinRing 4s linear infinite}
-.liveIconWrap::after{content:"";position:absolute;inset:0;border-radius:32px;background:#00a88433;filter:blur(20px);animation:breath 2s ease-in-out infinite}
-@keyframes spinRing{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes breath{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}}
-.liveIcon{width:110px;height:110px;border-radius:32px;object-fit:cover;position:relative;z-index:2;box-shadow:0 10px 40px #00a88466,0 0 0 2px #ffd70066;animation:breath2 2s ease-in-out infinite}
-@keyframes breath2{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
-.liveIconSmall{width:80px;height:80px;border-radius:24px;object-fit:cover;box-shadow:0 8px 30px #00a88466,0 0 0 2px #ffd70066}
-#splash{position:fixed;inset:0;background:#0b141a;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-#agreement{position:fixed;inset:0;background:#000000b8;z-index:199;display:flex;align-items:flex-end;justify-content:center}
-.agreeBox{background:#233138;width:100%;max-width:480px;border-radius:24px 24px 0 0;padding:24px}
-#loginPage{justify-content:center;padding:24px}
-#loginPage input{width:100%;background:#202c33;border:none;padding:14px 16px;border-radius:12px;color:#fff;font-size:15px;margin-bottom:10px}
-.btnMain{width:100%;background:#00a884;color:#fff;padding:14px;border-radius:30px;font-size:16px;font-weight:700;margin-top:6px}
-.btnMain:disabled{opacity:.6}
-.btnSec{width:100%;background:#202c33;color:#00a884;padding:13px;border-radius:30px;font-size:15px;font-weight:600;margin-top:10px}
-#msg{text-align:center;font-size:14px;min-height:22px;margin:6px 0;padding:8px;border-radius:10px;display:none}
-#msg.err{display:block;background:#ff3b3022;color:#ff8a8a;border:1px solid #ff3b3055}
-#msg.ok{display:block;background:#00a88422;color:#00ff88;border:1px solid #00a88455}
-#msg.load{display:block;background:#202c33;color:#ffd700;border:1px solid #ffd70055}
-.header{background:#202c33;padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
-.header b{font-size:22px;letter-spacing:2px}.header b span{color:#00a884}
-.hIcons{display:flex;gap:16px;font-size:20px;align-items:center}.hIcons div{width:32px;height:32px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
-.tabs{display:flex;gap:8px;padding:10px 12px;overflow-x:auto;white-space:nowrap}.tabs button{background:#202c33;color:#aebac1;padding:7px 14px;border-radius:20px;font-size:13px}.tabs button.active{background:#00a88433;color:#00ff88}
-.list{flex:1;overflow-y:auto;padding-bottom:85px}.chatItem{display:flex;gap:12px;padding:12px 14px;align-items:center;border-bottom:1px solid #222d34;cursor:pointer}
-.avatar{width:48px;height:48px;min-width:48px;border-radius:50%;background:linear-gradient(135deg,#00a884,#025c48);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;overflow:hidden}
-.chatItem p{font-size:13px;color:#8696a0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:270px}
-.fab{position:absolute;right:16px;bottom:88px;width:56px;height:56px;border-radius:50%;background:#00a884;color:#fff;font-size:26px;z-index:10}
-.bottomNav{position:absolute;bottom:0;left:0;right:0;background:#202c33;display:flex;justify-content:space-around;padding:8px 0 10px;border-top:1px solid #2a3942;z-index:20}.bottomNav button{background:none;color:#8696a0;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}.bottomNav button.active{color:#00ff88}
-#chatView{position:absolute;inset:0;background:#0b141a;z-index:30;display:flex;flex-direction:column}.chatHead{background:#202c33;padding:10px;display:flex;align-items:center;gap:10px}.chatHead h3{flex:1;font-size:16px}.chatHead h3 small{display:block;font-size:11px;color:#00ff88;font-weight:400}.chatHead button{background:none;color:#fff;font-size:20px}
-#chatBox{flex:1;overflow-y:auto;padding:12px}.msgBubble{max-width:82%;padding:8px 10px 6px;border-radius:12px;margin-bottom:8px;background:#202c33;font-size:15px;word-break:break-word}.msgBubble.mine{margin-left:auto;background:#005c4b}.msgBubble small{display:block;font-size:10px;color:#00ff88;margin-bottom:2px}
-.inputRow{display:flex;gap:8px;padding:8px;background:#0b141a;align-items:center}.inputRow input{flex:1;background:#202c33;border:none;padding:12px 14px;border-radius:24px;color:#fff;font-size:15px}.iconBtn{width:44px;height:44px;border-radius:50%;background:#202c33;color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}.sendBtn{background:#00a884!important}
-.menu{position:absolute;top:52px;right:10px;background:#233138;border-radius:12px;width:240px;z-index:40;overflow:hidden;box-shadow:0 10px 30px #000a}.menu button{display:block;width:100%;text-align:left;background:none;color:#e9edef;padding:13px 16px;font-size:14px;border-bottom:1px solid #ffffff0d}
-.modal{position:fixed;inset:0;background:#000000a8;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px}.modalBox{background:#233138;width:100%;max-width:400px;border-radius:16px;padding:18px;max-height:85vh;overflow-y:auto}.modalBox input,.modalBox select,.modalBox textarea{width:100%;background:#0b141a;border:none;padding:12px;border-radius:10px;color:#fff;margin-bottom:10px;font-size:14px}
-.setPage{position:absolute;inset:0;background:#0b141a;z-index:60;display:flex;flex-direction:column;overflow-y:auto}.setHead{background:#202c33;padding:12px;display:flex;gap:12px;align-items:center;font-size:18px;font-weight:700}.setHead button{background:none;color:#fff;font-size:22px}.profileCard{background:#202c33;margin:14px;border-radius:14px;padding:16px;display:flex;gap:14px;align-items:center}.setItem{background:#202c33;margin:0 14px 8px;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;font-size:14px}.setItem small{color:#8696a0;display:block;font-size:11px}
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLOQ - WhatsApp Jaisa</title>
 </head>
 <body>
-<div id="splash"><div class="liveIconWrap"><img src="icon.jpg" class="liveIcon"></div><h1 style="font-size:42px;letter-spacing:6px">CLOQ</h1><p style="color:#8696a0;font-size:13px">Luxury Chat • Rooms • Calls • Status</p><p style="color:#00a884;font-size:12px">Opening... Please wait</p></div>
-<div id="agreement" class="hidden"><div class="agreeBox"><div style="font-size:44px">🔒</div><h2>Welcome to CLOQ</h2><p style="color:#aebac1;font-size:13px;line-height:1.6;margin:8px 0 14px">By continuing, you agree to respect everyone, no abuse, no spam. CLOQ is a safe luxury space.</p><label style="display:flex;gap:10px;font-size:13px"><input type="checkbox" id="agreeCheck"> I agree to CLOQ Rules</label><button class="btnMain" onclick="acceptAgreement()">Agree & Continue →</button></div></div>
-<div id="loginPage" class="page"><div style="text-align:center"><img src="icon.jpg" class="liveIconSmall" style="margin:0 auto 10px"><h1 style="font-size:36px;letter-spacing:5px">CLOQ</h1><p style="color:#8696a0;font-size:13px;margin-bottom:22px">Luxury Chat • Rooms • Calls • Status</p></div>
-<input id="usernameInput" placeholder="Your Name - e.g. Waqas">
-<input id="email" type="email" placeholder="Email - e.g. abc@gmail.com">
-<div style="position:relative;margin-bottom:10px">
-<input id="password" type="password" placeholder="Password (6+ characters)" style="padding-right:48px;margin:0">
-<span id="eyeBtn" onclick="togglePass()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:20px;cursor:pointer">👁️</span>
-</div>
-<div id="msg"></div>
-<button class="btnMain" id="signupBtn" onclick="doSignup()">✨ Sign Up - New Account</button>
-<button class="btnSec" id="loginBtn" onclick="doLogin()">Login</button>
-<p style="text-align:center;color:#8696a0;font-size:11px;margin-top:18px">Login once, CLOQ will auto-open next time<br>Chat in any language - English, Urdu, Punjabi, Hindi</p></div>
-<div id="homePage" class="page hidden">
-<div class="header"><b>CLOQ<span>.</span></b><div class="hIcons"><span onclick="alert('Search coming soon')">🔍</span><span onclick="toggleMainMenu()">⋮</span><div id="myAvatar" onclick="openSettings()">A</div></div>
-<div id="mainMenu" class="menu hidden"><button onclick="openAddContact()">➕ New Chat</button><button onclick="openSettings()">⚙️ Settings</button><button onclick="switchAccount()">🔄 Switch Account</button><button onclick="logout()">🚪 Logout</button></div></div>
-<div class="tabs"><button class="active" onclick="setTab(this)">All</button><button onclick="setTab(this)">Unread</button><button onclick="setTab(this)">⭐ Favourites</button><button onclick="setTab(this)">Groups</button></div>
-<div class="list" id="mainList"></div><button class="fab" onclick="openAddContact()">＋</button>
-<div class="bottomNav"><button class="active" onclick="showSection('chats',this)"><span style="font-size:22px">💬</span>Chats</button><button onclick="showSection('status',this)"><span style="font-size:22px">🔄</span>Updates</button><button onclick="showSection('rooms',this)"><span style="font-size:22px">🏠</span>Rooms</button><button onclick="showSection('calls',this)"><span style="font-size:22px">📞</span>Calls</button></div>
 
-<div id="chatView" class="hidden"><div class="chatHead"><button onclick="closeChat()">←</button><div class="avatar" id="chatAvatar">G</div><h3 id="roomName">General Group <small>Online • Luxury</small></h3><button onclick="alert('Calling...')">📞</button></div><div id="chatBox"></div><div class="inputRow"><button class="iconBtn" onclick="document.getElementById('fileInput').click()">📎</button><input id="fileInput" type="file" class="hidden" onchange="uploadFile()"><input id="msgInput" placeholder="Message in any language..." onkeydown="if(event.key==='Enter') sendMsg()"><button class="iconBtn sendBtn" onclick="sendMsg()">➤</button></div></div>
-
-<div id="addContactModal" class="modal hidden"><div class="modalBox"><h3>➕ New Chat</h3><input id="searchUserInput" placeholder="Enter name - e.g. Ali"><div style="display:flex;gap:8px"><button class="btnMain" onclick="createChat()">Start Chat</button><button class="btnSec" onclick="closeAddContact()">Close</button></div><hr style="margin:14px 0;border-color:#ffffff22"><h3>👥 New Group</h3><input id="newGroupName" placeholder="Group name"><button class="btnMain" onclick="createGroup()">Create Group</button></div></div>
-
-<div id="settingsPage" class="setPage hidden"><div class="setHead"><button onclick="closeSettings()">←</button> Settings</div><div class="profileCard"><div class="avatar" style="width:64px;height:64px;font-size:28px" id="setAvatar">A</div><div style="flex:1"><b id="setName">@username</b><p id="setBio" style="color:#8696a0;font-size:13px">Hey there! I am using CLOQ.</p><p id="setEmail" style="color:#8696a0;font-size:11px"></p></div></div><div class="setItem"><div>🔔 Notifications</div><div>ON</div></div><div class="setItem"><div>🌍 App Language</div><div>English</div></div><div class="setItem"><div>💬 Chat Language</div><div>Any Language</div></div><div class="setItem" onclick="logout()" style="color:#ff6b6b;justify-content:center">🚪 Logout</div><p style="text-align:center;color:#8696a0;font-size:11px;padding:10px">CLOQ v3.2 • Secure</p></div>
-</div>
-<script>
-function showMsg(text,type){
-  var m=document.getElementById("msg"); if(!m) return alert(text);
-  m.className=""; m.id="msg"; m.classList.add(type); m.innerText=text; m.style.display="block";
-}
-function togglePass(){
-  var p=document.getElementById("password"); var e=document.getElementById("eyeBtn");
-  if(p.type==="password"){ p.type="text"; e.innerText="🙈"; } else { p.type="password"; e.innerText="👁️"; }
-}
-function getUsers(){ try{ return JSON.parse(localStorage.getItem("cloq_users")||"{}"); }catch(e){ return {}; } }
-function saveUsers(u){ localStorage.setItem("cloq_users", JSON.stringify(u)); }
-function goHome(name,email){
-  localStorage.setItem("cloq_login", JSON.stringify({name:name,email:email}));
-  document.getElementById("loginPage").classList.add("hidden");
-  document.getElementById("homePage").classList.remove("hidden");
-  document.getElementById("setName").innerText=name||"@user";
-  document.getElementById("setEmail").innerText=email||"";
-  document.getElementById("myAvatar").innerText=(name||"A").charAt(0).toUpperCase();
-  document.getElementById("setAvatar").innerText=(name||"A").charAt(0).toUpperCase();
-  renderChats();
-}
-function validate(){
-  var e=document.getElementById("email").value.trim();
-  var p=document.getElementById("password").value;
-  if(!e || !e.includes("@") || !e.includes(".")){ showMsg("❌ Please enter a valid Email - like abc@gmail.com","err"); return null; }
-  if(!p || p.length<6){ showMsg("❌ Password is too short - Use 6 or more characters","err"); return null; }
-  return {e:e,p:p};
-}
-window.doSignup=function(){
-  var v=validate(); if(!v) return;
-  var name=document.getElementById("usernameInput").value.trim() || v.e.split("@")[0];
-  var b=document.getElementById("signupBtn"); b.disabled=true; b.innerText="⏳ Creating...";
-  showMsg("⏳ Creating your account, please wait...","load");
-  setTimeout(function(){
-    var users=getUsers();
-    if(users[v.e.toLowerCase()]){ showMsg("❌ This Email is already registered. Please press Login.","err"); b.disabled=false; b.innerText="✨ Sign Up - New Account"; return; }
-    users[v.e.toLowerCase()]={name:name,pass:v.p}; saveUsers(users);
-    showMsg("✅ Account created! Opening CLOQ...","ok");
-    setTimeout(function(){ goHome(name,v.e); b.disabled=false; b.innerText="✨ Sign Up - New Account"; },600);
-  },600);
-};
-window.doLogin=function(){
-  var v=validate(); if(!v) return;
-  var b=document.getElementById("loginBtn"); b.disabled=true; b.innerText="⏳ Logging in...";
-  showMsg("⏳ Checking your Email and Password...","load");
-  setTimeout(function(){
-    var users=getUsers(); var u=users[v.e.toLowerCase()];
-    if(!u){ showMsg("❌ No account found with this Email. Please press Sign Up first.","err"); b.disabled=false; b.innerText="Login"; return; }
-    if(u.pass!==v.p){ showMsg("❌ Wrong Password. Tap 👁️ to check your password, then try again.","err"); b.disabled=false; b.innerText="Login"; return; }
-    showMsg("✅ Welcome back! Opening CLOQ...","ok");
-    setTimeout(function(){ goHome(u.name,v.e); b.disabled=false; b.innerText="Login"; },600);
-  },600);
-};
-window.acceptAgreement=function(){
-  var c=document.getElementById("agreeCheck"); if(!c.checked){ alert("Please tick - I agree to CLOQ Rules"); return; }
-  localStorage.setItem("cloq_agree","yes"); document.getElementById("agreement").classList.add("hidden");
-};
-window.toggleMainMenu=function(){ document.getElementById("mainMenu").classList.toggle("hidden"); };
-window.openSettings=function(){ document.getElementById("settingsPage").classList.remove("hidden"); };
-window.closeSettings=function(){ document.getElementById("settingsPage").classList.add("hidden"); };
-window.openAddContact=function(){ document.getElementById("addContactModal").classList.remove("hidden"); };
-window.closeAddContact=function(){ document.getElementById("addContactModal").classList.add("hidden"); };
-window.setTab=function(btn){ document.querySelectorAll(".tabs button").forEach(function(b){b.classList.remove("active")}); btn.classList.add("active"); };
-window.showSection=function(name,btn){ document.querySelectorAll(".bottomNav button").forEach(function(b){b.classList.remove("active")}); if(btn) btn.classList.add("active"); if(name!=="chats") alert(name.charAt(0).toUpperCase()+name.slice(1)+" - Coming soon, Chats are ready!"); };
-window.logout=function(){ localStorage.removeItem("cloq_login"); location.reload(); };
-window.switchAccount=function(){ localStorage.removeItem("cloq_login"); location.reload(); };
-function getChats(){ try{ return JSON.parse(localStorage.getItem("cloq_chats")||"[]"); }catch(e){ return []; } }
-function renderChats(){
-  var list=document.getElementById("mainList"); var chats=getChats();
-  if(chats.length===0){
-    chats=[{name:"General Group",last:"Welcome to CLOQ! Say Hi 👋",icon:"🌍"},{name:"CLOQ Support",last:"Need help? Message here",icon:"💬"}];
-    localStorage.setItem("cloq_chats",JSON.stringify(chats));
-  }
-  list.innerHTML="";
-  chats.forEach(function(c){
-    var d=document.createElement("div"); d.className="chatItem";
-    d.innerHTML='<div class="avatar">'+c.icon+'</div><div style="flex:1"><b>'+c.name+'</b><p>'+c.last+'</p></div><span style="color:#00a884">›</span>';
-    d.onclick=function(){ openChat(c.name); }; list.appendChild(d);
-  });
-}
-window.createChat=function(){
-  var n=document.getElementById("searchUserInput").value.trim(); if(!n){ alert("Please enter a name"); return; }
-  var chats=getChats(); chats.unshift({name:n,last:"Say Hi 👋",icon:n.charAt(0).toUpperCase()}); localStorage.setItem("cloq_chats",JSON.stringify(chats));
-  closeAddContact(); renderChats(); openChat(n);
-};
-window.createGroup=function(){
-  var n=document.getElementById("newGroupName").value.trim(); if(!n){ alert("Please enter group name"); return; }
-  var chats=getChats(); chats.unshift({name:"👥 "+n,last:"Group created",icon:"👥"}); localStorage.setItem("cloq_chats",JSON.stringify(chats));
-  closeAddContact(); renderChats(); openChat("👥 "+n);
-};
-var currentChat="General Group";
-window.openChat=function(name){ currentChat=name; document.getElementById("roomName").innerHTML=name+" <small>Online • Luxury</small>"; document.getElementById("chatAvatar").innerText=name.charAt(0).toUpperCase(); document.getElementById("chatView").classList.remove("hidden"); renderMsgs(); };
-window.closeChat=function(){ document.getElementById("chatView").classList.add("hidden"); };
-function getMsgs(){ try{ return JSON.parse(localStorage.getItem("cloq_msgs_"+currentChat)||"[]"); }catch(e){ return []; } }
-function renderMsgs(){
-  var box=document.getElementById("chatBox"); var msgs=getMsgs();
-  if(msgs.length===0){ msgs=[{t:"Welcome to CLOQ! You can chat in any language - English, Urdu, Punjabi, Hindi.",mine:false,n:"CLOQ"}]; }
-  box.innerHTML=""; msgs.forEach(function(m){
-    var d=document.createElement("div"); d.className="msgBubble"+(m.mine?" mine":"");
-    d.innerHTML="<small>"+(m.mine?"You":m.n)+"</small>"+m.t; box.appendChild(d);
-  }); box.scrollTop=box.scrollHeight;
-}
-window.sendMsg=function(){
-  var inp=document.getElementById("msgInput"); var t=inp.value.trim(); if(!t) return;
-  var msgs=getMsgs(); msgs.push({t:t,mine:true,n:"You"}); localStorage.setItem("cloq_msgs_"+currentChat, JSON.stringify(msgs));
-  inp.value=""; renderMsgs();
-  var chats=getChats(); var f=chats.find(function(c){return c.name===currentChat}); if(f){ f.last=t; localStorage.setItem("cloq_chats",JSON.stringify(chats)); renderChats(); }
-};
-window.uploadFile=function(){ alert("Photo upload - Coming soon!"); };
-setTimeout(function(){ document.getElementById("splash").style.display="none";
-  var login=localStorage.getItem("cloq_login");
-  if(login){ try{ var u=JSON.parse(login); goHome(u.name,u.email); }catch(e){} }
-  if(!localStorage.getItem("cloq_agree")) document.getElementById("agreement").classList.remove("hidden");
-},1500);
-</script>
-  <!-- ===== CLOQ V4 FEATURES ===== -->
-<div id="roomsPage" class="hidden" style="position:absolute;inset:0;background:#0b141a;z-index:65;display:flex;flex-direction:column">
-<div class="setHead"><button onclick="closeRooms()">←</button> 🏠 Rooms <span style="flex:1"></span><button onclick="openCreateRoom()" style="background:#00a884;padding:6px 12px;border-radius:20px;font-size:13px">+ New Room</button></div>
-<div style="padding:10px;display:flex;gap:8px"><input id="roomSearch" placeholder="Search rooms..." style="flex:1;background:#202c33;border:none;padding:11px;border-radius:20px;color:#fff" oninput="renderRooms()"><select id="roomFilter" onchange="renderRooms()" style="background:#202c33;color:#fff;border:none;padding:10px;border-radius:20px"><option value="all">All Rooms</option><option value="public">Public</option><option value="private">Private</option></select></div>
-<div id="roomsList" style="flex:1;overflow-y:auto;padding:0 10px 20px"></div>
+<!-- ===== LOGIN PAGE ===== -->
+<div id="loginPage" style="min-height:100vh;background:#0b141a;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center">
+  <div style="font-size:60px">💬</div>
+  <h1 style="font-size:36px;margin:10px 0 0">CLOQ</h1>
+  <p style="color:#8696a0;margin:4px 0 20px">WhatsApp Jaisa - Apna Style</p>
+  <div style="background:#111b21;padding:20px;border-radius:20px;width:100%;max-width:340px">
+    <input id="loginName" placeholder="Apna Naam likho" style="width:100%;background:#202c33;border:none;color:#fff;padding:14px;border-radius:12px;margin-bottom:10px;box-sizing:border-box;outline:none">
+    <input id="loginEmail" placeholder="Email likho" style="width:100%;background:#202c33;border:none;color:#fff;padding:14px;border-radius:12px;margin-bottom:10px;box-sizing:border-box;outline:none">
+    <div style="display:flex;align-items:center;gap:0;background:#202c33;border-radius:12px;overflow:hidden;margin-bottom:12px">
+      <input id="loginPin" placeholder="4 Digit PIN banao - e.g. 1234" type="password" style="flex:1;background:transparent;border:none;color:#fff;padding:14px;outline:none;min-width:0;text-align:center;letter-spacing:4px">
+      <button onclick="togglePin('loginPin',this)" style="width:52px;height:52px;background:transparent;border:none;font-size:22px;cursor:pointer">👁️</button>
+    </div>
+    <button onclick="doLogin()" style="width:100%;background:#00a884;color:#fff;border:none;padding:14px;border-radius:30px;font-weight:800;font-size:16px;cursor:pointer">Login / Continue</button>
+    <p style="font-size:11px;color:#8696a0;margin-top:10px">PIN yaad rakho, isi se Lock khulega</p>
+  </div>
 </div>
 
-<div id="createRoomModal" class="modal hidden"><div class="modalBox"><h3>🏠 Create Room</h3><input id="roomNameInput" placeholder="Room Name - e.g. Lahore Friends"><input id="roomTopicInput" placeholder="Topic - e.g. Cricket, Study"><select id="roomTypeInput"><option value="public">🌍 Public - Anyone can join</option><option value="private">🔒 Private - PIN needed</option></select><input id="roomPinInput" placeholder="Room PIN (only for Private) - e.g. 1234"><div style="display:flex;gap:8px"><button class="btnMain" onclick="createRoomNow()">Create Room</button><button class="btnSec" onclick="document.getElementById('createRoomModal').classList.add('hidden')">Cancel</button></div></div></div>
+<!-- ===== HOME PAGE ===== -->
+<div id="homePage" style="display:none;min-height:100vh;background:#0b141a;color:#fff;max-width:480px;margin:0 auto">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#111b21;position:sticky;top:0;z-index:10">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div id="headerAvatar" onclick="openProfile()" style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#00a884,#ffd700);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;cursor:pointer;overflow:hidden">W</div>
+      <div><div style="font-weight:800;font-size:17px"><span id="headerName">Welcome CLOQ</span> <span id="headerVip"></span></div><div id="headerStatus" style="font-size:11px;color:#00e676">● Online</div></div>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button onclick="showRooms()" style="background:#202c33;border:none;color:#fff;padding:8px 12px;border-radius:20px;cursor:pointer">🏠 Rooms</button>
+      <button onclick="openSettings()" style="background:#202c33;border:none;color:#fff;padding:8px 12px;border-radius:50%;cursor:pointer">⋮</button>
+    </div>
+  </div>
 
-<div id="vaultModal" class="modal hidden"><div class="modalBox"><h3>🔐 Secret Vault</h3><p style="color:#aebac1;font-size:12px">Your private notes. Only you can see.</p><textarea id="vaultText" placeholder="Write secret note here..." rows="4"></textarea><button class="btnMain" onclick="saveVault()">Save to Vault</button><button class="btnSec" onclick="document.getElementById('vaultModal').classList.add('hidden')">Close</button><p id="vaultSaved" style="color:#00ff88;font-size:12px;margin-top:8px"></p></div></div>
+  <!-- Tabs -->
+  <div style="display:flex;background:#111b21;padding:0 10px;gap:4px">
+    <button onclick="showTab('chats')" id="tabChats" style="flex:1;background:none;border:none;color:#00e676;padding:12px;font-weight:800;border-bottom:3px solid #00e676;cursor:pointer">Chats</button>
+    <button onclick="showTab('rooms')" id="tabRooms" style="flex:1;background:none;border:none;color:#8696a0;padding:12px;font-weight:800;cursor:pointer">Rooms</button>
+    <button onclick="showTab('settings')" id="tabSettings" style="flex:1;background:none;border:none;color:#8696a0;padding:12px;font-weight:800;cursor:pointer">Settings</button>
+  </div>
 
-<div id="fakeChatModal" class="modal hidden"><div class="modalBox"><h3>🎭 Fake Chat Creator</h3><input id="fakeName" placeholder="Fake person name - e.g. Ali"><input id="fakeMsg" placeholder="Fake message - e.g. Bhai 5000 bhej de"><button class="btnMain" onclick="createFakeChat()">Create Fake Chat</button><button class="btnSec" onclick="document.getElementById('fakeChatModal').classList.add('hidden')">Close</button></div></div>
+  <!-- Chats List -->
+  <div id="chatsTab">
+    <div onclick="openChat('Ayesha')" style="display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid #222;cursor:pointer">
+      <div style="width:50px;height:50px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:22px">😊</div>
+      <div style="flex:1"><div style="display:flex;justify-content:space-between"><b>Ayesha</b><span style="font-size:11px;color:#8696a0">2:03 PM</span></div><div style="font-size:13px;color:#8696a0">Salam! Kaisi ho? ✓✓</div></div>
+    </div>
+    <div onclick="openChat('Ali')" style="display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid #222;cursor:pointer">
+      <div style="width:50px;height:50px;border-radius:50%;background:#7f3dff;display:flex;align-items:center;justify-content:center;font-size:22px">😎</div>
+      <div style="flex:1"><div style="display:flex;justify-content:space-between"><b>Ali</b><span style="font-size:11px;color:#8696a0">1:45 PM</span></div><div style="font-size:13px;color:#8696a0">Room me aao ✓✓</div></div>
+    </div>
+    <div onclick="openChat('Family Group')" style="display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid #222;cursor:pointer">
+      <div style="width:50px;height:50px;border-radius:50%;background:#ff8c00;display:flex;align-items:center;justify-content:center;font-size:22px">👨‍👩‍👧</div>
+      <div style="flex:1"><div style="display:flex;justify-content:space-between"><b>Family Group</b><span style="font-size:11px;color:#8696a0">12:30 PM</span></div><div style="font-size:13px;color:#8696a0">Mama: Khana kha liya?</div></div>
+    </div>
+    <p style="text-align:center;color:#8696a0;font-size:12px;padding:20px">Kisi chat pe click karo - andar Tick + Time sab aayega</p>
+  </div>
 
-<div id="lockModal" class="modal hidden"><div class="modalBox" style="text-align:center"><h3>🔒 CLOQ Locked</h3><p style="color:#aebac1;font-size:13px">Enter your PIN to unlock</p><input id="lockPinInput" type="password" placeholder="PIN - e.g. 1234" style="text-align:center;font-size:20px;letter-spacing:8px"><button class="btnMain" onclick="unlockApp()">Unlock</button></div></div>
+  <!-- Rooms Tab -->
+  <div id="roomsTab" style="display:none;padding:16px">
+    <div id="roomsList"></div>
+    <button onclick="createRoom()" style="width:100%;background:#00a884;color:#fff;border:none;padding:14px;border-radius:30px;font-weight:800;cursor:pointer;margin-top:10px">+ Naya Room Banao</button>
+  </div>
 
-<script>
-// ===== V4 ROOMS + FEATURES =====
-function getRooms(){ try{return JSON.parse(localStorage.getItem("cloq_rooms")||"[]")}catch(e){return []} }
-function saveRooms(r){ localStorage.setItem("cloq_rooms",JSON.stringify(r)) }
-function seedRooms(){
-  if(getRooms().length===0){
-    saveRooms([
-      {name:"🌍 General Lounge",topic:"Everyone • Chat in any language",type:"public",pin:"",members:124,icon:"🌍"},
-      {name:"🏏 Cricket Fans Lahore",topic:"Cricket • PSL • Live",type:"public",pin:"",members:89,icon:"🏏"},
-      {name:"📚 Study Group",topic:"Study • Notes • Help",type:"public",pin:"",members:56,icon:"📚"},
-      {name:"💰 Earning Ideas",topic:"Online Earning • Business",type:"public",pin:"",members:210,icon:"💰"},
-      {name:"🎮 Gaming Squad",topic:"PUBG • Free Fire",type:"private",pin:"1234",members:34,icon:"🎮"},
-      {name:"🔒 VIP Lounge",topic:"VIP Only • PIN: 9999",type:"private",pin:"9999",members:12,icon:"👑"}
-    ]);
-  }
-}
-function renderRooms(){
-  seedRooms(); var q=(document.getElementById("roomSearch").value||"").toLowerCase();
-  var f=document.getElementById("roomFilter").value; var list=document.getElementById("roomsList");
-  var rooms=getRooms().filter(function(r){ return (f==="all"||r.type===f) && r.name.toLowerCase().includes(q) });
-  list.innerHTML="";
-  if(rooms.length===0) list.innerHTML='<p style="text-align:center;color:#8696a0;padding:20px">No rooms found. Create one!</p>';
-  rooms.forEach(function(r){
-    var d=document.createElement("div"); d.style.cssText="background:#202c33;margin-bottom:10px;border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer";
-    d.innerHTML='<div style="font-size:32px">'+r.icon+'</div><div style="flex:1"><b>'+r.name+'</b><p style="color:#8696a0;font-size:12px">'+r.topic+'</p><p style="color:#00a884;font-size:11px">👥 '+r.members+' members • '+(r.type==="public"?"🌍 Public":"🔒 Private")+'</p></div><button style="background:#00a884;color:#fff;padding:8px 14px;border-radius:20px;font-size:13px">Join</button>';
-    d.onclick=function(){ joinRoom(r) }; list.appendChild(d);
-  });
-}
-function openRooms(){ document.getElementById("roomsPage").classList.remove("hidden"); renderRooms(); }
-function closeRooms(){ document.getElementById("roomsPage").classList.add("hidden"); }
-function openCreateRoom(){ document.getElementById("createRoomModal").classList.remove("hidden"); }
-function createRoomNow(){
-  var n=document.getElementById("roomNameInput").value.trim(); if(!n){alert("Room name likho");return}
-  var rooms=getRooms(); rooms.unshift({name:n,topic:document.getElementById("roomTopicInput").value||"New Room",type:document.getElementById("roomTypeInput").value,pin:document.getElementById("roomPinInput").value||"",members:1,icon:"🏠"});
-  saveRooms(rooms); document.getElementById("createRoomModal").classList.add("hidden"); renderRooms(); alert("✅ Room ban gaya: "+n);
-}
-function joinRoom(r){
-  if(r.type==="private"){ var pin=prompt("🔒 Private Room hai. PIN dalo (Hint: Gaming=1234, VIP=9999)"); if(pin!==r.pin){ alert("❌ Wrong PIN"); return; } }
-  closeRooms(); openChat("🏠 "+r.name); 
-  setTimeout(function(){ var b=document.getElementById("chatBox"); if(b){ var d=document.createElement("div"); d.className="msgBubble"; d.innerHTML="<small>🏠 Room</small>Welcome to "+r.name+"! "+r.topic; b.appendChild(d); } },300);
-}
-// Override bottom nav - Rooms button now opens real Rooms
-var _oldShowSection = window.showSection;
-window.showSection = function(name,btn){
-  document.querySelectorAll(".bottomNav button").forEach(function(b){b.classList.remove("active")}); if(btn) btn.classList.add("active");
-  if(name==="rooms"){ openRooms(); return; }
-  if(name==="chats"){ return; }
-  if(name==="status"){ openStatusV4(); return; }
-  if(name==="calls"){ alert("📞 Calls - Coming in V5 with Firebase. Abhi Rooms + Chat ready hai!"); return; }
-};
-// ===== STATUS / STORY V4 =====
-function openStatusV4(){
-  var s=prompt("📸 Status lagao - Apna status likho (e.g. Alhamdulillah ❤️):");
-  if(s){ localStorage.setItem("cloq_my_status",s); alert("✅ Status lag gaya! Sab ko nazar aayega: "+s); }
-}
-// ===== THEMES =====
-window.changeTheme=function(t){
-  var colors={green:"#00a884",gold:"#ffd700",purple:"#a855f7"};
-  document.documentElement.style.setProperty("--main",colors[t]||colors.green);
-  var btns=document.querySelectorAll(".btnMain"); btns.forEach(function(b){b.style.background=colors[t]});
-  localStorage.setItem("cloq_theme",t); alert("🎨 Theme change ho gaya: "+t);
-};
-// ===== VANISH + UNSEND =====
-window.vanishMode = localStorage.getItem("cloq_vanish")==="on";
-window.toggleVanish=function(){ window.vanishMode=!window.vanishMode; localStorage.setItem("cloq_vanish",window.vanishMode?"on":"off"); alert(window.vanishMode?"👻 Vanish Mode ON - Messages 10 sec me gayab honge":"👻 Vanish Mode OFF"); };
-var _oldSend = window.sendMsg;
-window.sendMsg=function(){
-  _oldSend();
-  if(window.vanishMode){ setTimeout(function(){ var b=document.getElementById("chatBox"); if(b) b.innerHTML='<div class="msgBubble"><small>👻 Vanish</small>Messages vanished 👻</div>'; },10000); }
-};
-// Long press to unsend - double click any message to delete
-document.addEventListener("dblclick",function(e){ var b=e.target.closest(".msgBubble"); if(b && confirm("↩️ Ye message unsend karna hai?")){ b.remove(); alert("✅ Message unsend ho gaya"); } });
-// ===== VAULT + FAKE CHAT + AUTO REPLY + SCHEDULER + APP LOCK =====
-window.openVault=function(){ document.getElementById("vaultModal").classList.remove("hidden"); document.getElementById("vaultText").value=localStorage.getItem("cloq_vault")||""; };
-window.saveVault=function(){ localStorage.setItem("cloq_vault",document.getElementById("vaultText").value); document.getElementById("vaultSaved").innerText="✅ Saved in Vault"; };
-window.openFakeChat=function(){ document.getElementById("fakeChatModal").classList.remove("hidden"); };
-window.createFakeChat=function(){
-  var n=document.getElementById("fakeName").value||"Ali"; var m=document.getElementById("fakeMsg").value||"Hi";
-  var chats=JSON.parse(localStorage.getItem("cloq_chats")||"[]"); chats.unshift({name:"🎭 "+n+" (Fake)",last:m,icon:"🎭"}); localStorage.setItem("cloq_chats",JSON.stringify(chats));
-  document.getElementById("fakeChatModal").classList.add("hidden"); renderChats(); alert("🎭 Fake Chat ban gaya!");
-};
-window.setAutoReply=function(){ var t=prompt("🤖 Auto-Reply message likho - Jab koi msg karega to ye auto jayega:"); if(t){ localStorage.setItem("cloq_autoreply",t); alert("✅ Auto-Reply ON: "+t); } };
-window.scheduleMsg=function(){ var t=prompt("⏰ Kitne second baad bhejna hai? e.g. 10"); var m=prompt("Kya message bhejna hai?"); if(t&&m){ setTimeout(function(){ var inp=document.getElementById("msgInput"); if(inp){ inp.value=m; sendMsg(); } alert("⏰ Scheduled message bhej diya!"); },parseInt(t)*1000); } };
-window.setAppLock=function(){ var p=prompt("🔒 App Lock PIN set karo - 4 digit e.g. 1234"); if(p){ localStorage.setItem("cloq_applock",p); alert("✅ App Lock ON. Agli baar app khologe to PIN mangega."); } };
-window.unlockApp=function(){ if(document.getElementById("lockPinInput").value===localStorage.getItem("cloq_applock")){ document.getElementById("lockModal").classList.add("hidden"); } else alert("❌ Wrong PIN"); };
-// Add quick features to Settings page
-setTimeout(function(){
-  var setPage=document.getElementById("settingsPage");
-  if(setPage && !document.getElementById("v4Settings")){
-    var div=document.createElement("div"); div.id="v4Settings";
-    div.innerHTML='<div class="setItem" onclick="openRooms()"><div>🏠 My Rooms</div><div>›</div></div>'
-    +'<div class="setItem" onclick="openVault()"><div>🔐 Secret Vault</div><div>›</div></div>'
-    +'<div class="setItem" onclick="openFakeChat()"><div>🎭 Fake Chat Creator</div><div>›</div></div>'
-    +'<div class="setItem" onclick="toggleVanish()"><div>👻 Vanish Mode</div><div>'+(window.vanishMode?"ON":"OFF")+'</div></div>'
-    +'<div class="setItem" onclick="setAutoReply()"><div>🤖 Auto-Reply</div><div>›</div></div>'
-    +'<div class="setItem" onclick="scheduleMsg()"><div>⏰ Message Scheduler</div><div>›</div></div>'
-    +'<div class="setItem" onclick="setAppLock()"><div>🔒 App Lock PIN</div><div>›</div></div>'
-    +'<div class="setItem"><div>🎨 Theme</div><div style="display:flex;gap:6px"><button onclick="changeTheme(\'green\')" style="background:#00a884;color:#fff;padding:6px 10px;border-radius:12px">Green</button><button onclick="changeTheme(\'gold\')" style="background:#ffd700;padding:6px 10px;border-radius:12px">Gold</button><button onclick="changeTheme(\'purple\')" style="background:#a855f7;color:#fff;padding:6px 10px;border-radius:12px">Purple</button></div></div>'
-    +'<div class="setItem"><div>🏅 My Badge</div><div><select onchange="localStorage.setItem(\'cloq_badge\',this.value);alert(\'Badge: \'+this.value)" style="background:#0b141a;color:#fff;border:none;padding:6px;border-radius:8px"><option>Simple User</option><option>✅ Blue Tick VIP</option><option>💗 Pink Badge</option><option>👑 Yellow Badge</option></select></div></div>';
-    var logoutBtn=setPage.querySelector(".setItem[onclick*=\'logout\']");
-    if(logoutBtn) setPage.insertBefore(div,logoutBtn); else setPage.appendChild(div);
-  }
-  // App Lock check on start
-  if(localStorage.getItem("cloq_applock")){ document.getElementById("lockModal").classList.remove("hidden"); }
-},800);
-</script>
-  <!-- ===== CLOQ PART 5 LIVE ICON - Apna Asli Icon Wapas ===== -->
+  <!-- Settings Tab -->
+  <div id="settingsTab" style="display:none;padding:16px">
+    <div style="background:#111b21;border-radius:16px;padding:16px;margin-bottom:12px">
+      <h3 style="margin:0 0 10px">👑 VIP & Theme</h3>
+      <button onclick="toggleVip()" style="width:100%;background:#202c33;color:#fff;border:none;padding:12px;border-radius:12px;text-align:left;cursor:pointer;margin-bottom:8px">👑 VIP Badge - <span id="vipStatus">OFF</span></button>
+      <button onclick="changeTheme()" style="width:100%;background:#202c33;color:#fff;border:none;padding:12px;border-radius:12px;text-align:left;cursor:pointer">🎨 Theme Badlo - Dark / Gold / Blue / Pink</button>
+    </div>
+    <div style="background:#111b21;border-radius:16px;padding:16px;margin-bottom:12px">
+      <h3 style="margin:0 0 10px">🔒 Privacy</h3>
+      <button onclick="changePrivacy()" style="width:100%;background:#202c33;color:#fff;border:none;padding:12px;border-radius:12px;text-align:left;cursor:pointer;margin-bottom:8px">👁️ Last Seen & Online - <span id="privacyStatus">Sab ko</span></button>
+      <button onclick="lockNow()" style="width:100%;background:#202c33;color:#fff;border:none;padding:12px;border-radius:12px;text-align:left;cursor:pointer">🔒 App Lock Karo</button>
+    </div>
+    <div style="background:#111b21;border-radius:16px;padding:16px">
+      <h3 style="margin:0 0 10px">👤 Profile</h3>
+      <button onclick="openProfile()" style="width:100%;background:#00a884;color:#fff;border:none;padding:12px;border-radius:30px;font-weight:800;cursor:pointer">✏️ Profile Edit Karo - Naam / DP / Bio</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CHAT WINDOW ===== -->
+<div id="chatWindow" style="display:none;position:fixed;inset:0;background:#0b141a;color:#fff;z-index:100;flex-direction:column;max-width:480px;margin:0 auto">
+  <div style="display:flex;align-items:center;gap:10px;padding:12px;background:#111b21">
+    <button onclick="closeChat()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer">←</button>
+    <div style="width:40px;height:40px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-size:20px" id="chatAvatar">😊</div>
+    <div style="flex:1"><b id="chatName">Ayesha</b><div id="chatOnline" style="font-size:11px;color:#00e676">● Online</div></div>
+    <button onclick="alert('Call feature jald aayegi')" style="background:none;border:none;font-size:20px">📞</button>
+  </div>
+  <div id="chatMessages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column"></div>
+  <div style="display:flex;gap:8px;padding:10px;background:#111b21">
+    <input id="chatInput" placeholder="Message likho..." style="flex:1;background:#202c33;border:none;color:#fff;padding:12px;border-radius:30px;outline:none">
+    <button onclick="sendMessage()" style="width:48px;height:48px;border-radius:50%;background:#00a884;border:none;font-size:22px;cursor:pointer">➤</button>
+  </div>
+</div>
+
+<!-- ===== PROFILE MODAL ===== -->
+<div id="profileModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:flex-end;justify-content:center">
+  <div style="width:100%;max-width:480px;background:#111b21;border-radius:24px 24px 0 0;padding:18px;color:#fff;max-height:88vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between"><h3 style="margin:0">My Profile</h3><button onclick="closeProfile()" style="background:none;border:none;color:#fff;font-size:24px">×</button></div>
+    <div style="text-align:center;margin:14px 0"><div id="profDP" style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#00a884,#ffd700);display:flex;align-items:center;justify-content:center;font-size:44px;margin:0 auto;overflow:hidden">👤</div><button onclick="changeDP()" style="background:#202c33;color:#00e676;border:none;padding:8px 14px;border-radius:20px;margin-top:8px;cursor:pointer">📸 Change DP</button></div>
+    <label style="font-size:12px;color:#8696a0;font-weight:700">NAME</label><input id="profName" style="width:100%;background:#202c33;border:none;color:#fff;padding:12px;border-radius:12px;margin:6px 0 12px;box-sizing:border-box;outline:none">
+    <label style="font-size:12px;color:#8696a0;font-weight:700">BIO / ABOUT</label><input id="profBio" style="width:100%;background:#202c33;border:none;color:#fff;padding:12px;border-radius:12px;margin:6px 0 12px;box-sizing:border-box;outline:none">
+    <label style="font-size:12px;color:#8696a0;font-weight:700">PHONE</label><input id="profPhone" style="width:100%;background:#202c33;border:none;color:#fff;padding:12px;border-radius:12px;margin:6px 0 12px;box-sizing:border-box;outline:none">
+    <button onclick="saveProfile()" style="width:100%;background:#00a884;color:#fff;border:none;padding:14px;border-radius:30px;font-weight:800;cursor:pointer">✅ Save Profile</button>
+  </div>
+</div>
+
+<!-- ===== LOCK SCREEN - CENTER + EYE SIDE ME ===== -->
+<div id="lockScreen" style="display:none;position:fixed;inset:0;background:#000000f2;z-index:999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#111b21;padding:28px 20px;border-radius:28px;width:100%;max-width:340px;text-align:center">
+    <div style="font-size:48px">🔒</div>
+    <h2 style="color:#fff;margin:8px 0 2px;font-size:26px">CLOQ Locked</h2>
+    <p style="color:#8696a0;font-size:14px;margin:0 0 16px">Enter your PIN to unlock</p>
+    <div style="display:flex;flex-direction:row;align-items:center;background:#202c33;border-radius:16px;overflow:hidden;margin-bottom:14px">
+      <input id="lockPinInput" placeholder="PIN - e.g. 1234" type="password" style="flex:1;background:transparent;border:none;color:#fff;padding:16px 8px 16px 16px;outline:none;min-width:0;text-align:center;font-size:22px;letter-spacing:8px">
+      <button onclick="togglePin('lockPinInput',this)" style="width:52px;height:52px;flex:none;background:transparent;border:none;font-size:22px;cursor:pointer">👁️</button>
+    </div>
+    <button onclick="doUnlock()" style="width:100%;background:#00a884;color:#fff;border:none;padding:16px;border-radius:30px;font-weight:800;font-size:18px;cursor:pointer">Unlock</button>
+    <button onclick="forgotPin()" style="background:none;border:none;color:#00e676;font-size:13px;font-weight:700;text-decoration:underline;cursor:pointer;margin-top:14px">Forgot PIN? - Yahan Dabake Reset Karo</button>
+  </div>
+</div>
+
+<!-- ===== ROOM VIEW MODAL ===== -->
+<div id="roomModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:flex-end;justify-content:center">
+  <div style="width:100%;max-width:480px;background:#111b21;border-radius:24px 24px 0 0;padding:18px;color:#fff;max-height:88vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between"><h3 style="margin:0" id="roomModalTitle">🏠 Room</h3><button onclick="closeRoomModal()" style="background:none;border:none;color:#fff;font-size:24px">×</button></div>
+    <div id="roomModalBody" style="text-align:center;padding:16px 0"></div>
+  </div>
+</div>
 <style>
-.liveIcon{ animation: liveFloat 2.5s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(0,168,132,0.6)); }
-.liveIconSmall{ animation: liveFloat 2.5s ease-in-out infinite; filter: drop-shadow(0 0 15px rgba(0,168,132,0.5)); }
-@keyframes liveFloat{ 0%,100%{ transform: translateY(0) scale(1) rotate(0deg); } 50%{ transform: translateY(-8px) scale(1.05) rotate(2deg); } }
-</style>
-<script>
-// Asli icon wapas lao - icon.png
-setTimeout(function(){
-  document.querySelectorAll("img").forEach(function(img){
-    if(img.src.includes("icon") || img.getAttribute("src")==="icon.jpg" || img.getAttribute("src")==="icon.png"){
-      img.src="icon.png";
-      img.style.display="block";
-      // Live animation lagao
-      if(!img.className.includes("liveIcon")) img.className = img.className + " liveIcon";
-    }
-  });
-  // Agar icon phir bhi na mile to batao
-  setTimeout(function(){
-    var testImg=new Image();
-    testImg.onload=function(){ console.log("Icon mil gaya!"); };
-    testImg.onerror=function(){ alert("⚠️ icon.png abhi bhi GitHub pe nahi hai. Pehle Step 2 se dobara upload karo, phir page refresh karo."); };
-    testImg.src="icon.png";
-  }, 500);
-}, 400);
-
-// ===== FORGOT PASSWORD - Login ke neeche =====
-setTimeout(function(){
-  if(!document.getElementById("forgotBtn")){
-    var loginBtn=document.getElementById("loginBtn");
-    if(loginBtn){
-      var btn=document.createElement("button");
-      btn.id="forgotBtn";
-      btn.innerText="Forgot Password? - Yahan Dabake Reset Karo";
-      btn.style.cssText="width:100%;background:none;color:#00e676;padding:10px;font-size:13px;font-weight:600;margin-top:6px;text-decoration:underline;cursor:pointer;border:none;";
-      btn.onclick=function(){
-        var email=prompt("Apna Email likho jiska password bhool gaye ho:");
-        if(!email) return; email=email.trim().toLowerCase();
-        var users={}; try{ users=JSON.parse(localStorage.getItem("cloq_users")||"{}"); }catch(e){}
-        if(!users[email]){ alert("❌ Is Email se koi account nahi mila. Pehle Sign Up karo."); return; }
-        var newPass=prompt("Naya Password likho (6 se bara):");
-        if(!newPass || newPass.length<6){ alert("❌ Password chota hai"); return; }
-        users[email].pass=newPass; localStorage.setItem("cloq_users", JSON.stringify(users));
-        var p=document.getElementById("password"); if(p) p.value=newPass;
-        alert("✅ Password change ho gaya! Ab Login dabao.");
-      };
-      loginBtn.after(btn);
-    }
-  }
-}, 600);
-
-// ===== AUTO-LOGIN - Har baar Login na aaye =====
-setTimeout(function(){
-  try{
-    var saved=localStorage.getItem("cloq_login");
-    if(saved){
-      var u=JSON.parse(saved);
-      var loginPage=document.getElementById("loginPage");
-      var homePage=document.getElementById("homePage");
-      if(loginPage && homePage && homePage.classList.contains("hidden")){
-        if(typeof goHome==="function") goHome(u.name, u.email);
-        else { loginPage.classList.add("hidden"); homePage.classList.remove("hidden"); }
-      }
-      var sp=document.getElementById("splash"); if(sp) sp.style.display="none";
-    }
-  }catch(e){}
-}, 1800);
-</script>
-  <!-- ===== CLOQ PART 6 MEGA FIX - SAB KUCH WHATSAPP JESA ===== -->
-<style>
-#cloqLockFix{ position:fixed!important; inset:0!important; z-index:99999!important; background:#000000e6!important; backdrop-filter:blur(20px)!important; display:flex!important; align-items:center!important; justify-content:center!important; }
-#profileModal,#settingsModal,#roomViewModal{ position:fixed; inset:0; z-index:99990; background:rgba(0,0,0,.7); display:none; align-items:flex-end; justify-content:center; }
-#profileModal.open,#settingsModal.open,#roomViewModal.open{ display:flex; }
-.sheet{ width:100%; max-width:480px; background:#111b21; border-radius:24px 24px 0 0; padding:18px; max-height:88vh; overflow-y:auto; color:#fff; }
-.sheet input,.sheet textarea,.sheet select{ width:100%; background:#202c33; border:none; color:#fff; padding:12px; border-radius:12px; margin:6px 0 12px; outline:none; }
-.sheet label{ font-size:12px; color:#8696a0; font-weight:700; }
-.btnG{ width:100%; background:#00a884; color:#fff; border:none; padding:13px; border-radius:30px; font-weight:800; cursor:pointer; margin-top:8px; }
-.btnLine{ width:100%; background:#202c33; color:#fff; border:none; padding:11px; border-radius:12px; cursor:pointer; margin:5px 0; text-align:left; }
+*{ box-sizing:border-box; }
+body{ margin:0; font-family:Arial,sans-serif; background:#0b141a; }
+input{ font-family:inherit; }
+.theme-gold{ background:#1a1500!important; }
+.theme-blue{ background:#001a2e!important; }
+.theme-pink{ background:#2e001a!important; }
 .msgRow{ display:flex; flex-direction:column; align-items:flex-end; margin:6px 0; }
-.msgBubble{ background:#005c4b; color:#fff; padding:8px 10px; border-radius:12px; max-width:80%; font-size:14px; }
-.msgMeta{ font-size:10px; color:#a8b8c0; display:flex; gap:4px; align-items:center; margin-top:2px; }
+.msgBubble{ background:#005c4b; color:#fff; padding:8px 12px; border-radius:12px; max-width:80%; font-size:14px; line-height:1.4; }
+.msgMeta{ font-size:10px; color:#a8b8c0; display:flex; gap:4px; align-items:center; margin-top:3px; }
 .tick{ font-size:12px; } .tick.blue{ color:#53bdeb; }
-.vipBadge{ background:linear-gradient(90deg,#ffd700,#ff8c00); color:#000; font-size:10px; font-weight:900; padding:2px 7px; border-radius:10px; margin-left:6px; }
-.theme-gold{ background:#1a1500!important; } .theme-blue{ background:#001a2e!important; } .theme-pink{ background:#2e001a!important; }
+.roomCard{ background:#202c33; padding:16px; border-radius:16px; margin:10px 0; text-align:center; }
 </style>
 <script>
-// ========== 1. LOCK FIX - Peeche kuch nazar na aaye ==========
-setTimeout(function(){
-  var lock = document.querySelector('[id*="lock"], [class*="lock"]');
-  // Lock wali div dhoondo jo PIN wali hai
-  document.querySelectorAll("div").forEach(function(d){
-    if(d.innerText && d.innerText.includes("CLOQ Locked")){
-      d.id="cloqLockFix";
-      d.style.background="#000000e6";
-      // Peeche wali chat list ko hide karo jab lock ho
-      document.body.style.overflow="hidden";
-    }
-    if(d.innerText && d.innerText.includes("Unlock")){
-      // Unlock ke baad peeche wapas dikhao
-      var btn=d.querySelector("button");
-      if(btn && !btn._fixed){ btn._fixed=true; btn.addEventListener("click", function(){ setTimeout(function(){ var l=document.getElementById("cloqLockFix"); if(l) { var pinInp=document.querySelector('input[placeholder*="PIN"]'); if(pinInp && pinInp.value.length>=4){ l.style.display="none"; document.body.style.overflow=""; } } },400); }); }
-    }
-  });
-},800);
+// ===== HELPERS =====
+function togglePin(id, btn){
+  var inp=document.getElementById(id);
+  if(inp.type==="password"){ inp.type="text"; btn.innerText="🙈"; }
+  else { inp.type="password"; btn.innerText="👁️"; }
+  inp.focus();
+}
+function getPin(){ return (localStorage.getItem("cloq_pin")||"").trim(); }
+function setPin(p){ localStorage.setItem("cloq_pin", p); localStorage.setItem("cloq_lock_pin", p); localStorage.setItem("app_pin", p); }
+function showHome(){
+  document.getElementById("loginPage").style.display="none";
+  document.getElementById("homePage").style.display="block";
+  document.getElementById("lockScreen").style.display="none";
+  loadProfileToHeader(); loadRooms(); updateVipUI(); updatePrivacyUI(); applyTheme();
+}
+function loadProfileToHeader(){
+  var p={}; try{ p=JSON.parse(localStorage.getItem("cloq_profile")||"{}"); }catch(e){}
+  var name=p.name||localStorage.getItem("cloq_name")||"Welcome CLOQ";
+  document.getElementById("headerName").innerText=name;
+  var av=document.getElementById("headerAvatar");
+  if(p.dpEmoji) av.innerText=p.dpEmoji;
+  else if(p.dp) av.innerHTML='<img src="'+p.dp+'" style="width:100%;height:100%;object-fit:cover">';
+  else av.innerText=name[0] ? name[0].toUpperCase() : "W";
+}
 
-// ========== 2. PROFILE - W pe click karo to khulegi + Edit ==========
-setTimeout(function(){
-  var avatar = document.querySelector('[id*="avatar"], [class*="avatar"]');
-  // Header me W wala circle dhoondo
-  document.querySelectorAll("div,button,span").forEach(function(el){
-    if(el.innerText==="W" && el.offsetWidth>30 && el.offsetWidth<60){
-      avatar=el;
-    }
-  });
-  if(avatar && !avatar._fixed){
-    avatar._fixed=true; avatar.style.cursor="pointer";
-    avatar.onclick=function(){ openProfile(); };
-  }
-  function openProfile(){
-    var saved={}; try{ saved=JSON.parse(localStorage.getItem("cloq_profile")||"{}"); }catch(e){}
-    var m=document.getElementById("profileModal");
-    if(!m){
-      m=document.createElement("div"); m.id="profileModal";
-      m.innerHTML='<div class="sheet"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">My Profile</h3><button onclick="document.getElementById(\'profileModal\').classList.remove(\'open\')" style="background:none;border:none;color:#fff;font-size:22px">×</button></div><div style="text-align:center;margin:14px 0"><div id="profDP" style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#00a884,#ffd700);display:flex;align-items:center;justify-content:center;font-size:48px;margin:0 auto;overflow:hidden">👤</div><button onclick="changeDP()" style="background:#202c33;color:#00e676;border:none;padding:8px 14px;border-radius:20px;margin-top:8px">📸 Change DP</button></div><label>NAME</label><input id="profName" placeholder="Apna Naam"><label>BIO / ABOUT</label><textarea id="profBio" placeholder="Hey! I am using CLOQ"></textarea><label>PHONE</label><input id="profPhone" placeholder="0300-1234567"><label>EMAIL</label><input id="profEmail" placeholder="email@gmail.com"><button class="btnG" onclick="saveProfile()">✅ Save Profile</button><p style="font-size:11px;color:#8696a0;text-align:center">Save karte hi naam header aur chats me update ho jayega.</p></div>';
-      document.body.appendChild(m);
-    }
-    document.getElementById("profName").value = saved.name || "";
-    document.getElementById("profBio").value = saved.bio || "Hey! I am using CLOQ";
-    document.getElementById("profPhone").value = saved.phone || "";
-    document.getElementById("profEmail").value = saved.email || "";
-    var dp=document.getElementById("profDP");
-    if(saved.dp) dp.innerHTML='<img src="'+saved.dp+'" style="width:100%;height:100%;object-fit:cover">';
-    else dp.innerText = saved.name ? saved.name[0].toUpperCase() : "👤";
-    m.classList.add("open");
-  }
-  window.openProfile=openProfile;
-  window.changeDP=function(){
-    var em=prompt("DP ke liye Emoji likho ya Photo ka link:\n1. Emoji - 😎🔥👑\n2. Photo Link paste karo");
-    if(!em) return;
-    var dp=document.getElementById("profDP");
-    if(em.startsWith("http")) dp.innerHTML='<img src="'+em+'" style="width:100%;height:100%;object-fit:cover">';
-    else dp.innerText=em;
-    window._tempDP = em.startsWith("http") ? em : "";
-    if(!em.startsWith("http")) window._tempDPemoji=em;
-  };
-  window.saveProfile=function(){
-    var name=document.getElementById("profName").value.trim();
-    var bio=document.getElementById("profBio").value.trim();
-    var phone=document.getElementById("profPhone").value.trim();
-    var email=document.getElementById("profEmail").value.trim();
-    if(!name){ alert("Naam to likho"); return; }
-    var old={}; try{ old=JSON.parse(localStorage.getItem("cloq_profile")||"{}"); }catch(e){}
-    var data={name:name,bio:bio,phone:phone,email:email,dp:window._tempDP||old.dp||"",dpEmoji:window._tempDPemoji||old.dpEmoji||""};
-    localStorage.setItem("cloq_profile", JSON.stringify(data));
-    localStorage.setItem("cloq_login", JSON.stringify({name:name,email:email}));
-    // Header W ko naam se badlo
-    document.querySelectorAll("div,button,span").forEach(function(el){ if(el.innerText==="W" && el.offsetWidth<60) el.innerText=name[0].toUpperCase(); });
-    document.getElementById("profileModal").classList.remove("open");
-    alert("✅ Profile Save ho gayi! Naam: "+name);
-  };
-},1000);
+// ===== LOGIN =====
+function doLogin(){
+  var name=document.getElementById("loginName").value.trim();
+  var email=document.getElementById("loginEmail").value.trim();
+  var pin=document.getElementById("loginPin").value.trim();
+  if(!name){ alert("Naam likho"); return; }
+  if(!pin || pin.length<4){ alert("4 digit PIN banao"); return; }
+  localStorage.setItem("cloq_name", name);
+  localStorage.setItem("cloq_email", email);
+  setPin(pin);
+  localStorage.setItem("cloq_profile", JSON.stringify({name:name, bio:"Hey! I am using CLOQ", phone:"", dp:"", dpEmoji:""}));
+  showHome();
+  alert("✅ Welcome to CLOQ, "+name+"!\nTumhara PIN: "+pin+" - Yaad rakho");
+}
 
-// ========== 3. SETTINGS - VIP Badge + Themes + Privacy + Last Seen ==========
-setTimeout(function(){
-  // Settings khulne pe inject karo
-  document.querySelectorAll("button,div").forEach(function(el){
-    if(el.innerText && el.innerText.trim()==="⋮" && !el._fixed){
-      el._fixed=true;
-      el.onclick=function(){
-        var choice=prompt("⚙️ SETTINGS\n\n1 - VIP Badge Lagao\n2 - Theme Badlo\n3 - Privacy (Last Seen / Online)\n4 - My Profile\n\nNumber likho (1-4):");
-        if(choice==="1"){
-          var vip=localStorage.getItem("cloq_vip")==="yes" ? "no" : "yes";
-          localStorage.setItem("cloq_vip", vip);
-          alert(vip==="yes" ? "👑 VIP Badge ON ho gaya! Ab tumhare naam ke saath 👑 aayega." : "VIP Badge OFF kar diya.");
-          applyVIP();
-        } else if(choice==="2"){
-          var th=prompt("THEME:\n1 - Dark (Normal)\n2 - Gold\n3 - Blue\n4 - Pink\nNumber likho:");
-          document.body.classList.remove("theme-gold","theme-blue","theme-pink");
-          if(th==="2") document.body.classList.add("theme-gold");
-          if(th==="3") document.body.classList.add("theme-blue");
-          if(th==="4") document.body.classList.add("theme-pink");
-          localStorage.setItem("cloq_theme", th||"1");
-          alert("✅ Theme lag gaya!");
-        } else if(choice==="3"){
-          var ls=prompt("PRIVACY:\nLast Seen kisko dikhaye?\n1 - Sab ko\n2 - Sirf Friends ko\n3 - Kisi ko nahi (Hide)\n\nOnline status?\n4 - Online Show karo\n5 - Online Hide karo\n\nNumber likho:");
-          if(ls==="1"||ls==="2"||ls==="3") localStorage.setItem("cloq_lastseen", ls);
-          if(ls==="4") localStorage.setItem("cloq_online", "show");
-          if(ls==="5") localStorage.setItem("cloq_online", "hide");
-          alert("✅ Privacy save ho gayi!");
-        } else if(choice==="4"){ if(window.openProfile) window.openProfile(); }
-      };
-    }
-  });
-  function applyVIP(){
-    if(localStorage.getItem("cloq_vip")==="yes"){
-      document.querySelectorAll("h3,h2").forEach(function(h){ if(h.innerText && h.innerText.includes("CLOQ") && !h.innerText.includes("👑")) h.innerText=h.innerText+" 👑"; });
-    }
-  }
-  applyVIP();
-  var th=localStorage.getItem("cloq_theme"); if(th==="2") document.body.classList.add("theme-gold"); if(th==="3") document.body.classList.add("theme-blue"); if(th==="4") document.body.classList.add("theme-pink");
-},1200);
-
-// ========== 4. ROOMS - Banta hai to Show bhi hoga + Center me + Edit + Entry ==========
-setTimeout(function(){
-  window.showRooms=function(){
-    var rooms=[]; try{ rooms=JSON.parse(localStorage.getItem("cloq_rooms")||"[]"); }catch(e){}
-    if(rooms.length===0){
-      rooms=[{name:"My Room", desc:"Welcome to my Room", id:Date.now()}];
-      localStorage.setItem("cloq_rooms", JSON.stringify(rooms));
-    }
-    var m=document.getElementById("roomViewModal");
-    if(!m){ m=document.createElement("div"); m.id="roomViewModal"; document.body.appendChild(m); }
-    var html='<div class="sheet"><div style="display:flex;justify-content:space-between"><h3 style="margin:0">🏠 My Rooms</h3><button onclick="document.getElementById(\'roomViewModal\').classList.remove(\'open\')" style="background:none;border:none;color:#fff;font-size:22px">×</button></div>';
-    rooms.forEach(function(r,idx){
-      html+='<div style="background:#202c33;padding:14px;border-radius:16px;margin:12px 0;text-align:center"><div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#00a884,#ffd700);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto">🏠</div><h3 style="margin:8px 0 2px">'+r.name+'</h3><p style="color:#8696a0;font-size:12px;margin:0">'+(r.desc||"")+'</p><div style="display:flex;gap:6px;margin-top:10px"><button onclick="enterRoom('+idx+')" style="flex:1;background:#00a884;color:#fff;border:none;padding:10px;border-radius:20px;font-weight:800">🚪 Enter Room</button><button onclick="editRoom('+idx+')" style="flex:1;background:#2a3942;color:#fff;border:none;padding:10px;border-radius:20px">✏️ Edit</button></div></div>';
-    });
-    html+='<button class="btnG" onclick="createRoom()">+ Naya Room Banao</button></div>';
-    m.innerHTML=html; m.classList.add("open");
-  };
-  window.createRoom=function(){
-    var n=prompt("Room ka Naam likho:"); if(!n) return;
-    var d=prompt("Room ka Bio / Description:")||"";
-    var rooms=[]; try{ rooms=JSON.parse(localStorage.getItem("cloq_rooms")||"[]"); }catch(e){}
-    rooms.push({name:n,desc:d,id:Date.now()}); localStorage.setItem("cloq_rooms", JSON.stringify(rooms));
-    alert("✅ Room ban gaya: "+n); window.showRooms();
-  };
-  window.editRoom=function(i){
-    var rooms=JSON.parse(localStorage.getItem("cloq_rooms")||"[]");
-    var n=prompt("Naya Naam:", rooms[i].name); if(n) rooms[i].name=n;
-    var d=prompt("Nayi Description:", rooms[i].desc); if(d!==null) rooms[i].desc=d;
-    localStorage.setItem("cloq_rooms", JSON.stringify(rooms)); window.showRooms();
-  };
-  window.enterRoom=function(i){
-    var rooms=JSON.parse(localStorage.getItem("cloq_rooms")||"[]");
-    alert("🚪 Tum "+rooms[i].name+" me enter ho gaye!\n\nAb yahan sab chat kar sakte hain.");
-    document.getElementById("roomViewModal").classList.remove("open");
-  };
-  // Neeche Rooms wale button ko pakro
-  document.querySelectorAll("div,button,span").forEach(function(el){
-    if(el.innerText && el.innerText.trim()==="Rooms" && !el._fixed){
-      el._fixed=true; el.style.cursor="pointer"; el.onclick=function(){ window.showRooms(); };
-    }
-  });
-},1500);
-
-// ========== 5. CHAT TICKS + TIME - Bilkul WhatsApp jesa ==========
-function addTickTime(){
-  document.querySelectorAll("div").forEach(function(d){
-    // Message bubble wali div
-    if(d.className && d.className.includes("msg") && !d._tickFixed){
-      // Agar pehle se time nahi hai to lagao
-    }
-  });
-  // Send button pe tick logic lagao
-  var sendBtn=document.querySelector('[id*="send"], [class*="send"]');
-  if(sendBtn && !sendBtn._fixed){
-    sendBtn._fixed=true;
-    sendBtn.addEventListener("click", function(){
-      setTimeout(function(){
-        var now=new Date(); var time=now.getHours()%12||12; time+=":"+(now.getMinutes()<10?"0":"")+now.getMinutes()+" "+(now.getHours()>=12?"PM":"AM");
-        // Aakhri message dhoondo aur usme tick+time lagao
-        var msgs=document.querySelectorAll("div");
-        var last=null;
-        msgs.forEach(function(m){ if(m.innerText && m.innerText.length<200 && m.offsetHeight>20) last=m; });
-        // Naya meta div banao
-        var meta=document.createElement("div");
-        meta.className="msgMeta";
-        meta.innerHTML='<span>'+time+'</span><span class="tick" id="tick_'+Date.now()+'">✓</span>';
-        // Chat container me daalo
-        var chatBox=document.querySelector('[id*="chat"], [id*="messages"], [class*="chat"]');
-        if(chatBox) chatBox.appendChild(meta);
-        // 1 sec baad Double Tick (Delivered)
-        setTimeout(function(){ var t=meta.querySelector(".tick"); if(t) t.innerText="✓✓"; },1000);
-        // 3 sec baad Blue Tick (Seen) - Jaise agle bande ne dekh liya
-        setTimeout(function(){ var t=meta.querySelector(".tick"); if(t){ t.innerText="✓✓"; t.classList.add("blue"); } },3000);
-      },300);
-    });
+// ===== LOCK / UNLOCK - EK HI PIN =====
+function lockNow(){
+  document.getElementById("lockPinInput").value="";
+  document.getElementById("lockPinInput").type="password";
+  document.getElementById("lockScreen").style.display="flex";
+}
+function doUnlock(){
+  var entered=document.getElementById("lockPinInput").value.trim();
+  var saved=getPin();
+  if(!entered){ alert("PIN likho pehle"); return; }
+  if(!saved){ setPin(entered); showHome(); alert("✅ PIN set ho gaya: "+entered); return; }
+  if(entered===saved){
+    showHome();
+    alert("✅ Welcome to CLOQ - Unlock ho gaya!");
+  } else {
+    alert("❌ Wrong PIN\nTumne dala: "+entered+"\nSahi PIN hai: "+saved+"\n\nAgar yaad nahi to Forgot PIN dabao.");
+    document.getElementById("lockPinInput").value="";
   }
 }
-setInterval(addTickTime, 1500);
-    </script>
-  <!-- ===== PART 6B - LOCK SCREEN SEEDHA ===== -->
-<style>
-#cloqLockFix{
-  flex-direction: column !important;
-  gap: 0px !important;
-  text-align: center !important;
-  padding: 20px !important;
+function forgotPin(){
+  var newPin=prompt("Naya 4-Digit PIN likho (e.g. 1234):");
+  if(!newPin || newPin.trim().length<4){ alert("PIN 4 digit ka hona chahiye"); return; }
+  newPin=newPin.trim();
+  setPin(newPin);
+  document.getElementById("lockPinInput").value=newPin;
+  document.getElementById("lockPinInput").type="text";
+  alert("✅ Naya PIN save ho gaya: "+newPin+"\nAb Unlock dabao.");
 }
-#cloqLockFix > *{
-  width: 100% !important;
-  max-width: 320px !important;
-  flex: none !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
+document.getElementById("lockPinInput").addEventListener("keydown", function(e){ if(e.key==="Enter") doUnlock(); });
+
+// ===== TABS / SETTINGS =====
+function showTab(t){
+  document.getElementById("chatsTab").style.display = t==="chats" ? "block" : "none";
+  document.getElementById("roomsTab").style.display = t==="rooms" ? "block" : "none";
+  document.getElementById("settingsTab").style.display = t==="settings" ? "block" : "none";
+  document.getElementById("tabChats").style.color = t==="chats" ? "#00e676" : "#8696a0";
+  document.getElementById("tabRooms").style.color = t==="rooms" ? "#00e676" : "#8696a0";
+  document.getElementById("tabSettings").style.color = t==="settings" ? "#00e676" : "#8696a0";
+  if(t==="rooms") loadRooms();
 }
-/* CLOQ Locked wala text */
-#cloqLockFix div:first-child{
-  font-size: 26px !important;
-  font-weight: 900 !important;
-  line-height: 1.2 !important;
-  display: block !important;
+function openSettings(){ showTab("settings"); window.scrollTo(0,0); }
+
+// ===== VIP =====
+function toggleVip(){
+  var cur=localStorage.getItem("cloq_vip")==="yes" ? "no" : "yes";
+  localStorage.setItem("cloq_vip", cur);
+  updateVipUI();
+  alert(cur==="yes" ? "👑 VIP ON! Ab tumhare naam ke saath 👑 aayega." : "VIP OFF kar diya.");
 }
-/* Enter your PIN wala text */
-#cloqLockFix div:nth-child(2){
-  font-size: 14px !important;
-  color: #aaa !important;
-  margin-bottom: 16px !important;
-  display: block !important;
+function updateVipUI(){
+  var on=localStorage.getItem("cloq_vip")==="yes";
+  document.getElementById("vipStatus").innerText = on ? "ON 👑" : "OFF";
+  document.getElementById("headerVip").innerText = on ? "👑" : "";
 }
-/* PIN wala box */
-#cloqLockFix input{
-  width: 100% !important;
-  max-width: 320px !important;
-  padding: 16px !important;
-  font-size: 20px !important;
-  letter-spacing: 6px !important;
-  text-align: center !important;
-  border-radius: 16px !important;
-  margin-bottom: 16px !important;
-  display: block !important;
+
+// ===== THEME =====
+function changeTheme(){
+  var th=prompt("THEME:\n1 - Dark (Normal)\n2 - Gold\n3 - Blue\n4 - Pink\nNumber likho:");
+  if(!th) return;
+  localStorage.setItem("cloq_theme", th);
+  applyTheme();
+  alert("✅ Theme lag gaya!");
 }
-/* Unlock button */
-#cloqLockFix button{
-  width: 100% !important;
-  max-width: 320px !important;
-  padding: 16px !important;
-  border-radius: 30px !important;
-  font-size: 18px !important;
-  display: block !important;
+function applyTheme(){
+  document.body.classList.remove("theme-gold","theme-blue","theme-pink");
+  var th=localStorage.getItem("cloq_theme");
+  if(th==="2") document.body.classList.add("theme-gold");
+  if(th==="3") document.body.classList.add("theme-blue");
+  if(th==="4") document.body.classList.add("theme-pink");
 }
-</style>
-<script>
-// Lock ko dobara column me karo
-setTimeout(function(){
-  var l = document.getElementById("cloqLockFix");
-  if(l){
-    l.style.flexDirection="column";
-    l.style.alignItems="center";
-    l.style.justifyContent="center";
-  }
-  // Agar lock wali div abhi bhi ek line me hai to usko bhi theek karo
-  document.querySelectorAll("div").forEach(function(d){
-    if(d.innerText && d.innerText.includes("CLOQ Locked")){
-      d.style.display="flex";
-      d.style.flexDirection="column";
-      d.style.alignItems="center";
-      d.style.justifyContent="center";
-      d.style.gap="0px";
-      d.style.textAlign="center";
-    }
+
+// ===== PRIVACY =====
+function changePrivacy(){
+  var c=prompt("PRIVACY:\nLast Seen:\n1 - Sab ko dikhao\n2 - Sirf Friends ko\n3 - Kisi ko nahi\n\nOnline:\n4 - Online Show karo\n5 - Online Hide karo\n\nNumber likho:");
+  if(c==="1") localStorage.setItem("cloq_lastseen","Sab ko");
+  if(c==="2") localStorage.setItem("cloq_lastseen","Sirf Friends");
+  if(c==="3") localStorage.setItem("cloq_lastseen","Kisi ko nahi");
+  if(c==="4") localStorage.setItem("cloq_online","show");
+  if(c==="5") localStorage.setItem("cloq_online","hide");
+  updatePrivacyUI();
+  alert("✅ Privacy save ho gayi!");
+}
+function updatePrivacyUI(){
+  var ls=localStorage.getItem("cloq_lastseen")||"Sab ko";
+  document.getElementById("privacyStatus").innerText=ls;
+  var on=localStorage.getItem("cloq_online");
+  document.getElementById("headerStatus").innerText = on==="hide" ? "Last seen: "+ls : "● Online";
+  var co=document.getElementById("chatOnline");
+  if(co) co.innerText = on==="hide" ? "Last seen: "+ls : "● Online";
+}
+
+// ===== PROFILE =====
+function openProfile(){
+  var p={}; try{ p=JSON.parse(localStorage.getItem("cloq_profile")||"{}"); }catch(e){}
+  document.getElementById("profName").value=p.name||"";
+  document.getElementById("profBio").value=p.bio||"Hey! I am using CLOQ";
+  document.getElementById("profPhone").value=p.phone||"";
+  var dp=document.getElementById("profDP");
+  if(p.dp) dp.innerHTML='<img src="'+p.dp+'" style="width:100%;height:100%;object-fit:cover">';
+  else dp.innerText=p.dpEmoji||(p.name ? p.name[0].toUpperCase() : "👤");
+  document.getElementById("profileModal").style.display="flex";
+}
+function closeProfile(){ document.getElementById("profileModal").style.display="none"; }
+function changeDP(){
+  var em=prompt("DP ke liye Emoji likho (😎🔥👑) ya Photo ka Link paste karo:");
+  if(!em) return;
+  var dp=document.getElementById("profDP");
+  if(em.startsWith("http")) dp.innerHTML='<img src="'+em+'" style="width:100%;height:100%;object-fit:cover">';
+  else dp.innerText=em;
+  window._tempDP = em.startsWith("http") ? em : "";
+  window._tempEmoji = em.startsWith("http") ? "" : em;
+}
+function saveProfile(){
+  var name=document.getElementById("profName").value.trim();
+  if(!name){ alert("Naam likho"); return; }
+  var old={}; try{ old=JSON.parse(localStorage.getItem("cloq_profile")||"{}"); }catch(e){}
+  var data={name:name, bio:document.getElementById("profBio").value.trim(), phone:document.getElementById("profPhone").value.trim(), dp:window._tempDP!==undefined?window._tempDP:(old.dp||""), dpEmoji:window._tempEmoji!==undefined?window._tempEmoji:(old.dpEmoji||"")};
+  localStorage.setItem("cloq_profile", JSON.stringify(data));
+  localStorage.setItem("cloq_name", name);
+  window._tempDP=undefined; window._tempEmoji=undefined;
+  closeProfile(); loadProfileToHeader();
+  alert("✅ Profile Save ho gayi!");
+}
+
+// ===== ROOMS - FIXED =====
+function getRooms(){ try{ return JSON.parse(localStorage.getItem("cloq_rooms")||"[]"); }catch(e){ return []; } }
+function loadRooms(){
+  var rooms=getRooms();
+  var box=document.getElementById("roomsList");
+  if(rooms.length===0){ box.innerHTML='<p style="text-align:center;color:#8696a0">Abhi koi Room nahi hai. Neeche se banao.</p>'; return; }
+  var html="";
+  rooms.forEach(function(r,i){
+    html+='<div class="roomCard"><div style="font-size:40px">🏠</div><h3 style="margin:8px 0 2px">'+r.name+'</h3><p style="color:#8696a0;font-size:12px;margin:0">'+(r.desc||"")+'</p><div style="display:flex;gap:8px;margin-top:12px"><button onclick="enterRoom('+i+')" style="flex:1;background:#00a884;color:#fff;border:none;padding:11px;border-radius:20px;font-weight:800;cursor:pointer">🚪 Enter Room</button><button onclick="editRoom('+i+')" style="flex:1;background:#2a3942;color:#fff;border:none;padding:11px;border-radius:20px;cursor:pointer">✏️ Edit</button><button onclick="deleteRoom('+i+')" style="background:#ff3b30;color:#fff;border:none;padding:11px 14px;border-radius:20px;cursor:pointer">🗑️</button></div></div>';
   });
-},500);
-setTimeout(function(){
-  var l = document.getElementById("cloqLockFix");
-  if(l){ l.style.flexDirection="column"; }
-},1500);
-</script>
-  <!-- ===== PART 6C - LOCK CENTER + EYE + FORGOT PIN ===== -->
-<style>
-#cloqLockFix{
-  display:flex!important; flex-direction:column!important;
-  align-items:center!important; justify-content:center!important;
-  padding:20px!important; text-align:center!important;
+  box.innerHTML=html;
 }
-#cloqLockFix > div:first-child{
-  background:#111b21!important; padding:28px 20px!important;
-  border-radius:28px!important; width:100%!important; max-width:340px!important;
-  box-shadow:0 20px 60px rgba(0,0,0,.6)!important;
-  display:flex!important; flex-direction:column!important; align-items:center!important;
+function showRooms(){ showTab("rooms"); }
+function createRoom(){
+  var n=prompt("Room ka Naam likho:"); if(!n) return;
+  var d=prompt("Room Description likho:")||"";
+  var rooms=getRooms(); rooms.push({name:n,desc:d,id:Date.now()});
+  localStorage.setItem("cloq_rooms", JSON.stringify(rooms));
+  loadRooms(); showTab("rooms");
+  alert("✅ Room ban gaya: "+n);
 }
-#cloqPinWrap{ position:relative!important; width:100%!important; margin:16px 0 12px!important; }
-#cloqPinWrap input{
-  width:100%!important; padding:16px 48px 16px 16px!important;
-  font-size:22px!important; letter-spacing:8px!important; text-align:center!important;
-  border-radius:16px!important; background:#202c33!important; color:#fff!important;
-  border:none!important; outline:none!important; box-sizing:border-box!important;
+function editRoom(i){
+  var rooms=getRooms();
+  var n=prompt("Naya Naam:", rooms[i].name); if(n) rooms[i].name=n;
+  var d=prompt("Nayi Description:", rooms[i].desc); if(d!==null) rooms[i].desc=d;
+  localStorage.setItem("cloq_rooms", JSON.stringify(rooms)); loadRooms();
 }
-#cloqEyeBtn{
-  position:absolute!important; right:12px!important; top:50%!important;
-  transform:translateY(-50%)!important; background:none!important; border:none!important;
-  font-size:22px!important; cursor:pointer!important; padding:4px!important;
+function deleteRoom(i){
+  if(!confirm("Room delete karna hai?")) return;
+  var rooms=getRooms(); rooms.splice(i,1);
+  localStorage.setItem("cloq_rooms", JSON.stringify(rooms)); loadRooms();
 }
-#cloqForgotPin{
-  background:none!important; border:none!important; color:#00e676!important;
-  font-size:13px!important; font-weight:700!important; text-decoration:underline!important;
-  cursor:pointer!important; margin-top:12px!important;
+function enterRoom(i){
+  var rooms=getRooms(); var r=rooms[i];
+  document.getElementById("roomModalTitle").innerText="🏠 "+r.name;
+  document.getElementById("roomModalBody").innerHTML='<div style="font-size:60px">🏠</div><h2 style="margin:10px 0 4px">'+r.name+'</h2><p style="color:#8696a0">'+(r.desc||"")+'</p><p style="background:#202c33;padding:12px;border-radius:12px">Tum <b>'+r.name+'</b> me enter ho gaye! 🎉<br>Ab yahan sab chat kar sakte hain.</p><button onclick="closeRoomModal(); openChat(\''+r.name+'\')" style="width:100%;background:#00a884;color:#fff;border:none;padding:14px;border-radius:30px;font-weight:800;cursor:pointer;margin-top:10px">💬 Is Room Me Chat Karo</button><button onclick="editRoom('+i+'); closeRoomModal();" style="width:100%;background:#202c33;color:#fff;border:none;padding:12px;border-radius:30px;cursor:pointer;margin-top:8px">✏️ Room Edit Karo</button>';
+  document.getElementById("roomModal").style.display="flex";
 }
-</style>
-<script>
-function fixLockCenter(){
-  var lockBox=null;
-  document.querySelectorAll("div").forEach(function(d){
-    if(d.innerText && d.innerText.includes("CLOQ Locked") && !d._centerFixed){
-      // Sab se bahar wali lock div
-      lockBox=d;
-    }
-  });
-  // PIN input dhoondo
-  var pinInput=null;
-  document.querySelectorAll("input").forEach(function(inp){
-    var ph=(inp.placeholder||"").toLowerCase();
-    if(ph.includes("pin")) pinInput=inp;
-  });
-  if(!pinInput) return;
-  if(pinInput._eyeFixed) return;
-  pinInput._eyeFixed=true;
-  pinInput.type="password";
+function closeRoomModal(){ document.getElementById("roomModal").style.display="none"; }
 
-  // 1. PIN ko wrap me daalo aur Eye lagao
-  var wrap=document.createElement("div");
-  wrap.id="cloqPinWrap";
-  pinInput.parentNode.insertBefore(wrap, pinInput);
-  wrap.appendChild(pinInput);
-  var eye=document.createElement("button");
-  eye.id="cloqEyeBtn"; eye.innerText="👁️"; eye.type="button";
-  eye.onclick=function(){
-    if(pinInput.type==="password"){ pinInput.type="text"; eye.innerText="🙈"; }
-    else { pinInput.type="password"; eye.innerText="👁️"; }
-  };
-  wrap.appendChild(eye);
-
-  // 2. Forgot PIN button lagao - Unlock ke neeche
-  var unlockBtn=null;
-  document.querySelectorAll("button").forEach(function(b){
-    if(b.innerText && b.innerText.trim()==="Unlock") unlockBtn=b;
-  });
-  if(unlockBtn && !document.getElementById("cloqForgotPin")){
-    var fb=document.createElement("button");
-    fb.id="cloqForgotPin"; fb.innerText="Forgot PIN? - Yahan Dabake Reset Karo"; fb.type="button";
-    fb.onclick=function(){
-      var email=prompt("Apna Email likho jisse account bana tha:");
-      if(!email) return;
-      email=email.trim().toLowerCase();
-      var users={}; try{ users=JSON.parse(localStorage.getItem("cloq_users")||"{}"); }catch(e){}
-      // Email check na bhi ho to bhi reset de do, taake lock na phanse
-      var newPin=prompt("Naya 4-Digit PIN likho (e.g. 1234):");
-      if(!newPin || newPin.length<4){ alert("❌ PIN 4 digit ka hona chahiye"); return; }
-      localStorage.setItem("cloq_pin", newPin);
-      // Agar purana pin kisi aur naam se save tha to bhi update karo
-      localStorage.setItem("cloq_lock_pin", newPin);
-      localStorage.setItem("app_pin", newPin);
-      pinInput.value=newPin;
-      pinInput.type="text";
-      alert("✅ Naya PIN save ho gaya: "+newPin+"\nAb Unlock dabao.");
-    };
-    unlockBtn.after(fb);
-  }
-
-  // 3. Center fix - lock wali div ko center me lao
-  var l=document.getElementById("cloqLockFix");
-  if(l){ l.style.display="flex"; l.style.flexDirection="column"; l.style.alignItems="center"; l.style.justifyContent="center"; }
+// ===== CHAT - TICK + TIME FIXED =====
+var currentChat="Ayesha";
+function openChat(name){
+  currentChat=name;
+  document.getElementById("chatName").innerText=name;
+  document.getElementById("chatAvatar").innerText=name[0]||"😊";
+  document.getElementById("chatWindow").style.display="flex";
+  document.getElementById("chatMessages").innerHTML="";
+  // Pehla welcome message
+  addMsg("Salam! "+name+" wali chat me welcome 👋", false);
 }
-setTimeout(fixLockCenter, 500);
-setTimeout(fixLockCenter, 1500);
-setTimeout(fixLockCenter, 2500);
-</script>
-  <!-- ===== PART 6D - WRONG PIN PAKKA FIX ===== -->
-<script>
-function fixWrongPin(){
-  var pinInput=null;
-  document.querySelectorAll("input").forEach(function(inp){
-    var ph=(inp.placeholder||"").toLowerCase();
-    if(ph.includes("pin")) pinInput=inp;
-  });
-  if(!pinInput) return;
-
-  var unlockBtn=null;
-  document.querySelectorAll("button").forEach(function(b){
-    if(b.innerText && b.innerText.trim()==="Unlock") unlockBtn=b;
-  });
-  if(!unlockBtn || unlockBtn._pinFixed) return;
-  unlockBtn._pinFixed=true;
-
-  // Purane wale click ko hata ke naya lagao - clone karke
-  var newBtn=unlockBtn.cloneNode(true);
-  unlockBtn.parentNode.replaceChild(newBtn, unlockBtn);
-
-  newBtn.addEventListener("click", function(e){
-    e.preventDefault(); e.stopPropagation();
-    var entered=(pinInput.value||"").trim();
-    if(!entered){ alert("PIN likho pehle"); return; }
-
-    // Saari jagah se PIN nikalo - jahan bhi save ho
-    var savedList=[];
-    ["cloq_pin","cloq_lock_pin","app_pin","pin","CLOQ_PIN","lockPin"].forEach(function(k){
-      var v=localStorage.getItem(k);
-      if(v) savedList.push(String(v).trim());
-    });
-    // Agar kahi bhi PIN save nahi hai, to jo dala hai wahi naya PIN bana do
-    if(savedList.length===0){
-      localStorage.setItem("cloq_pin", entered);
-      localStorage.setItem("cloq_lock_pin", entered);
-      localStorage.setItem("app_pin", entered);
-      alert("✅ Pehli baar PIN set ho gaya: "+entered);
-      unlockNow(); return;
-    }
-
-    // Check karo - kisi ek se bhi match ho to sahi hai
-    var isCorrect=false;
-    for(var i=0;i<savedList.length;i++){
-      if(String(savedList[i])===String(entered)) isCorrect=true;
-    }
-
-    if(isCorrect){
-      // Saari jagah ek hi PIN kar do taake aage kabhi masla na ho
-      localStorage.setItem("cloq_pin", entered);
-      localStorage.setItem("cloq_lock_pin", entered);
-      localStorage.setItem("app_pin", entered);
-      unlockNow();
-    } else {
-      // Galat hai to batao ke sahi PIN kaun sa save hai - sirf tumhe pata chalega
-      alert("❌ Wrong PIN\n\nTumne dala: "+entered+"\nSave hua PIN: "+savedList[0]+"\n\nAgar yaad nahi to neeche 'Forgot PIN?' dabao, naya PIN bana lo.");
-      pinInput.value=""; pinInput.focus();
-    }
-  });
-
-  function unlockNow(){
-    var l=document.getElementById("cloqLockFix");
-    if(l) l.style.display="none";
-    // Jo bhi lock wali div hai usko hide karo
-    document.querySelectorAll("div").forEach(function(d){
-      if(d.innerText && d.innerText.includes("CLOQ Locked")){
-        // Sirf sab se bahar wali ko hide karo, andar wali ko nahi
-        if(d.id==="cloqLockFix") d.style.display="none";
-      }
-    });
-    document.body.style.overflow="";
-    // Home dikhao
-    var home=document.getElementById("homePage");
-    if(home) home.classList.remove("hidden");
-    var login=document.getElementById("loginPage");
-    if(login && home && !home.classList.contains("hidden")) login.classList.add("hidden");
-    alert("✅ Welcome Back! Lock khul gaya.");
-  }
-
-  // Enter dabane se bhi unlock ho
-  pinInput.addEventListener("keydown", function(ev){
-    if(ev.key==="Enter"){ newBtn.click(); }
-  });
-}
-setTimeout(fixWrongPin, 600);
-setTimeout(fixWrongPin, 1600);
-setTimeout(fixWrongPin, 2600);
-</script>
-  <!-- ===== PART 6E - ANKH END PE + PIN BOX CLICK FIX ===== -->
-<style>
-#cloqPinWrap{
-  position:relative!important; width:100%!important;
-  display:block!important; text-align:left!important;
-}
-#cloqPinWrap input{
-  width:100%!important; box-sizing:border-box!important;
-  padding-right:52px!important; padding-left:16px!important;
-  text-align:center!important; position:relative!important; z-index:1!important;
-}
-#cloqEyeBtn{
-  position:absolute!important;
-  left:auto!important; right:10px!important; top:50%!important; bottom:auto!important;
-  transform:translateY(-50%)!important;
-  width:38px!important; height:38px!important;
-  display:flex!important; align-items:center!important; justify-content:center!important;
-  background:transparent!important; border:none!important;
-  font-size:20px!important; cursor:pointer!important;
-  z-index:2!important; margin:0!important; padding:0!important;
-  pointer-events:auto!important;
-}
-</style>
-<script>
-function fixEyeEnd(){
-  var eye=document.getElementById("cloqEyeBtn");
-  if(!eye) return;
-  // Ankh ko bilkul end pe set karo
-  eye.style.left="auto";
-  eye.style.right="10px";
-  eye.style.top="50%";
-  eye.style.transform="translateY(-50%)";
-  eye.style.position="absolute";
-  eye.style.width="38px";
-  eye.style.height="38px";
-  // PIN input ko phir se click-able banao
-  var wrap=document.getElementById("cloqPinWrap");
-  if(wrap){
-    wrap.style.position="relative";
-    wrap.style.display="block";
-  }
-  var pin=null;
-  document.querySelectorAll("input").forEach(function(i){
-    if((i.placeholder||"").toLowerCase().includes("pin")) pin=i;
-  });
-  if(pin){
-    pin.style.pointerEvents="auto";
-    pin.style.position="relative";
-    pin.style.zIndex="1";
-    pin.style.paddingRight="52px";
-    // Jab bhi PIN box pe click ho to keyboard khule
-    if(!pin._clickFixed){
-      pin._clickFixed=true;
-      pin.addEventListener("click", function(e){ e.stopPropagation(); pin.focus(); });
-    }
+function closeChat(){ document.getElementById("chatWindow").style.display="none"; }
+function addMsg(text, mine){
+  var box=document.getElementById("chatMessages");
+  var now=new Date();
+  var h=now.getHours(); var ampm=h>=12?"PM":"AM"; h=h%12||12;
+  var time=h+":"+(now.getMinutes()<10?"0":"")+now.getMinutes()+" "+ampm;
+  var row=document.createElement("div"); row.className="msgRow";
+  if(!mine){ row.style.alignItems="flex-start"; }
+  var bubble=document.createElement("div"); bubble.className="msgBubble"; bubble.innerText=text;
+  if(!mine){ bubble.style.background="#202c33"; }
+  var meta=document.createElement("div"); meta.className="msgMeta";
+  if(mine){
+    var tickId="tick"+Date.now()+Math.floor(Math.random()*1000);
+    meta.innerHTML='<span>'+time+'</span><span class="tick" id="'+tickId+'">✓</span>';
+    row.appendChild(bubble); row.appendChild(meta); box.appendChild(row); box.scrollTop=box.scrollHeight;
+    // 1 sec baad Double Tick
+    setTimeout(function(){ var t=document.getElementById(tickId); if(t) t.innerText="✓✓"; },1000);
+    // 3 sec baad Blue Tick = Seen
+    setTimeout(function(){ var t=document.getElementById(tickId); if(t){ t.innerText="✓✓"; t.classList.add("blue"); } },3000);
+  } else {
+    meta.innerHTML='<span>'+time+'</span>';
+    row.appendChild(bubble); row.appendChild(meta); box.appendChild(row); box.scrollTop=box.scrollHeight;
   }
 }
-setTimeout(fixEyeEnd, 500);
-setTimeout(fixEyeEnd, 1500);
-setTimeout(fixEyeEnd, 2500);
+function sendMessage(){
+  var inp=document.getElementById("chatInput");
+  var txt=inp.value.trim(); if(!txt) return;
+  addMsg(txt, true); inp.value="";
+  // Samne wala reply karega
+  setTimeout(function(){ addMsg("Ok, samajh gaya 👍", false); },3500);
+}
+document.getElementById("chatInput").addEventListener("keydown", function(e){ if(e.key==="Enter") sendMessage(); });
+
+// ===== START - Agar pehle login hai to seedha Home, warna Login =====
+window.onload=function(){
+  var name=localStorage.getItem("cloq_name");
+  var pin=getPin();
+  if(name && pin){
+    // Pehle se login hai - Lock dikhao
+    document.getElementById("loginPage").style.display="none";
+    document.getElementById("homePage").style.display="block";
+    loadProfileToHeader(); loadRooms(); updateVipUI(); updatePrivacyUI(); applyTheme();
+    document.getElementById("lockScreen").style.display="flex";
+  } else {
+    document.getElementById("loginPage").style.display="flex";
+    document.getElementById("homePage").style.display="none";
+  }
+};
 </script>
 </body>
 </html>
