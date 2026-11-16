@@ -311,5 +311,73 @@ setTimeout(function(){
   if(localStorage.getItem("cloq_applock")){ document.getElementById("lockModal").classList.remove("hidden"); }
 },800);
 </script>
+  <!-- ===== CLOQ PART 5 LIVE ICON - Apna Asli Icon Wapas ===== -->
+<style>
+.liveIcon{ animation: liveFloat 2.5s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(0,168,132,0.6)); }
+.liveIconSmall{ animation: liveFloat 2.5s ease-in-out infinite; filter: drop-shadow(0 0 15px rgba(0,168,132,0.5)); }
+@keyframes liveFloat{ 0%,100%{ transform: translateY(0) scale(1) rotate(0deg); } 50%{ transform: translateY(-8px) scale(1.05) rotate(2deg); } }
+</style>
+<script>
+// Asli icon wapas lao - icon.png
+setTimeout(function(){
+  document.querySelectorAll("img").forEach(function(img){
+    if(img.src.includes("icon") || img.getAttribute("src")==="icon.jpg" || img.getAttribute("src")==="icon.png"){
+      img.src="icon.png";
+      img.style.display="block";
+      // Live animation lagao
+      if(!img.className.includes("liveIcon")) img.className = img.className + " liveIcon";
+    }
+  });
+  // Agar icon phir bhi na mile to batao
+  setTimeout(function(){
+    var testImg=new Image();
+    testImg.onload=function(){ console.log("Icon mil gaya!"); };
+    testImg.onerror=function(){ alert("⚠️ icon.png abhi bhi GitHub pe nahi hai. Pehle Step 2 se dobara upload karo, phir page refresh karo."); };
+    testImg.src="icon.png";
+  }, 500);
+}, 400);
+
+// ===== FORGOT PASSWORD - Login ke neeche =====
+setTimeout(function(){
+  if(!document.getElementById("forgotBtn")){
+    var loginBtn=document.getElementById("loginBtn");
+    if(loginBtn){
+      var btn=document.createElement("button");
+      btn.id="forgotBtn";
+      btn.innerText="Forgot Password? - Yahan Dabake Reset Karo";
+      btn.style.cssText="width:100%;background:none;color:#00e676;padding:10px;font-size:13px;font-weight:600;margin-top:6px;text-decoration:underline;cursor:pointer;border:none;";
+      btn.onclick=function(){
+        var email=prompt("Apna Email likho jiska password bhool gaye ho:");
+        if(!email) return; email=email.trim().toLowerCase();
+        var users={}; try{ users=JSON.parse(localStorage.getItem("cloq_users")||"{}"); }catch(e){}
+        if(!users[email]){ alert("❌ Is Email se koi account nahi mila. Pehle Sign Up karo."); return; }
+        var newPass=prompt("Naya Password likho (6 se bara):");
+        if(!newPass || newPass.length<6){ alert("❌ Password chota hai"); return; }
+        users[email].pass=newPass; localStorage.setItem("cloq_users", JSON.stringify(users));
+        var p=document.getElementById("password"); if(p) p.value=newPass;
+        alert("✅ Password change ho gaya! Ab Login dabao.");
+      };
+      loginBtn.after(btn);
+    }
+  }
+}, 600);
+
+// ===== AUTO-LOGIN - Har baar Login na aaye =====
+setTimeout(function(){
+  try{
+    var saved=localStorage.getItem("cloq_login");
+    if(saved){
+      var u=JSON.parse(saved);
+      var loginPage=document.getElementById("loginPage");
+      var homePage=document.getElementById("homePage");
+      if(loginPage && homePage && homePage.classList.contains("hidden")){
+        if(typeof goHome==="function") goHome(u.name, u.email);
+        else { loginPage.classList.add("hidden"); homePage.classList.remove("hidden"); }
+      }
+      var sp=document.getElementById("splash"); if(sp) sp.style.display="none";
+    }
+  }catch(e){}
+}, 1800);
+</script>
 </body>
 </html>
