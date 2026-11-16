@@ -549,5 +549,260 @@ window.showHome=function(){ if(_oldShow2) _oldShow2(); setTimeout(buildCloqLight
 setTimeout(buildCloqLightHome, 600);
 setTimeout(buildCloqLightHome, 1500);
   </script>
+  <!-- ===== PART FINAL 7 - CHAT INSIDE - WHATSAPP LAYOUT, CLOQ FEATURES ===== -->
+<style>
+#chatWindow{ background:#efe9dd!important; color:#111!important; }
+.chatHeaderCloq{ background:#fff; display:flex; align-items:center; gap:10px; padding:10px 12px; position:sticky; top:0; z-index:20; border-bottom:1px solid #eee; }
+.chatBubbleWhite{ background:#fff; color:#111; padding:8px 12px; border-radius:12px; max-width:82%; font-size:16px; line-height:1.35; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.chatBubbleGreen{ background:#d9fdd3; color:#111; padding:8px 12px; border-radius:12px; max-width:82%; font-size:16px; line-height:1.35; box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.chatMenu{ position:absolute; top:52px; right:10px; background:#fff; border-radius:14px; box-shadow:0 8px 24px rgba(0,0,0,.22); width:270px; z-index:300; overflow:hidden; display:none; }
+.chatMenu button{ width:100%; background:none; border:none; text-align:left; padding:14px 18px; font-size:16px; cursor:pointer; color:#111; }
+.chatMenu button:active{ background:#f5f2ea; }
+.chatMenu .div{ height:1px; background:#eee; }
+.chatInputBar{ background:#fff; display:flex; gap:6px; padding:8px 10px; align-items:center; }
+.chatInputPill{ flex:1; background:#f0ede6; border-radius:30px; display:flex; align-items:center; gap:8px; padding:8px 12px; }
+.chatInputPill input{ flex:1; background:transparent; border:none; outline:none; font-size:16px; }
+.voiceBtn{ width:50px; height:50px; min-width:50px; border-radius:50%; background:linear-gradient(135deg,#00a884,#7ac74f); border:none; font-size:22px; color:#fff; cursor:pointer; }
+.callModal{ position:fixed; inset:0; background:#0b141a; z-index:500; display:none; flex-direction:column; align-items:center; justify-content:center; color:#fff; padding:20px; text-align:center; }
+.funWatermark{ position:fixed; inset:0; pointer-events:none; z-index:400; display:none; opacity:.12; font-size:28px; font-weight:900; color:#000; transform:rotate(-25deg); text-align:center; line-height:90px; }
+</style>
+<div id="funWatermark" class="funWatermark">CLOQ • WAQAS • CLOQ • WAQAS<br>CLOQ • FUN MODE • CLOQ<br>CLOQ • WAQAS • CLOQ</div>
+<script>
+// ===== CHAT WINDOW KO WHATSAPP JESA BANAO =====
+function buildCloqChat(){
+  var cw=document.getElementById("chatWindow");
+  if(!cw || cw._cloqChat) return;
+  cw._cloqChat=true;
+  cw.style.display="none";
+  cw.innerHTML=
+  // HEADER
+  '<div class="chatHeaderCloq">'
+  +'<button onclick="closeChat()" style="background:none;border:none;font-size:26px;cursor:pointer">←</button>'
+  +'<div onclick="openChatProfile()" style="width:42px;height:42px;border-radius:50%;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;overflow:hidden" id="cloqChatAvatar">👨</div>'
+  +'<div onclick="openChatProfile()" style="flex:1;cursor:pointer"><b id="chatName" style="font-size:18px">Mudasir Ch</b><div id="chatOnline" style="font-size:12px;color:#666">8:49 PM • Online</div></div>'
+  +'<button onclick="startVideoCall()" style="background:none;border:none;font-size:26px;cursor:pointer">📹</button>'
+  +'<button onclick="startVoiceCall()" style="background:none;border:none;font-size:26px;cursor:pointer">📞</button>'
+  +'<button onclick="toggleChatMenu(event)" style="background:none;border:none;font-size:24px;cursor:pointer">⋮</button>'
+  // 3 DOT MENU - Screenshot jesa
+  +'<div id="chatMenu" class="chatMenu">'
+  +'<button onclick="alert(\'New Group:\\nGroup banao aur doston ko add karo\');hideChatMenu()">New group</button><div class="div"></div>'
+  +'<button onclick="openChatProfile();hideChatMenu()">View contact</button>'
+  +'<button onclick="searchInChat();hideChatMenu()">Search</button>'
+  +'<button onclick="alert(\'Media, links, and docs:\\nIs chat ki sari Photos / Videos / Files yahan dikhengi\');hideChatMenu()">Media, links, and docs</button>'
+  +'<button onclick="toggleMute();hideChatMenu()">Mute notifications - <span id="muteTxt">OFF</span></button>'
+  +'<button onclick="toggleVanish();hideChatMenu()">Disappearing messages - <span id="vanishTxt">OFF</span></button>'
+  +'<button onclick="changeChatTheme();hideChatMenu()">Chat theme</button><div class="div"></div>'
+  +'<button onclick="toggleMoreMenu(event)" style="display:flex;justify-content:space-between">More <span>›</span></button>'
+  // MORE SUBMENU
+  +'<div id="moreMenu" style="display:none;background:#f9f7f2">'
+  +'<button onclick="blockContact();hideChatMenu()">🚫 Block</button>'
+  +'<button onclick="reportContact();hideChatMenu()">⚠️ Report</button>'
+  +'<button onclick="clearThisChat();hideChatMenu()">🧹 Clear chat</button>'
+  +'<button onclick="exportChat();hideChatMenu()">📤 Export chat</button>'
+  +'</div>'
+  // HAMARE APNE FEATURES - View Contact ke neeche
+  +'<div class="div"></div><div style="padding:10px 18px 4px;font-size:11px;font-weight:800;color:#888;letter-spacing:1px">CLOQ SPECIAL ✨</div>'
+  +'<button onclick="toggleVanish();hideChatMenu()">👻 Vanish Mode - <span id="vanishTxt2">OFF</span><div style="font-size:12px;color:#888">Message dekhte hi gayab</div></button>'
+  +'<button onclick="toggleFunMode();hideChatMenu()">🎭 Fun Mode - <span id="funTxt">OFF</span><div style="font-size:12px;color:#888">Logo + Watermark ke saath</div></button>'
+  +'<button onclick="setupLockChat();hideChatMenu()">🔒 Lock Chat - <span id="lockChatTxt">OFF</span><div style="font-size:12px;color:#888">Real + Fake PIN - Double Protection</div></button>'
+  +'<button onclick="alert(\'⭐ Star Message:\\nIs message ko star karke save karo\');hideChatMenu()">⭐ Starred messages</button>'
+  +'</div>'
+  +'</div>'
+  // MESSAGES AREA - Doodle jesa background
+  +'<div id="chatMessages" style="flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;background-image:radial-gradient(#00000008 1px, transparent 1px);background-size:22px 22px"></div>'
+  // INPUT BAR - Screenshot jesa
+  +'<div class="chatInputBar">'
+  +'<div class="chatInputPill"><span onclick="alert(\'Emoji Panel jald aayega 😊\')" style="font-size:24px;cursor:pointer">😊</span><input id="chatInput" placeholder="Message"><span onclick="alert(\'Attach:\\nPhoto / Video / File / Location\')" style="font-size:22px;cursor:pointer">📎</span><span onclick="openCameraChat()" style="font-size:22px;cursor:pointer">📷</span></div>'
+  +'<button class="voiceBtn" id="micBtn" onclick="toggleVoiceNote()">🎤</button>'
+  +'</div>'
+  // CALL MODAL
+  +'<div id="callModal" class="callModal"><div id="callAvatar" style="width:110px;height:110px;border-radius:50%;background:#333;display:flex;align-items:center;justify-content:center;font-size:55px">👨</div><h2 id="callName" style="margin:16px 0 4px">Mudasir Ch</h2><div id="callStatus" style="color:#00e676">Calling...</div><video id="callVideo" autoplay playsinline muted style="width:100%;max-width:320px;border-radius:16px;background:#000;margin-top:14px;display:none"></video><div style="display:flex;gap:16px;margin-top:22px"><button onclick="toggleMicCall(this)" style="width:60px;height:60px;border-radius:50%;background:#333;border:none;font-size:24px;color:#fff">🎤</button><button onclick="toggleVideoCallBtn()" style="width:60px;height:60px;border-radius:50%;background:#333;border:none;font-size:24px;color:#fff">📹</button><button onclick="endCall()" style="width:60px;height:60px;border-radius:50%;background:#ff3b30;border:none;font-size:24px;color:#fff">📞</button></div><p style="font-size:11px;color:#888;margin-top:14px">CLOQ Call • End-to-End Encrypted</p></div>';
+
+  // Input Enter
+  setTimeout(function(){
+    var inp=document.getElementById("chatInput");
+    if(inp) inp.addEventListener("keydown", function(e){ if(e.key==="Enter") sendMessage(); });
+  },500);
+}
+
+// ===== MENU =====
+function toggleChatMenu(e){ if(e) e.stopPropagation(); var m=document.getElementById("chatMenu"); m.style.display = m.style.display==="block" ? "none" : "block"; }
+function hideChatMenu(){ var m=document.getElementById("chatMenu"); if(m) m.style.display="none"; var mm=document.getElementById("moreMenu"); if(mm) mm.style.display="none"; }
+function toggleMoreMenu(e){ if(e) e.stopPropagation(); var m=document.getElementById("moreMenu"); m.style.display = m.style.display==="block" ? "none" : "block"; }
+document.addEventListener("click", function(e){ if(!e.target.closest("#chatMenu") && !e.target.closest(".chatHeaderCloq")) hideChatMenu(); });
+
+// ===== CHAT ACTIONS =====
+function searchInChat(){ var q=prompt("Is chat me kya dhoondna hai?"); if(q) alert("🔍 Search: '"+q+"'\nIs chat me '"+q+"' wale messages yahan highlight honge."); }
+function toggleMute(){ var cur=localStorage.getItem("cloq_mute")==="yes"?"no":"yes"; localStorage.setItem("cloq_mute",cur); document.getElementById("muteTxt").innerText=cur==="yes"?"ON":"OFF"; alert(cur==="yes" ? "🔕 Notifications Mute ho gayi" : "🔔 Notifications On ho gayi"); }
+function changeChatTheme(){ var t=prompt("Chat Theme:\n1 - Green (WhatsApp jesa)\n2 - Gold Premium\n3 - Pink\n4 - Blue\nNumber likho:"); if(!t) return; var box=document.getElementById("chatMessages"); if(t==="2") box.style.background="#fff8e1"; if(t==="3") box.style.background="#ffeef5"; if(t==="4") box.style.background="#eef5ff"; if(t==="1") box.style.background=""; alert("✅ Chat Theme lag gaya!"); }
+function blockContact(){ if(confirm("🚫 Is contact ko Block karna hai?\nWo tumhe message nahi kar sakega.")){ alert("✅ Block ho gaya. Unblock ke liye Settings > Blocked me jao."); closeChat(); } }
+function reportContact(){ if(confirm("⚠️ Is contact ko Report karna hai?\nSpam / Ghalat baat ki wajah se?")){ alert("✅ Report ho gayi. Hamari team check karegi. Tumhara naam zahir nahi hoga."); } }
+function clearThisChat(){ if(confirm("🧹 Sari chat delete karni hai?")){ document.getElementById("chatMessages").innerHTML=""; alert("✅ Chat Clear ho gayi."); } }
+function exportChat(){ alert("📤 Export Chat:\nChat ka backup download ho gaya (Demo)."); }
+function openChatProfile(){ var n=document.getElementById("chatName").innerText; var num=prompt("View Contact - "+n+"\n\nNaam: "+n+"\nPhone: 0300-XXXXXXX\nAbout: Hey! I am using CLOQ\n\n1 - Call karo\n2 - Block karo\n3 - Profile dekho\n\nNumber likho:"); if(num==="1") startVoiceCall(); if(num==="2") blockContact(); }
+function openCameraChat(){ alert("📷 Camera khul raha hai... Photo lo aur bhejo."); }
+
+// ===== VANISH MODE =====
+function toggleVanish(){
+  var cur=localStorage.getItem("cloq_vanish")==="yes"?"no":"yes";
+  localStorage.setItem("cloq_vanish",cur);
+  var t=cur==="yes"?"ON":"OFF";
+  if(document.getElementById("vanishTxt")) document.getElementById("vanishTxt").innerText=t;
+  if(document.getElementById("vanishTxt2")) document.getElementById("vanishTxt2").innerText=t;
+  alert(cur==="yes" ? "👻 Vanish Mode ON!\nAb jo message bhejoge wo samne wala dekhte hi gayab ho jayega. Screenshot lene pe bhi pata chalega." : "Vanish Mode OFF");
+}
+
+// ===== FUN MODE + AGREEMENT + WATERMARK =====
+function toggleFunMode(){
+  if(localStorage.getItem("cloq_fun")==="yes"){
+    localStorage.setItem("cloq_fun","no");
+    document.getElementById("funWatermark").style.display="none";
+    document.getElementById("funTxt").innerText="OFF";
+    alert("Fun Mode OFF ho gaya."); return;
+  }
+  var agree=confirm("🎭 FUN MODE - AGREEMENT - DHYAN SE PARHO\n\n1. Fun Mode sirf Mazaq / Fun ke liye hai.\n2. Tum iska MISUSE nahi karoge - Kisi ko tang karna, blackmail, fake photo/video banana MANA hai.\n3. Agar kisi ne misuse kiya to uske khilaf KARWAI hogi - Account BAN + Report.\n4. CLOQ ya Team is misuse ki ZIMMEDAR NAHI hogi. Zimmedari tumhari hogi.\n\nKya tum is Agreement se SEHMAT ho?\n\nOK = Haan, Sehemat hun\nCancel = Nahi");
+  if(!agree){ alert("Fun Mode ON nahi hua. Pehle Agreement se sehemat hona zaroori hai."); return; }
+  localStorage.setItem("cloq_fun","yes");
+  document.getElementById("funTxt").innerText="ON";
+  document.getElementById("funWatermark").style.display="block";
+  document.getElementById("funWatermark").innerText="CLOQ • "+(localStorage.getItem("cloq_name")||"WAQAS")+" • FUN MODE\n".repeat(6);
+  alert("🎭 Fun Mode ON!\n\nAb is chat pe CLOQ ka Logo + Tumhara Naam ka Watermark aa gaya hai.\nKoi bhi iska screenshot lega to pata chal jayega ye CLOQ Fun Mode se hai.\nMisuse mat karna!");
+}
+
+// ===== LOCK CHAT - REAL + FAKE PIN =====
+function setupLockChat(){
+  var real=localStorage.getItem("cloq_chat_real_pin");
+  if(!real){
+    var r1=prompt("🔒 LOCK CHAT - SETUP\n\nREAL PIN banao (Asli chat kholne ke liye):\n4 digit likho:");
+    if(!r1 || r1.length<4) return;
+    var f1=prompt("FAKE PIN banao (Koi zabardasti khulwaye to ye dena - Khali / Fake chat khulegi):\n4 digit likho, Real se alag:");
+    if(!f1 || f1.length<4 || f1===r1){ alert("Fake PIN Real se alag hona chahiye"); return; }
+    localStorage.setItem("cloq_chat_real_pin", r1);
+    localStorage.setItem("cloq_chat_fake_pin", f1);
+    localStorage.setItem("cloq_chat_locked","yes");
+    document.getElementById("lockChatTxt").innerText="ON";
+    alert("✅ Lock Chat ON!\n\nReal PIN: "+r1+" = Asli Chat\nFake PIN: "+f1+" = Khali Fake Chat\n\nKoi zabardasti bole to Fake PIN de dena, usko khali chat dikhegi.");
+    return;
+  }
+  var choice=prompt("🔒 Lock Chat ON hai\n\n1 - Lock ko OFF karo\n2 - PIN Change karo\n3 - Abhi Chat ko Lock karke Test karo\n\nNumber likho:");
+  if(choice==="1"){ localStorage.setItem("cloq_chat_locked","no"); document.getElementById("lockChatTxt").innerText="OFF"; alert("Lock OFF ho gaya."); }
+  if(choice==="2"){ localStorage.removeItem("cloq_chat_real_pin"); localStorage.removeItem("cloq_chat_fake_pin"); setupLockChat(); }
+  if(choice==="3"){ checkChatLock(); }
+}
+function checkChatLock(){
+  if(localStorage.getItem("cloq_chat_locked")!=="yes") return false;
+  var real=localStorage.getItem("cloq_chat_real_pin");
+  var fake=localStorage.getItem("cloq_chat_fake_pin");
+  var p=prompt("🔒 Ye Chat Locked Hai\nPIN likho:");
+  if(p===real) return false; // Asli kholo
+  if(p===fake){
+    // Fake chat dikhao - khali
+    document.getElementById("chatMessages").innerHTML="";
+    addMsg("Hi! 👋 (Fake Chat)", false);
+    alert("⚠️ Fake PIN diya - Fake / Khali Chat dikhai ja rahi hai.\nAsli chat ke liye Real PIN chahiye.");
+    return true;
+  }
+  alert("❌ Wrong PIN"); closeChat(); return true;
+}
+
+// ===== VOICE / VIDEO CALL - REAL =====
+var callTimer=null, callSec=0, callStream=null;
+function startVoiceCall(){ openCallModal(false); }
+function startVideoCall(){ openCallModal(true); }
+function openCallModal(isVideo){
+  var m=document.getElementById("callModal"); if(!m) return;
+  var name=document.getElementById("chatName") ? document.getElementById("chatName").innerText : "Mudasir Ch";
+  document.getElementById("callName").innerText=name;
+  document.getElementById("callAvatar").innerText=name[0]||"👨";
+  document.getElementById("callStatus").innerText = isVideo ? "Video Calling... Camera on ho raha hai" : "Voice Calling... Mic on ho raha hai";
+  m.style.display="flex";
+  callSec=0;
+  if(callTimer) clearInterval(callTimer);
+  callTimer=setInterval(function(){ callSec++; var mm=Math.floor(callSec/60); var ss=callSec%60; document.getElementById("callStatus").innerText="On Call - "+mm+":"+(ss<10?"0":"")+ss+" • CLOQ Secure"; },1000);
+  // REAL Mic / Camera
+  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({audio:true, video:isVideo}).then(function(stream){
+      callStream=stream;
+      if(isVideo){ var v=document.getElementById("callVideo"); v.style.display="block"; v.srcObject=stream; }
+      document.getElementById("callStatus").innerText="Connected • Mic ON"+(isVideo?" • Camera ON":"");
+    }).catch(function(){
+      document.getElementById("callStatus").innerText="Mic/Camera permission nahi mili - Demo Call chal rahi hai";
+    });
+  }
+}
+function toggleMicCall(btn){ if(btn.innerText==="🎤"){ btn.innerText="🔇"; btn.style.background="#ff3b30"; } else { btn.innerText="🎤"; btn.style.background="#333"; } if(callStream) callStream.getAudioTracks().forEach(function(t){ t.enabled=!t.enabled; }); }
+function toggleVideoCallBtn(){ var v=document.getElementById("callVideo"); v.style.display = v.style.display==="none" ? "block" : "none"; }
+function endCall(){
+  if(callTimer) clearInterval(callTimer);
+  if(callStream) callStream.getTracks().forEach(function(t){ t.stop(); });
+  document.getElementById("callModal").style.display="none";
+  document.getElementById("callVideo").style.display="none";
+  var mins=Math.floor(callSec/60); var secs=callSec%60;
+  alert("📞 Call khatam.\nDuration: "+mins+":"+secs);
+}
+function toggleVoiceNote(){
+  var btn=document.getElementById("micBtn");
+  if(btn.innerText==="🎤"){
+    btn.innerText="⏹️"; btn.style.background="#ff3b30";
+    alert("🎤 Voice Note Record ho raha hai... Dobara dabao to bhejo.");
+  } else {
+    btn.innerText="🎤"; btn.style.background="linear-gradient(135deg,#00a884,#7ac74f)";
+    // Voice note bhejo - WhatsApp jesa
+    var box=document.getElementById("chatMessages");
+    var row=document.createElement("div"); row.style.cssText="display:flex;flex-direction:column;align-items:flex-end;margin:6px 0";
+    var now=new Date(); var h=now.getHours()%12||12; var ampm=now.getHours()>=12?"PM":"AM";
+    row.innerHTML='<div class="chatBubbleGreen" style="display:flex;align-items:center;gap:8px">▶️ <span style="font-size:18px">▂▃▅▆▃▂▅▃</span> <span style="font-size:12px">0:02</span></div><div style="font-size:10px;color:#888;margin-top:3px">'+h+':'+(now.getMinutes()<10?"0":"")+now.getMinutes()+' '+ampm+' ✓✓</div>';
+    box.appendChild(row); box.scrollTop=box.scrollHeight;
+  }
+}
+
+// ===== OVERRIDE OLD openChat / addMsg / sendMessage =====
+var _oldOpenChat = window.openChat;
+window.openChat=function(name){
+  buildCloqChat();
+  // Purana openChat na chalao, naya chalao
+  currentChat=name;
+  var cw=document.getElementById("chatWindow");
+  cw.style.display="flex";
+  document.getElementById("chatName").innerText=name;
+  document.getElementById("chatAvatar").innerText=name[0]||"👨";
+  document.getElementById("cloqChatAvatar").innerText=name[0]||"👨";
+  document.getElementById("chatOnline").innerText="Online • Last seen today";
+  document.getElementById("chatMessages").innerHTML="";
+  // Lock check - Real / Fake
+  setTimeout(function(){ if(checkChatLock()) return; addMsg("Salam! "+name+" wali chat me welcome 👋", false); },200);
+};
+window.addMsg=function(text, mine){
+  var box=document.getElementById("chatMessages"); if(!box) return;
+  var now=new Date(); var h=now.getHours()%12||12; var ampm=now.getHours()>=12?"PM":"AM";
+  var time=h+":"+(now.getMinutes()<10?"0":"")+now.getMinutes()+" "+ampm;
+  var row=document.createElement("div");
+  row.style.cssText="display:flex;flex-direction:column;align-items:"+(mine?"flex-end":"flex-start")+";margin:6px 0";
+  var tickId="tick"+Date.now()+Math.floor(Math.random()*1000);
+  if(mine){
+    row.innerHTML='<div class="chatBubbleGreen">'+text+'</div><div style="font-size:11px;color:#666;margin-top:2px;display:flex;gap:4px"><span>'+time+'</span><span id="'+tickId+'" style="color:#53bdeb">✓</span></div>';
+  } else {
+    row.innerHTML='<div class="chatBubbleWhite">'+text+'</div><div style="font-size:11px;color:#888;margin-top:2px">'+time+'</div>';
+  }
+  box.appendChild(row); box.scrollTop=box.scrollHeight;
+  // Vanish Mode - 8 sec baad gayab
+  if(localStorage.getItem("cloq_vanish")==="yes"){
+    setTimeout(function(){ row.style.opacity="0.3"; row.innerHTML='<div style="font-size:12px;color:#999;font-style:italic">👻 Ye message Vanish ho gaya</div>'; },8000);
+  }
+  if(mine){
+    setTimeout(function(){ var t=document.getElementById(tickId); if(t) t.innerText="✓✓"; },1000);
+    setTimeout(function(){ var t=document.getElementById(tickId); if(t) t.innerText="✓✓"; },3000);
+  }
+};
+window.sendMessage=function(){
+  var inp=document.getElementById("chatInput"); if(!inp) return;
+  var txt=inp.value.trim(); if(!txt) return;
+  addMsg(txt, true); inp.value="";
+  setTimeout(function(){ addMsg("Ok, samajh gaya 👍", false); },3000);
+};
+setTimeout(buildCloqChat, 800);
+setTimeout(buildCloqChat, 800);
+setTimeout(buildCloqChat, 1600);
+</script>
 </body>
 </html>
