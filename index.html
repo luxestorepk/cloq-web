@@ -856,5 +856,66 @@ setTimeout(fixWrongPin, 600);
 setTimeout(fixWrongPin, 1600);
 setTimeout(fixWrongPin, 2600);
 </script>
+  <!-- ===== PART 6E - ANKH END PE + PIN BOX CLICK FIX ===== -->
+<style>
+#cloqPinWrap{
+  position:relative!important; width:100%!important;
+  display:block!important; text-align:left!important;
+}
+#cloqPinWrap input{
+  width:100%!important; box-sizing:border-box!important;
+  padding-right:52px!important; padding-left:16px!important;
+  text-align:center!important; position:relative!important; z-index:1!important;
+}
+#cloqEyeBtn{
+  position:absolute!important;
+  left:auto!important; right:10px!important; top:50%!important; bottom:auto!important;
+  transform:translateY(-50%)!important;
+  width:38px!important; height:38px!important;
+  display:flex!important; align-items:center!important; justify-content:center!important;
+  background:transparent!important; border:none!important;
+  font-size:20px!important; cursor:pointer!important;
+  z-index:2!important; margin:0!important; padding:0!important;
+  pointer-events:auto!important;
+}
+</style>
+<script>
+function fixEyeEnd(){
+  var eye=document.getElementById("cloqEyeBtn");
+  if(!eye) return;
+  // Ankh ko bilkul end pe set karo
+  eye.style.left="auto";
+  eye.style.right="10px";
+  eye.style.top="50%";
+  eye.style.transform="translateY(-50%)";
+  eye.style.position="absolute";
+  eye.style.width="38px";
+  eye.style.height="38px";
+  // PIN input ko phir se click-able banao
+  var wrap=document.getElementById("cloqPinWrap");
+  if(wrap){
+    wrap.style.position="relative";
+    wrap.style.display="block";
+  }
+  var pin=null;
+  document.querySelectorAll("input").forEach(function(i){
+    if((i.placeholder||"").toLowerCase().includes("pin")) pin=i;
+  });
+  if(pin){
+    pin.style.pointerEvents="auto";
+    pin.style.position="relative";
+    pin.style.zIndex="1";
+    pin.style.paddingRight="52px";
+    // Jab bhi PIN box pe click ho to keyboard khule
+    if(!pin._clickFixed){
+      pin._clickFixed=true;
+      pin.addEventListener("click", function(e){ e.stopPropagation(); pin.focus(); });
+    }
+  }
+}
+setTimeout(fixEyeEnd, 500);
+setTimeout(fixEyeEnd, 1500);
+setTimeout(fixEyeEnd, 2500);
+</script>
 </body>
 </html>
