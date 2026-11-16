@@ -379,5 +379,218 @@ setTimeout(function(){
   }catch(e){}
 }, 1800);
 </script>
+  <!-- ===== CLOQ PART 6 MEGA FIX - SAB KUCH WHATSAPP JESA ===== -->
+<style>
+#cloqLockFix{ position:fixed!important; inset:0!important; z-index:99999!important; background:#000000e6!important; backdrop-filter:blur(20px)!important; display:flex!important; align-items:center!important; justify-content:center!important; }
+#profileModal,#settingsModal,#roomViewModal{ position:fixed; inset:0; z-index:99990; background:rgba(0,0,0,.7); display:none; align-items:flex-end; justify-content:center; }
+#profileModal.open,#settingsModal.open,#roomViewModal.open{ display:flex; }
+.sheet{ width:100%; max-width:480px; background:#111b21; border-radius:24px 24px 0 0; padding:18px; max-height:88vh; overflow-y:auto; color:#fff; }
+.sheet input,.sheet textarea,.sheet select{ width:100%; background:#202c33; border:none; color:#fff; padding:12px; border-radius:12px; margin:6px 0 12px; outline:none; }
+.sheet label{ font-size:12px; color:#8696a0; font-weight:700; }
+.btnG{ width:100%; background:#00a884; color:#fff; border:none; padding:13px; border-radius:30px; font-weight:800; cursor:pointer; margin-top:8px; }
+.btnLine{ width:100%; background:#202c33; color:#fff; border:none; padding:11px; border-radius:12px; cursor:pointer; margin:5px 0; text-align:left; }
+.msgRow{ display:flex; flex-direction:column; align-items:flex-end; margin:6px 0; }
+.msgBubble{ background:#005c4b; color:#fff; padding:8px 10px; border-radius:12px; max-width:80%; font-size:14px; }
+.msgMeta{ font-size:10px; color:#a8b8c0; display:flex; gap:4px; align-items:center; margin-top:2px; }
+.tick{ font-size:12px; } .tick.blue{ color:#53bdeb; }
+.vipBadge{ background:linear-gradient(90deg,#ffd700,#ff8c00); color:#000; font-size:10px; font-weight:900; padding:2px 7px; border-radius:10px; margin-left:6px; }
+.theme-gold{ background:#1a1500!important; } .theme-blue{ background:#001a2e!important; } .theme-pink{ background:#2e001a!important; }
+</style>
+<script>
+// ========== 1. LOCK FIX - Peeche kuch nazar na aaye ==========
+setTimeout(function(){
+  var lock = document.querySelector('[id*="lock"], [class*="lock"]');
+  // Lock wali div dhoondo jo PIN wali hai
+  document.querySelectorAll("div").forEach(function(d){
+    if(d.innerText && d.innerText.includes("CLOQ Locked")){
+      d.id="cloqLockFix";
+      d.style.background="#000000e6";
+      // Peeche wali chat list ko hide karo jab lock ho
+      document.body.style.overflow="hidden";
+    }
+    if(d.innerText && d.innerText.includes("Unlock")){
+      // Unlock ke baad peeche wapas dikhao
+      var btn=d.querySelector("button");
+      if(btn && !btn._fixed){ btn._fixed=true; btn.addEventListener("click", function(){ setTimeout(function(){ var l=document.getElementById("cloqLockFix"); if(l) { var pinInp=document.querySelector('input[placeholder*="PIN"]'); if(pinInp && pinInp.value.length>=4){ l.style.display="none"; document.body.style.overflow=""; } } },400); }); }
+    }
+  });
+},800);
+
+// ========== 2. PROFILE - W pe click karo to khulegi + Edit ==========
+setTimeout(function(){
+  var avatar = document.querySelector('[id*="avatar"], [class*="avatar"]');
+  // Header me W wala circle dhoondo
+  document.querySelectorAll("div,button,span").forEach(function(el){
+    if(el.innerText==="W" && el.offsetWidth>30 && el.offsetWidth<60){
+      avatar=el;
+    }
+  });
+  if(avatar && !avatar._fixed){
+    avatar._fixed=true; avatar.style.cursor="pointer";
+    avatar.onclick=function(){ openProfile(); };
+  }
+  function openProfile(){
+    var saved={}; try{ saved=JSON.parse(localStorage.getItem("cloq_profile")||"{}"); }catch(e){}
+    var m=document.getElementById("profileModal");
+    if(!m){
+      m=document.createElement("div"); m.id="profileModal";
+      m.innerHTML='<div class="sheet"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">My Profile</h3><button onclick="document.getElementById(\'profileModal\').classList.remove(\'open\')" style="background:none;border:none;color:#fff;font-size:22px">×</button></div><div style="text-align:center;margin:14px 0"><div id="profDP" style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#00a884,#ffd700);display:flex;align-items:center;justify-content:center;font-size:48px;margin:0 auto;overflow:hidden">👤</div><button onclick="changeDP()" style="background:#202c33;color:#00e676;border:none;padding:8px 14px;border-radius:20px;margin-top:8px">📸 Change DP</button></div><label>NAME</label><input id="profName" placeholder="Apna Naam"><label>BIO / ABOUT</label><textarea id="profBio" placeholder="Hey! I am using CLOQ"></textarea><label>PHONE</label><input id="profPhone" placeholder="0300-1234567"><label>EMAIL</label><input id="profEmail" placeholder="email@gmail.com"><button class="btnG" onclick="saveProfile()">✅ Save Profile</button><p style="font-size:11px;color:#8696a0;text-align:center">Save karte hi naam header aur chats me update ho jayega.</p></div>';
+      document.body.appendChild(m);
+    }
+    document.getElementById("profName").value = saved.name || "";
+    document.getElementById("profBio").value = saved.bio || "Hey! I am using CLOQ";
+    document.getElementById("profPhone").value = saved.phone || "";
+    document.getElementById("profEmail").value = saved.email || "";
+    var dp=document.getElementById("profDP");
+    if(saved.dp) dp.innerHTML='<img src="'+saved.dp+'" style="width:100%;height:100%;object-fit:cover">';
+    else dp.innerText = saved.name ? saved.name[0].toUpperCase() : "👤";
+    m.classList.add("open");
+  }
+  window.openProfile=openProfile;
+  window.changeDP=function(){
+    var em=prompt("DP ke liye Emoji likho ya Photo ka link:\n1. Emoji - 😎🔥👑\n2. Photo Link paste karo");
+    if(!em) return;
+    var dp=document.getElementById("profDP");
+    if(em.startsWith("http")) dp.innerHTML='<img src="'+em+'" style="width:100%;height:100%;object-fit:cover">';
+    else dp.innerText=em;
+    window._tempDP = em.startsWith("http") ? em : "";
+    if(!em.startsWith("http")) window._tempDPemoji=em;
+  };
+  window.saveProfile=function(){
+    var name=document.getElementById("profName").value.trim();
+    var bio=document.getElementById("profBio").value.trim();
+    var phone=document.getElementById("profPhone").value.trim();
+    var email=document.getElementById("profEmail").value.trim();
+    if(!name){ alert("Naam to likho"); return; }
+    var old={}; try{ old=JSON.parse(localStorage.getItem("cloq_profile")||"{}"); }catch(e){}
+    var data={name:name,bio:bio,phone:phone,email:email,dp:window._tempDP||old.dp||"",dpEmoji:window._tempDPemoji||old.dpEmoji||""};
+    localStorage.setItem("cloq_profile", JSON.stringify(data));
+    localStorage.setItem("cloq_login", JSON.stringify({name:name,email:email}));
+    // Header W ko naam se badlo
+    document.querySelectorAll("div,button,span").forEach(function(el){ if(el.innerText==="W" && el.offsetWidth<60) el.innerText=name[0].toUpperCase(); });
+    document.getElementById("profileModal").classList.remove("open");
+    alert("✅ Profile Save ho gayi! Naam: "+name);
+  };
+},1000);
+
+// ========== 3. SETTINGS - VIP Badge + Themes + Privacy + Last Seen ==========
+setTimeout(function(){
+  // Settings khulne pe inject karo
+  document.querySelectorAll("button,div").forEach(function(el){
+    if(el.innerText && el.innerText.trim()==="⋮" && !el._fixed){
+      el._fixed=true;
+      el.onclick=function(){
+        var choice=prompt("⚙️ SETTINGS\n\n1 - VIP Badge Lagao\n2 - Theme Badlo\n3 - Privacy (Last Seen / Online)\n4 - My Profile\n\nNumber likho (1-4):");
+        if(choice==="1"){
+          var vip=localStorage.getItem("cloq_vip")==="yes" ? "no" : "yes";
+          localStorage.setItem("cloq_vip", vip);
+          alert(vip==="yes" ? "👑 VIP Badge ON ho gaya! Ab tumhare naam ke saath 👑 aayega." : "VIP Badge OFF kar diya.");
+          applyVIP();
+        } else if(choice==="2"){
+          var th=prompt("THEME:\n1 - Dark (Normal)\n2 - Gold\n3 - Blue\n4 - Pink\nNumber likho:");
+          document.body.classList.remove("theme-gold","theme-blue","theme-pink");
+          if(th==="2") document.body.classList.add("theme-gold");
+          if(th==="3") document.body.classList.add("theme-blue");
+          if(th==="4") document.body.classList.add("theme-pink");
+          localStorage.setItem("cloq_theme", th||"1");
+          alert("✅ Theme lag gaya!");
+        } else if(choice==="3"){
+          var ls=prompt("PRIVACY:\nLast Seen kisko dikhaye?\n1 - Sab ko\n2 - Sirf Friends ko\n3 - Kisi ko nahi (Hide)\n\nOnline status?\n4 - Online Show karo\n5 - Online Hide karo\n\nNumber likho:");
+          if(ls==="1"||ls==="2"||ls==="3") localStorage.setItem("cloq_lastseen", ls);
+          if(ls==="4") localStorage.setItem("cloq_online", "show");
+          if(ls==="5") localStorage.setItem("cloq_online", "hide");
+          alert("✅ Privacy save ho gayi!");
+        } else if(choice==="4"){ if(window.openProfile) window.openProfile(); }
+      };
+    }
+  });
+  function applyVIP(){
+    if(localStorage.getItem("cloq_vip")==="yes"){
+      document.querySelectorAll("h3,h2").forEach(function(h){ if(h.innerText && h.innerText.includes("CLOQ") && !h.innerText.includes("👑")) h.innerText=h.innerText+" 👑"; });
+    }
+  }
+  applyVIP();
+  var th=localStorage.getItem("cloq_theme"); if(th==="2") document.body.classList.add("theme-gold"); if(th==="3") document.body.classList.add("theme-blue"); if(th==="4") document.body.classList.add("theme-pink");
+},1200);
+
+// ========== 4. ROOMS - Banta hai to Show bhi hoga + Center me + Edit + Entry ==========
+setTimeout(function(){
+  window.showRooms=function(){
+    var rooms=[]; try{ rooms=JSON.parse(localStorage.getItem("cloq_rooms")||"[]"); }catch(e){}
+    if(rooms.length===0){
+      rooms=[{name:"My Room", desc:"Welcome to my Room", id:Date.now()}];
+      localStorage.setItem("cloq_rooms", JSON.stringify(rooms));
+    }
+    var m=document.getElementById("roomViewModal");
+    if(!m){ m=document.createElement("div"); m.id="roomViewModal"; document.body.appendChild(m); }
+    var html='<div class="sheet"><div style="display:flex;justify-content:space-between"><h3 style="margin:0">🏠 My Rooms</h3><button onclick="document.getElementById(\'roomViewModal\').classList.remove(\'open\')" style="background:none;border:none;color:#fff;font-size:22px">×</button></div>';
+    rooms.forEach(function(r,idx){
+      html+='<div style="background:#202c33;padding:14px;border-radius:16px;margin:12px 0;text-align:center"><div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#00a884,#ffd700);display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto">🏠</div><h3 style="margin:8px 0 2px">'+r.name+'</h3><p style="color:#8696a0;font-size:12px;margin:0">'+(r.desc||"")+'</p><div style="display:flex;gap:6px;margin-top:10px"><button onclick="enterRoom('+idx+')" style="flex:1;background:#00a884;color:#fff;border:none;padding:10px;border-radius:20px;font-weight:800">🚪 Enter Room</button><button onclick="editRoom('+idx+')" style="flex:1;background:#2a3942;color:#fff;border:none;padding:10px;border-radius:20px">✏️ Edit</button></div></div>';
+    });
+    html+='<button class="btnG" onclick="createRoom()">+ Naya Room Banao</button></div>';
+    m.innerHTML=html; m.classList.add("open");
+  };
+  window.createRoom=function(){
+    var n=prompt("Room ka Naam likho:"); if(!n) return;
+    var d=prompt("Room ka Bio / Description:")||"";
+    var rooms=[]; try{ rooms=JSON.parse(localStorage.getItem("cloq_rooms")||"[]"); }catch(e){}
+    rooms.push({name:n,desc:d,id:Date.now()}); localStorage.setItem("cloq_rooms", JSON.stringify(rooms));
+    alert("✅ Room ban gaya: "+n); window.showRooms();
+  };
+  window.editRoom=function(i){
+    var rooms=JSON.parse(localStorage.getItem("cloq_rooms")||"[]");
+    var n=prompt("Naya Naam:", rooms[i].name); if(n) rooms[i].name=n;
+    var d=prompt("Nayi Description:", rooms[i].desc); if(d!==null) rooms[i].desc=d;
+    localStorage.setItem("cloq_rooms", JSON.stringify(rooms)); window.showRooms();
+  };
+  window.enterRoom=function(i){
+    var rooms=JSON.parse(localStorage.getItem("cloq_rooms")||"[]");
+    alert("🚪 Tum "+rooms[i].name+" me enter ho gaye!\n\nAb yahan sab chat kar sakte hain.");
+    document.getElementById("roomViewModal").classList.remove("open");
+  };
+  // Neeche Rooms wale button ko pakro
+  document.querySelectorAll("div,button,span").forEach(function(el){
+    if(el.innerText && el.innerText.trim()==="Rooms" && !el._fixed){
+      el._fixed=true; el.style.cursor="pointer"; el.onclick=function(){ window.showRooms(); };
+    }
+  });
+},1500);
+
+// ========== 5. CHAT TICKS + TIME - Bilkul WhatsApp jesa ==========
+function addTickTime(){
+  document.querySelectorAll("div").forEach(function(d){
+    // Message bubble wali div
+    if(d.className && d.className.includes("msg") && !d._tickFixed){
+      // Agar pehle se time nahi hai to lagao
+    }
+  });
+  // Send button pe tick logic lagao
+  var sendBtn=document.querySelector('[id*="send"], [class*="send"]');
+  if(sendBtn && !sendBtn._fixed){
+    sendBtn._fixed=true;
+    sendBtn.addEventListener("click", function(){
+      setTimeout(function(){
+        var now=new Date(); var time=now.getHours()%12||12; time+=":"+(now.getMinutes()<10?"0":"")+now.getMinutes()+" "+(now.getHours()>=12?"PM":"AM");
+        // Aakhri message dhoondo aur usme tick+time lagao
+        var msgs=document.querySelectorAll("div");
+        var last=null;
+        msgs.forEach(function(m){ if(m.innerText && m.innerText.length<200 && m.offsetHeight>20) last=m; });
+        // Naya meta div banao
+        var meta=document.createElement("div");
+        meta.className="msgMeta";
+        meta.innerHTML='<span>'+time+'</span><span class="tick" id="tick_'+Date.now()+'">✓</span>';
+        // Chat container me daalo
+        var chatBox=document.querySelector('[id*="chat"], [id*="messages"], [class*="chat"]');
+        if(chatBox) chatBox.appendChild(meta);
+        // 1 sec baad Double Tick (Delivered)
+        setTimeout(function(){ var t=meta.querySelector(".tick"); if(t) t.innerText="✓✓"; },1000);
+        // 3 sec baad Blue Tick (Seen) - Jaise agle bande ne dekh liya
+        setTimeout(function(){ var t=meta.querySelector(".tick"); if(t){ t.innerText="✓✓"; t.classList.add("blue"); } },3000);
+      },300);
+    });
+  }
+}
+setInterval(addTickTime, 1500);
+    </script>
 </body>
 </html>
