@@ -592,5 +592,82 @@ function addTickTime(){
 }
 setInterval(addTickTime, 1500);
     </script>
+  <!-- ===== PART 6B - LOCK SCREEN SEEDHA ===== -->
+<style>
+#cloqLockFix{
+  flex-direction: column !important;
+  gap: 0px !important;
+  text-align: center !important;
+  padding: 20px !important;
+}
+#cloqLockFix > *{
+  width: 100% !important;
+  max-width: 320px !important;
+  flex: none !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+/* CLOQ Locked wala text */
+#cloqLockFix div:first-child{
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  line-height: 1.2 !important;
+  display: block !important;
+}
+/* Enter your PIN wala text */
+#cloqLockFix div:nth-child(2){
+  font-size: 14px !important;
+  color: #aaa !important;
+  margin-bottom: 16px !important;
+  display: block !important;
+}
+/* PIN wala box */
+#cloqLockFix input{
+  width: 100% !important;
+  max-width: 320px !important;
+  padding: 16px !important;
+  font-size: 20px !important;
+  letter-spacing: 6px !important;
+  text-align: center !important;
+  border-radius: 16px !important;
+  margin-bottom: 16px !important;
+  display: block !important;
+}
+/* Unlock button */
+#cloqLockFix button{
+  width: 100% !important;
+  max-width: 320px !important;
+  padding: 16px !important;
+  border-radius: 30px !important;
+  font-size: 18px !important;
+  display: block !important;
+}
+</style>
+<script>
+// Lock ko dobara column me karo
+setTimeout(function(){
+  var l = document.getElementById("cloqLockFix");
+  if(l){
+    l.style.flexDirection="column";
+    l.style.alignItems="center";
+    l.style.justifyContent="center";
+  }
+  // Agar lock wali div abhi bhi ek line me hai to usko bhi theek karo
+  document.querySelectorAll("div").forEach(function(d){
+    if(d.innerText && d.innerText.includes("CLOQ Locked")){
+      d.style.display="flex";
+      d.style.flexDirection="column";
+      d.style.alignItems="center";
+      d.style.justifyContent="center";
+      d.style.gap="0px";
+      d.style.textAlign="center";
+    }
+  });
+},500);
+setTimeout(function(){
+  var l = document.getElementById("cloqLockFix");
+  if(l){ l.style.flexDirection="column"; }
+},1500);
+</script>
 </body>
 </html>
