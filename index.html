@@ -11,32 +11,41 @@
 
 <div class="mobile-frame">
 
-    <!-- ================= SCREEN 1: SECURE AUTH / LOGIN / SIGNUP ================= -->
+    <!-- ================= SCREEN 1: AUTH, SIGNUP & REAL-TIME OTP ================= -->
     <div class="app-screen active" id="screen-1">
         <div class="s1-body">
             <div class="logo-emblem">👑</div>
             <div class="brand-name" id="authTitle">CLOQCHAT LOGIN</div>
             <div class="brand-tag" id="authSub">Military-Grade Privacy • Secure Access</div>
 
-            <!-- Input Fields -->
-            <input type="text" id="authIdentity" class="auth-input" placeholder="Phone Number or Email Address">
-            
-            <div style="position:relative; width:100%; margin-bottom:12px;">
-                <input type="password" id="authPin" class="auth-input" placeholder="Password / Security PIN" style="margin-bottom:0;">
-                <span onclick="togglePasswordVisibility()" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:16px;" id="eyeIcon">👁️‍🗨️</span>
+            <!-- Standard Auth Form -->
+            <div id="authFormArea" style="width:100%;">
+                <input type="text" id="authIdentity" class="auth-input" placeholder="Phone Number or Email Address">
+                
+                <div style="position:relative; width:100%; margin-bottom:10px;">
+                    <input type="password" id="authPin" class="auth-input" placeholder="Password / Security PIN" style="margin-bottom:0;">
+                    <span onclick="togglePasswordVisibility()" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:15px;" id="eyeIcon">👁️‍🗨️</span>
+                </div>
+
+                <button class="gold-cta" id="authSubmitBtn" onclick="handleAuthAction()">Login to Dashboard →</button>
             </div>
 
-            <button class="gold-cta" id="authSubmitBtn" onclick="handleAuthAction()">Login to Dashboard →</button>
+            <!-- Real-Time OTP Verification Box (Hidden Initially) -->
+            <div id="otpBoxArea" style="display:none; width:100%; text-align:center;">
+                <div style="font-size:12px; color:var(--gold-main); margin-bottom:10px;">📲 Enter 6-Digit Real-Time OTP sent to your phone/email:</div>
+                <input type="text" id="otpInput" class="auth-input" placeholder="e.g. 786923" style="text-align:center; letter-spacing:4px; font-size:18px;">
+                <button class="gold-cta" onclick="verifyOtpAndEnter()">Verify & Proceed →</button>
+            </div>
 
-            <!-- Extra Options: Forgot Password & Sign Up Switch -->
-            <div style="display:flex; justify-content:space-between; width:100%; margin-top:14px; font-size:12px;">
-                <span style="color:var(--gold-main); cursor:pointer;" onclick="alert('Password reset link sent to your phone/email!')">Forgot Password?</span>
+            <!-- Extra Switchers -->
+            <div style="display:flex; justify-content:space-width; width:100%; margin-top:14px; font-size:12px; justify-content:space-between;" id="authSwitchFooter">
+                <span style="color:var(--gold-main); cursor:pointer;" onclick="alert('Password reset OTP sent!')">Forgot Password?</span>
                 <span style="color:var(--text-sub); cursor:pointer;" id="switchAuthMode" onclick="toggleAuthMode()">New to Cloq? <strong>Sign Up</strong></span>
             </div>
         </div>
     </div>
 
-    <!-- ================= SCREEN 2: MAIN DASHBOARD & STORIES ================= -->
+    <!-- ================= SCREEN 2: MAIN DASHBOARD ================= -->
     <div class="app-screen" id="screen-2">
         <div class="top-header">
             <div class="hdr-logo">CloqChat</div>
@@ -56,7 +65,7 @@
             </div>
         </div>
 
-        <!-- LIVE DP / STATUS STORY STRIP -->
+        <!-- STORIES -->
         <div class="story-strip">
             <div class="story-item" onclick="openStory('My Status')">
                 <div class="story-ring live-dp"><div class="story-inner">👑</div></div>
@@ -64,7 +73,7 @@
             </div>
             <div class="story-item" onclick="openStory('Zain Ali')">
                 <div class="story-ring live-dp"><div class="story-inner">😎</div></div>
-                <div class="story-label">Zain (30s DP)</div>
+                <div class="story-label">Zain (30s)</div>
             </div>
             <div class="story-item" onclick="openStory('Sarah Khan')">
                 <div class="story-ring"><div class="story-inner">💎</div></div>
@@ -72,7 +81,7 @@
             </div>
         </div>
 
-        <div class="search-wrap" style="padding:8px 14px; background:#0e141c;">
+        <div style="padding:8px 14px; background:#0e141c; flex-shrink:0;">
             <input type="text" class="search-box" style="width:100%; background:var(--bg-card); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:8px 12px; color:#fff; font-size:13px; outline:none;" placeholder="🔍 Search encrypted chats...">
         </div>
 
@@ -83,9 +92,9 @@
             <div class="chip" onclick="goScreen(4)">🔒 Hidden Vault</div>
         </div>
 
-        <div class="chat-list" id="chatListContainer">
+        <div class="chat-list">
             <div class="chat-row" onclick="openChat('Zain Ali', '✔️')">
-                <div class="avatar-ring" style="width:46px; height:46px; border-radius:50%; padding:2px; background:linear-gradient(135deg, #ffd700, #ff2a85);"><div class="avatar-inner" style="width:100%; height:100%; border-radius:50%; background:#1b2531; display:flex; align-items:center; justify-content:center; font-size:19px;">😎</div></div>
+                <div class="avatar-ring" style="width:44px; height:44px; border-radius:50%; padding:2px; background:linear-gradient(135deg, #ffd700, #ff2a85);"><div class="avatar-inner" style="width:100%; height:100%; border-radius:50%; background:#1b2531; display:flex; align-items:center; justify-content:center; font-size:17px;">😎</div></div>
                 <div class="chat-meta">
                     <div class="chat-name">Zain Ali <span style="color:var(--blue-tick); font-size:12px;">✔️</span></div>
                     <div class="chat-sub">CloqChat ka VIP interface bilkul royal hai 🔥</div>
@@ -93,7 +102,7 @@
                 <span style="font-size:10px; color:var(--gold-main);">10:45 AM</span>
             </div>
             <div class="chat-row" onclick="openChat('Sarah Khan', '🌸')">
-                <div class="avatar-ring" style="width:46px; height:46px; border-radius:50%; padding:2px; background:linear-gradient(135deg, #ffd700, #ff2a85);"><div class="avatar-inner" style="width:100%; height:100%; border-radius:50%; background:#1b2531; display:flex; align-items:center; justify-content:center; font-size:19px;">💎</div></div>
+                <div class="avatar-ring" style="width:44px; height:44px; border-radius:50%; padding:2px; background:linear-gradient(135deg, #ffd700, #ff2a85);"><div class="avatar-inner" style="width:100%; height:100%; border-radius:50%; background:#1b2531; display:flex; align-items:center; justify-content:center; font-size:17px;">💎</div></div>
                 <div class="chat-meta">
                     <div class="chat-name">Sarah Khan <span style="background:var(--pink-vip); font-size:8px; padding:1px 5px; border-radius:4px;">PINK VIP</span></div>
                     <div class="chat-sub">🛡️ Anti-screenshot shield active hai</div>
@@ -102,41 +111,41 @@
             </div>
         </div>
 
-        <!-- FLOATING NEW CHAT BUTTON -->
-        <button style="position: absolute; bottom: 20px; right: 20px; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-main), #b8860b); color: #000; border: none; font-size: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(255,215,0,0.4); cursor: pointer; z-index: 50;" onclick="alert('Opening contacts to start new chat...')">💬</button>
+        <!-- FLOATING CHAT BUTTON -->
+        <button style="position: absolute; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-main), #b8860b); color: #000; border: none; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(255,215,0,0.4); cursor: pointer; z-index: 50;" onclick="alert('Opening contact list...')">💬</button>
     </div>
 
-    <!-- ================= SCREEN 3: LUXURY CHAT ENGINE ================= -->
+    <!-- ================= SCREEN 3: CHAT ENGINE ================= -->
     <div class="app-screen" id="screen-3">
         <div class="top-header">
             <div style="display:flex; align-items:center; gap:9px;">
                 <span style="color:var(--gold-main); cursor:pointer; font-size:18px;" onclick="goScreen(2)">←</span>
                 <div>
                     <div style="font-size:14px; font-weight:700;" id="activeChatName">Zain Ali ✔️</div>
-                    <div style="font-size:10px; color:var(--green-secure);">Online • 30s Live DP Active</div>
+                    <div style="font-size:10px; color:var(--green-secure);">Online • Secure Chat</div>
                 </div>
             </div>
             <div class="hdr-actions">
-                <span title="Simulate Screenshot Breach" onclick="triggerScreenshotAlert()">📸</span>
-                <span title="Switch Theme" onclick="toggleChatTheme()">🎨</span>
-                <span title="Vanish Mode" onclick="goScreen(6)">👻</span>
+                <span title="Screenshot Alert" onclick="triggerScreenshotAlert()">📸</span>
+                <span title="Theme" onclick="toggleChatTheme()">🎨</span>
+                <span title="Vanish" onclick="goScreen(6)">👻</span>
             </div>
         </div>
         <div class="chat-screen-bg" id="chatBg">
-            <div class="enc-banner">🔒 AES-256 Encrypted. Firebase Realtime Active.</div>
+            <div class="enc-banner">🔒 AES-256 Encrypted Chat Active</div>
             <div class="msgs-feed" id="chatFeed">
-                <div class="msg-bubble msg-in">Assalam-o-Alaikum! CloqChat ka real-time firebase chat active hai! 🔥<span class="msg-time">10:42 AM</span></div>
+                <div class="msg-bubble msg-in">Assalam-o-Alaikum! Real smooth WhatsApp experience! 🔥<span class="msg-time" style="font-size:9px; color:var(--text-sub);">10:42 AM</span></div>
             </div>
             <div class="chat-composer">
-                <button class="icon-btn" onclick="sendVoiceNote()" title="Voice Note">🎤</button>
+                <button class="icon-btn" onclick="sendVoiceNote()">🎤</button>
                 <input type="text" class="msg-input" id="chatInput" placeholder="Encrypted message..." onkeypress="if(event.key==='Enter') sendFirebaseMsg()">
-                <button class="icon-btn" onclick="sendMedia()" title="Media">📎</button>
+                <button class="icon-btn" onclick="sendMedia()">📎</button>
                 <button class="send-circle" onclick="sendFirebaseMsg()">➤</button>
             </div>
         </div>
     </div>
 
-    <!-- ================= SCREEN 4: CALCULATOR VAULT & STORAGE ================= -->
+    <!-- ================= SCREEN 4: CALCULATOR VAULT ================= -->
     <div class="app-screen" id="screen-4">
         <div class="top-header">
             <span style="color:var(--gold-main); cursor:pointer;" onclick="goScreen(2)">← Back</span>
@@ -171,10 +180,9 @@
             </div>
         </div>
 
-        <!-- UNLOCKED VAULT & STORAGE EXPANSION -->
         <div class="vault-overlay" id="vaultBox">
             <div class="top-header">
-                <div class="hdr-logo">🔐 CloqVault & Storage</div>
+                <div class="hdr-logo">🔐 CloqVault</div>
                 <button style="background:#ff3b30; color:#fff; border:none; padding:5px 10px; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer;" onclick="document.getElementById('vaultBox').classList.remove('open')">🔒 Lock</button>
             </div>
             <div class="scroll-pad">
@@ -188,13 +196,12 @@
                     </div>
                     <button style="width:100%; background:linear-gradient(135deg,#ffd700,#b8860b); color:#000; border:none; padding:8px; border-radius:8px; font-weight:800; font-size:11px; cursor:pointer;" onclick="watchAdForStorage()">📺 Watch 1 Ad for +50MB Storage</button>
                 </div>
-                <div class="card-box"><div><strong>🖼️ Private Photos</strong><div style="font-size:10px; color:var(--gold-main);">Encrypted Vault Folder</div></div><span>❯</span></div>
-                <div class="card-box"><div><strong>🎬 Secret Videos</strong><div style="font-size:10px; color:var(--gold-main);">Encrypted Vault Folder</div></div><span>❯</span></div>
+                <div class="card-box"><div><strong>🖼️ Private Photos</strong><div style="font-size:10px; color:var(--gold-main);">Encrypted Vault</div></div><span>❯</span></div>
             </div>
         </div>
     </div>
 
-    <!-- ================= SCREEN 5: VIP KING STORE ================= -->
+    <!-- ================= SCREEN 5: VIP STORE ================= -->
     <div class="app-screen" id="screen-5">
         <div class="top-header">
             <span style="color:var(--gold-main); cursor:pointer;" onclick="goScreen(2)">←</span>
@@ -205,22 +212,20 @@
             <div style="background:linear-gradient(135deg,#241c09,#121921); border:1px solid var(--gold-main); border-radius:16px; padding:14px; text-align:center;">
                 <div style="font-size:24px;">👑</div>
                 <div style="font-size:16px; font-weight:800; margin:4px 0;">Unlock Ultimate VIP Status</div>
-                <div style="font-size:11px; color:var(--text-sub);">Verified Blue Tick, Pink/Yellow Badges & 10GB Vault</div>
+                <div style="font-size:11px; color:var(--text-sub);">Verified Blue Tick, Pink/Yellow Badges</div>
             </div>
-
-            <div class="card-box"><div><strong>✔️ Verified Blue & Gold Badges</strong><div style="font-size:10px; color:var(--text-sub);">Yellow Gold, Pink VIP & Blue Ticks</div></div><span>💎</span></div>
-            <div class="card-box"><div><strong>🚫 100% Ad-Free Experience</strong><div style="font-size:10px; color:var(--text-sub);">Zero ads across all chats & vault</div></div><span>✨</span></div>
-
-            <div class="price-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px;">
-                <div class="p-card" style="background:var(--bg-card); border:1px solid var(--border-gold); border-radius:14px; padding:12px; text-align:center;">
+            <div class="card-box"><div><strong>✔️ Verified Badges</strong><div style="font-size:10px; color:var(--text-sub);">Gold, Pink & Blue Ticks</div></div><span>💎</span></div>
+            <div class="card-box"><div><strong>🚫 Ad-Free Experience</strong><div style="font-size:10px; color:var(--text-sub);">Zero ads</div></div><span>✨</span></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:4px;">
+                <div style="background:var(--bg-card); border:1px solid var(--border-gold); border-radius:14px; padding:12px; text-align:center;">
                     <div style="font-size:11px; color:var(--text-sub);">Monthly VIP</div>
                     <div style="font-size:18px; font-weight:800; color:var(--gold-main); margin:4px 0;">$9.99</div>
-                    <button style="width:100%; padding:8px; border-radius:8px; border:1px solid var(--gold-main); background:transparent; color:var(--gold-main); font-weight:700; font-size:11px; cursor:pointer;" onclick="alert('VIP Monthly Subscribed!')">Subscribe</button>
+                    <button style="width:100%; padding:8px; border-radius:8px; border:1px solid var(--gold-main); background:transparent; color:var(--gold-main); font-weight:700; font-size:11px; cursor:pointer;" onclick="alert('Subscribed!')">Subscribe</button>
                 </div>
-                <div class="p-card best" style="background:#181e28; border:2px solid var(--gold-main); border-radius:14px; padding:12px; text-align:center;">
+                <div style="background:#181e28; border:2px solid var(--gold-main); border-radius:14px; padding:12px; text-align:center;">
                     <div style="font-size:11px; color:var(--gold-main); font-weight:700;">Yearly King</div>
                     <div style="font-size:18px; font-weight:800; color:var(--gold-main); margin:4px 0;">$69.99</div>
-                    <button style="width:100%; padding:8px; border-radius:8px; border:none; background:var(--gold-main); color:#000; font-weight:800; font-size:11px; cursor:pointer;" onclick="alert('🎉 Yearly VIP King Activated!')">Get Yearly</button>
+                    <button style="width:100%; padding:8px; border-radius:8px; border:none; background:var(--gold-main); color:#000; font-weight:800; font-size:11px; cursor:pointer;" onclick="alert('Activated!')">Get Yearly</button>
                 </div>
             </div>
         </div>
@@ -239,11 +244,10 @@
             <div class="s-tab" onclick="switchSub(3, this)">🔐 Locks/Status</div>
         </div>
 
-        <!-- Sub 1: Vanish & Fake Chat -->
         <div class="sub-view active" id="sub-1">
             <div class="vanish-panel" style="flex:1; background:radial-gradient(circle at top, #1e1035, #09060f); border:1px solid #7e22ce; border-radius:16px; padding:12px; display:flex; flex-direction:column; justify-content:space-between;">
                 <div style="font-size:11px; color:#d8b4fe; text-align:center; background:rgba(147,51,234,0.2); padding:8px; border-radius:10px;">
-                    👻 Vanish Mode: Auto-destruct in <strong>5 seconds</strong>!
+                    👻 Vanish Mode: Auto-destruct in <strong>5s</strong>!
                 </div>
                 <div style="flex:1; overflow-y:auto; padding:10px 0; display:flex; flex-direction:column;" id="vList">
                     <div class="v-bubble" style="align-self:flex-end; background:#6b21a8; color:#fff; padding:8px 12px; border-radius:14px; font-size:12px;">Secret vanish msg (5s) ⏱️</div>
@@ -255,52 +259,31 @@
             </div>
         </div>
 
-        <!-- Sub 2: Auto-Reply & Message Scheduler -->
         <div class="sub-view" id="sub-2">
             <div class="card-box" style="flex-direction:column; align-items:stretch; gap:8px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><strong>🤖 Auto-Reply Bot</strong><div style="font-size:10px; color:var(--text-sub);">Reply automatically when away</div></div>
+                    <div><strong>🤖 Auto-Reply Bot</strong><div style="font-size:10px; color:var(--text-sub);">Reply when away</div></div>
                     <label class="switch"><input type="checkbox" id="autoReplyToggle" checked><span class="slider"></span></label>
                 </div>
-                <input type="text" id="autoReplyText" style="background:#0b0f14; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px; color:#fff; font-size:11px;" value="I am busy on CloqChat right now. Will reply soon! 👑">
-            </div>
-            <div class="card-box" style="flex-direction:column; align-items:stretch; gap:8px; margin-top:8px;">
-                <div><strong>⏰ Message Scheduler</strong><div style="font-size:10px; color:var(--text-sub);">Schedule encrypted message for later</div></div>
-                <input type="text" style="background:#0b0f14; border:1px solid rgba(255,215,0,0.3); border-radius:8px; padding:8px; color:#fff; font-size:11px;" placeholder="Message to send...">
-                <button style="background:var(--gold-main); color:#000; border:none; padding:7px; border-radius:8px; font-weight:800; font-size:11px; cursor:pointer;" onclick="alert('📅 Message scheduled successfully!')">Schedule Message</button>
+                <input type="text" id="autoReplyText" style="background:#0b0f14; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px; color:#fff; font-size:11px;" value="I am busy on CloqChat right now. 👑">
             </div>
         </div>
 
-        <!-- Sub 3: Locks & Status Downloader Control -->
         <div class="sub-view" id="sub-3">
             <div class="card-box" style="margin-bottom:8px;">
-                <div><strong>📱 Fingerprint App Lock</strong><div style="font-size:10px; color:var(--text-sub);">Secure app startup</div></div>
+                <div><strong>📱 Fingerprint App Lock</strong><div style="font-size:10px; color:var(--text-sub);">Secure startup</div></div>
                 <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
             </div>
             <div class="card-box" style="flex-direction:column; align-items:stretch;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><strong>📥 Status Download Permission</strong><div style="font-size:10px; color:var(--text-sub);">Allow others to save your status</div></div>
+                    <div><strong>📥 Status Download Permission</strong><div style="font-size:10px; color:var(--text-sub);">Allow others to save status</div></div>
                     <label class="switch"><input type="checkbox" id="dlSwitch" checked onchange="toggleDlBtn()"><span class="slider"></span></label>
-                            <!-- Sub 3: Locks & Status Downloader Control -->
-        <div class="sub-view" id="sub-3">
-            <div class="card-box" style="margin-bottom:8px;">
-                <div><strong>📱 Fingerprint App Lock</strong><div style="font-size:10px; color:var(--text-sub);">Secure app startup</div></div>
-                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-            </div>
-            <div class="card-box" style="flex-direction:column; align-items:stretch;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><strong>📥 Status Download Permission</strong><div style="font-size:10px; color:var(--text-sub);">Allow others to save your status</div></div>
-                    <label class="switch"><input type="checkbox" id="dlSwitch" checked onchange="toggleDlBtn()"><span class="slider"></span></label>
-                </div>
-                <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:11px; color:var(--green-secure);" id="dlStateTxt">Status: Download Allowed</span>
-                    <button id="dlActionBtn" style="background:var(--gold-main); color:#000; border:none; padding:5px 10px; border-radius:6px; font-size:10px; font-weight:800;" onclick="testDl()">⬇ Save Status</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- QUICK NAV SWITCHER BAR (HIDDEN UNTIL LOGIN) -->
+    <!-- QUICK NAV BAR (HIDDEN UNTIL LOGIN) -->
     <div class="bottom-nav" id="bottomNav" style="display:none;">
         <button class="nav-pill active" id="nav-2" onclick="goScreen(2)"><span>💬</span>Home</button>
         <button class="nav-pill" id="nav-3" onclick="goScreen(3)"><span>✨</span>Chat</button>
@@ -313,6 +296,5 @@
 
 <script src="app.js"></script>
 </body>
-        </html>
-            
-              
+                </html>
+                        
