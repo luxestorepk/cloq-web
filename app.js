@@ -1,5 +1,13 @@
 let isSignUpMode = false;
 let isLoggedIn = false;
+let pendingIdentity = "";
+let generatedOtp = "7869"; // Simulated real-time OTP
+
+// MOCK REGISTERED USERS DATABASE
+let registeredUsers = {
+    "+923001234567": "123456",
+    "waqas@cloq.com": "secure123"
+};
 
 // SECURE NAVIGATION GUARD
 function goScreen(num) {
@@ -27,7 +35,7 @@ function toggleAuthMode() {
     if (isSignUpMode) {
         title.innerText = "CLOQCHAT SIGN UP";
         sub.innerText = "Create Your Encrypted Account";
-        btn.innerText = "Create Account & Register →";
+        btn.innerText = "Proceed to OTP Verification →";
         switchTxt.innerHTML = "Already have an account? <strong>Login</strong>";
     } else {
         title.innerText = "CLOQCHAT LOGIN";
@@ -50,7 +58,7 @@ function togglePasswordVisibility() {
     }
 }
 
-// AUTHENTICATION ACTION
+// SMART AUTH & REAL OTP TRIGGER
 function handleAuthAction() {
     const identity = document.getElementById('authIdentity').value.trim();
     const pin = document.getElementById('authPin').value.trim();
@@ -60,27 +68,71 @@ function handleAuthAction() {
         return;
     }
 
+    const userExists = registeredUsers.hasOwnProperty(identity);
+
+    if (!isSignUpMode) {
+        // LOGIN CHECK
+        if (!userExists) {
+            alert('❌ Account not found! You are not registered. Please switch to Sign Up.');
+            return;
+        }
+        if (registeredUsers[identity] !== pin) {
+            alert('❌ Incorrect Password or PIN!');
+            return;
+        }
+    } else {
+        // SIGNUP CHECK
+        if (userExists) {
+            alert('⚠️ This account is already registered! Please switch to Login.');
+            return;
+        }
+    }
+
+    pendingIdentity = identity;
+    // Trigger Real-Time OTP Step
+    document.getElementById('authFormArea').style.display = 'none';
+    document.getElementById('authSwitchFooter').style.display = 'none';
+    document.getElementById('otpBoxArea').style.display = 'block';
+    document.getElementById('authTitle').innerText = "VERIFY OTP";
+    document.getElementById('authSub').innerText = "Code sent to " + identity + " (Demo OTP: 7869)";
+    alert('📲 Real-Time OTP sent successfully! Enter 7869 to verify.');
+}
+
+// VERIFY OTP & COMPLETE LOGIN/SIGNUP
+function verifyOtpAndEnter() {
+    const enteredOtp = document.getElementById('otpInput').value.trim();
+    if (enteredOtp !== generatedOtp) {
+        alert('❌ Invalid OTP! Please enter the correct code (7869).');
+        return;
+    }
+
+    if (isSignUpMode) {
+        const pin = document.getElementById('authPin').value.trim();
+        registeredUsers[pendingIdentity] = pin;
+        alert('🎉 Account registered and verified successfully!');
+    } else {
+        alert('✅ Login successful!');
+    }
+
     isLoggedIn = true;
     document.getElementById('bottomNav').style.display = 'flex';
-    
-    if (isSignUpMode) {
-        alert('🎉 Account successfully registered & verified!');
-    } else {
-        alert('✅ Welcome back! Login successful.');
-    }
-    
     goScreen(2);
 }
 
 function logoutApp() {
     isLoggedIn = false;
     document.getElementById('bottomNav').style.display = 'none';
+    document.getElementById('otpBoxArea').style.display = 'none';
+    document.getElementById('authFormArea').style.display = 'block';
+    document.getElementById('authSwitchFooter').style.display = 'flex';
+    document.getElementById('authIdentity').value = '';
+    document.getElementById('authPin').value = '';
     goScreen(1);
     closeMenu();
     alert('🔒 Logged out securely.');
 }
 
-// 3-DOT MENU TOGGLE
+// WHATSAPP 3-DOT MENU
 function toggleMenu(event) {
     event.stopPropagation();
     document.getElementById('whatsappMenu').classList.toggle('show');
@@ -90,7 +142,7 @@ function closeMenu() {
     if (m) m.classList.remove('show');
 }
 
-// CHAT & THEME ENGINE
+// CHAT ENGINE
 function openChat(name, badge) {
     document.getElementById('activeChatName').innerText = name + ' ' + badge;
     goScreen(3);
@@ -122,25 +174,14 @@ function sendFirebaseMsg() {
     div.className = 'msg-bubble msg-out';
     div.innerHTML = `${inp.value}<div class="msg-actions">Just now ✓✓ <span class="unsend-link" onclick="this.closest('.msg-bubble').remove()">Unsend</span></div>`;
     feed.appendChild(div);
-    
     inp.value = '';
     feed.scrollTop = feed.scrollHeight;
-
-    if(document.getElementById('autoReplyToggle') && document.getElementById('autoReplyToggle').checked) {
-        setTimeout(() => {
-            const replyDiv = document.createElement('div');
-            replyDiv.className = 'msg-bubble msg-in';
-            replyDiv.innerHTML = `${document.getElementById('autoReplyText').value}<span style="font-size:9px; color:var(--text-sub); display:block; text-align:right;">Auto-Reply 🤖</span>`;
-            feed.appendChild(replyDiv);
-            feed.scrollTop = feed.scrollHeight;
-        }, 1200);
-    }
 }
 
-function sendVoiceNote() { alert('🎤 Voice note recorded & encrypted (AES-256)'); }
-function sendMedia() { alert('📁 Media file selected from encrypted vault'); }
+function sendVoiceNote() { alert('🎤 Voice note recorded & encrypted'); }
+function sendMedia() { alert('📁 Media file selected'); }
 
-// CALCULATOR & VAULT LOGIC (PIN: 1234=)
+// CALCULATOR VAULT (PIN: 1234=)
 let cStr = '';
 function cAdd(ch) { cStr += ch; document.getElementById('cDisp').innerText = cStr; }
 function cClear() { cStr = ''; document.getElementById('cDisp').innerText = '0'; document.getElementById('cHist').innerText = ''; }
@@ -158,19 +199,17 @@ function cEval() {
     } catch { document.getElementById('cDisp').innerText = 'Error'; cStr = ''; }
 }
 
-// STORAGE AD REWARD SYSTEM (+50MB per ad)
 let currentStorageMB = 100;
 function watchAdForStorage() {
-    alert('📺 Ad playing... (Simulated Rewarded Video Ad)');
+    alert('📺 Ad playing...');
     setTimeout(() => {
         currentStorageMB += 50;
         document.getElementById('storageText').innerText = currentStorageMB + ' MB / Free Limit';
         document.getElementById('storageBar').style.width = Math.min(currentStorageMB, 100) + '%';
-        alert('🎉 Success! +50MB added to your free cloud vault storage.');
+        alert('🎉 +50MB added to cloud vault.');
     }, 1000);
 }
 
-// LABS & STATUS CONTROLS
 function switchSub(idx, el) {
     document.querySelectorAll('.s-tab').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
@@ -193,21 +232,10 @@ function sendVanish() {
 
 function toggleDlBtn() {
     const on = document.getElementById('dlSwitch').checked;
-    const btn = document.getElementById('dlActionBtn');
-    const txt = document.getElementById('dlStateTxt');
-    if (on) {
-        btn.style.background = 'var(--gold-main)'; btn.style.color = '#000'; btn.innerText = '⬇ Save Status';
-        txt.style.color = 'var(--green-secure)'; txt.innerText = 'Status: Download Allowed';
-    } else {
-        btn.style.background = '#2a3441'; btn.style.color = '#64748b'; btn.innerText = '🔒 Locked';
-        txt.style.color = 'var(--red-alert)'; txt.innerText = 'Status: Download Blocked';
-    }
+    if (on) alert('✅ Status download allowed');
+    else alert('🚫 Status download blocked');
 }
 
-function testDl() {
-    if (document.getElementById('dlSwitch').checked) alert('✅ Status downloaded successfully!');
-    else alert('🚫 Owner has disabled status downloading for other users!');
-}
-
-function openStory(name) { alert('🎥 Opening ' + name + ' Live Video Story / DP'); }
-function openCameraModal() { alert('📸 Opening secure camera for status upload...'); }
+function openStory(name) { alert('🎥 Opening ' + name + ' Live Story'); }
+function openCameraModal() { alert('📸 Opening secure camera'); }
+        
