@@ -11,15 +11,28 @@
 
 <div class="mobile-frame">
 
-    <!-- ================= SCREEN 1: AUTH & LOGIN ================= -->
+    <!-- ================= SCREEN 1: SECURE AUTH / LOGIN / SIGNUP ================= -->
     <div class="app-screen active" id="screen-1">
         <div class="s1-body">
             <div class="logo-emblem">👑</div>
-            <div class="brand-name">CLOQCHAT</div>
-            <div class="brand-tag">Military-Grade Privacy • 200% Royal Luxury</div>
-            <input type="text" id="authPhone" class="auth-input" value="+92 300 1234567" placeholder="Phone Number">
-            <input type="password" id="authPin" class="auth-input" value="123456" placeholder="Security PIN">
-            <button class="gold-cta" onclick="firebaseLogin()">Enter Encrypted Dashboard →</button>
+            <div class="brand-name" id="authTitle">CLOQCHAT LOGIN</div>
+            <div class="brand-tag" id="authSub">Military-Grade Privacy • Secure Access</div>
+
+            <!-- Input Fields -->
+            <input type="text" id="authIdentity" class="auth-input" placeholder="Phone Number or Email Address">
+            
+            <div style="position:relative; width:100%; margin-bottom:12px;">
+                <input type="password" id="authPin" class="auth-input" placeholder="Password / Security PIN" style="margin-bottom:0;">
+                <span onclick="togglePasswordVisibility()" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:16px;" id="eyeIcon">👁️‍🗨️</span>
+            </div>
+
+            <button class="gold-cta" id="authSubmitBtn" onclick="handleAuthAction()">Login to Dashboard →</button>
+
+            <!-- Extra Options: Forgot Password & Sign Up Switch -->
+            <div style="display:flex; justify-content:space-between; width:100%; margin-top:14px; font-size:12px;">
+                <span style="color:var(--gold-main); cursor:pointer;" onclick="alert('Password reset link sent to your phone/email!')">Forgot Password?</span>
+                <span style="color:var(--text-sub); cursor:pointer;" id="switchAuthMode" onclick="toggleAuthMode()">New to Cloq? <strong>Sign Up</strong></span>
+            </div>
         </div>
     </div>
 
@@ -39,7 +52,7 @@
                 <div class="menu-item" onclick="alert('New broadcast screen');">New broadcast</div>
                 <div class="menu-item" onclick="goScreen(6);">🛡️ Privacy & Labs</div>
                 <div class="menu-item" onclick="goScreen(5);">👑 VIP Store</div>
-                <div class="menu-item" onclick="alert('Opening WhatsApp-style Settings...');">Settings</div>
+                <div class="menu-item" onclick="logoutApp()">🚪 Logout</div>
             </div>
         </div>
 
@@ -268,6 +281,16 @@
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div><strong>📥 Status Download Permission</strong><div style="font-size:10px; color:var(--text-sub);">Allow others to save your status</div></div>
                     <label class="switch"><input type="checkbox" id="dlSwitch" checked onchange="toggleDlBtn()"><span class="slider"></span></label>
+                            <!-- Sub 3: Locks & Status Downloader Control -->
+        <div class="sub-view" id="sub-3">
+            <div class="card-box" style="margin-bottom:8px;">
+                <div><strong>📱 Fingerprint App Lock</strong><div style="font-size:10px; color:var(--text-sub);">Secure app startup</div></div>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+            <div class="card-box" style="flex-direction:column; align-items:stretch;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div><strong>📥 Status Download Permission</strong><div style="font-size:10px; color:var(--text-sub);">Allow others to save your status</div></div>
+                    <label class="switch"><input type="checkbox" id="dlSwitch" checked onchange="toggleDlBtn()"><span class="slider"></span></label>
                 </div>
                 <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:11px; color:var(--green-secure);" id="dlStateTxt">Status: Download Allowed</span>
@@ -277,10 +300,9 @@
         </div>
     </div>
 
-        <!-- QUICK NAV SWITCHER BAR -->
-    <div class="bottom-nav">
-        <button class="nav-pill active" id="nav-1" onclick="goScreen(1)"><span>🔑</span>Auth</button>
-        <button class="nav-pill" id="nav-2" onclick="goScreen(2)"><span>💬</span>Home</button>
+    <!-- QUICK NAV SWITCHER BAR (HIDDEN UNTIL LOGIN) -->
+    <div class="bottom-nav" id="bottomNav" style="display:none;">
+        <button class="nav-pill active" id="nav-2" onclick="goScreen(2)"><span>💬</span>Home</button>
         <button class="nav-pill" id="nav-3" onclick="goScreen(3)"><span>✨</span>Chat</button>
         <button class="nav-pill" id="nav-4" onclick="goScreen(4)"><span>🧮</span>Vault</button>
         <button class="nav-pill" id="nav-5" onclick="goScreen(5)"><span>👑</span>VIP</button>
@@ -291,4 +313,6 @@
 
 <script src="app.js"></script>
 </body>
-</html>
+        </html>
+            
+              
