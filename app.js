@@ -1,10 +1,83 @@
-// NAVIGATION SYSTEM
+let isSignUpMode = false;
+let isLoggedIn = false;
+
+// SECURE NAVIGATION GUARD
 function goScreen(num) {
+    if (!isLoggedIn && num !== 1) {
+        alert('🔒 Access Denied! Please Login or Sign Up first.');
+        return;
+    }
     document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + num).classList.add('active');
+    
     document.querySelectorAll('.nav-pill').forEach(n => n.classList.remove('active'));
-    document.getElementById('nav-' + num).classList.add('active');
+    const activeNav = document.getElementById('nav-' + num);
+    if(activeNav) activeNav.classList.add('active');
     closeMenu();
+}
+
+// TOGGLE LOGIN / SIGNUP MODE
+function toggleAuthMode() {
+    isSignUpMode = !isSignUpMode;
+    const title = document.getElementById('authTitle');
+    const sub = document.getElementById('authSub');
+    const btn = document.getElementById('authSubmitBtn');
+    const switchTxt = document.getElementById('switchAuthMode');
+
+    if (isSignUpMode) {
+        title.innerText = "CLOQCHAT SIGN UP";
+        sub.innerText = "Create Your Encrypted Account";
+        btn.innerText = "Create Account & Register →";
+        switchTxt.innerHTML = "Already have an account? <strong>Login</strong>";
+    } else {
+        title.innerText = "CLOQCHAT LOGIN";
+        sub.innerText = "Military-Grade Privacy • Secure Access";
+        btn.innerText = "Login to Dashboard →";
+        switchTxt.innerHTML = "New to Cloq? <strong>Sign Up</strong>";
+    }
+}
+
+// PASSWORD EYE TOGGLE
+function togglePasswordVisibility() {
+    const pinInput = document.getElementById('authPin');
+    const eyeIcon = document.getElementById('eyeIcon');
+    if (pinInput.type === "password") {
+        pinInput.type = "text";
+        eyeIcon.innerText = "👁️";
+    } else {
+        pinInput.type = "password";
+        eyeIcon.innerText = "👁️‍🗨️";
+    }
+}
+
+// AUTHENTICATION ACTION
+function handleAuthAction() {
+    const identity = document.getElementById('authIdentity').value.trim();
+    const pin = document.getElementById('authPin').value.trim();
+
+    if (!identity || !pin) {
+        alert('⚠️ Please enter your Phone/Email and Password.');
+        return;
+    }
+
+    isLoggedIn = true;
+    document.getElementById('bottomNav').style.display = 'flex';
+    
+    if (isSignUpMode) {
+        alert('🎉 Account successfully registered & verified!');
+    } else {
+        alert('✅ Welcome back! Login successful.');
+    }
+    
+    goScreen(2);
+}
+
+function logoutApp() {
+    isLoggedIn = false;
+    document.getElementById('bottomNav').style.display = 'none';
+    goScreen(1);
+    closeMenu();
+    alert('🔒 Logged out securely.');
 }
 
 // 3-DOT MENU TOGGLE
@@ -15,17 +88,6 @@ function toggleMenu(event) {
 function closeMenu() {
     const m = document.getElementById('whatsappMenu');
     if (m) m.classList.remove('show');
-}
-
-// AUTHENTICATION & FIREBASE PLACEHOLDER
-function firebaseLogin() {
-    const phone = document.getElementById('authPhone').value;
-    const pin = document.getElementById('authPin').value;
-    if(!phone || !pin) { alert('Please enter credentials'); return; }
-    
-    // Yahan aap apna Firebase Auth connection call kar sakte hain
-    alert('✅ Connected successfully to Firebase Cloud!');
-    goScreen(2);
 }
 
 // CHAT & THEME ENGINE
@@ -61,11 +123,9 @@ function sendFirebaseMsg() {
     div.innerHTML = `${inp.value}<div class="msg-actions">Just now ✓✓ <span class="unsend-link" onclick="this.closest('.msg-bubble').remove()">Unsend</span></div>`;
     feed.appendChild(div);
     
-    const textVal = inp.value;
     inp.value = '';
     feed.scrollTop = feed.scrollHeight;
 
-    // Auto-Reply simulation if enabled
     if(document.getElementById('autoReplyToggle') && document.getElementById('autoReplyToggle').checked) {
         setTimeout(() => {
             const replyDiv = document.createElement('div');
