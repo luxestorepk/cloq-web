@@ -139,4 +139,82 @@ function toggleFun(){ var ok=confirm("🎭 FUN MODE AGREEMENT\n\n1. Sirf Fun ke 
 function clearChat(){ if(confirm("Chat clear karni hai?")){ MSGS[curChat]=[]; openChat(curChat); toast("Chat clear ho gayi"); } }
 function startCall(isVideo){ var ok=confirm((isVideo?"📹 Video Call":"📞 Voice Call")+" - "+curChat+" ko call karni hai?"); if(ok) toast((isVideo?"📹 Video Call":"📞 Voice Call")+" shuru - Connected!"); }
 showHome();
+</script><!-- ===== PART 4 - REAL FIREBASE CONNECT - cloq-ba2e7 ===== -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB7zPYGBy0sRrqqZ_WjxQikiEhGHESDHLM",
+  authDomain: "cloq-ba2e7.firebaseapp.com",
+  projectId: "cloq-ba2e7",
+  storageBucket: "cloq-ba2e7.firebasestorage.app",
+  messagingSenderId: "57829575029",
+  appId: "1:57829575029:web:b9c1d99ab47eed63b56b3c",
+  measurementId: "G-F7QCXTYBNM"
+};
+
+try{
+  const fapp = initializeApp(firebaseConfig);
+  const db = getFirestore(fapp);
+  const auth = getAuth(fapp);
+
+  signInAnonymously(auth).catch(function(e){ console.log("Auth:", e.message); });
+
+  onAuthStateChanged(auth, function(user){
+    if(!user) return;
+    console.log("CLOQ REAL Connected:", user.uid);
+    toast("✅ REAL Connected! Ab message doosre ko jayega");
+
+    // ===== REAL SYNC - Firebase se live messages suno =====
+    const q = query(collection(db, "chats"), orderBy("createdAt", "asc"));
+    onSnapshot(q, function(snap){
+      var box = document.getElementById("msgs");
+      if(!box) return;
+      snap.docChanges().forEach(function(ch){
+        if(ch.type !== "added") return;
+        var d = ch.doc.data();
+        // Apna message dobara na dikhe - wo pehle se sendMsg se aa gaya hai
+        if(d.uid === user.uid) return;
+        // Sirf isi chat ke messages dikhao
+        if(d.chat && d.chat !== curChat) return;
+        var div = document.createElement("div");
+        div.className = "b";
+        div.innerHTML = d.text + "<small>" + (d.sender || "Dost") + " • " + (d.time || "") + "</small>";
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+      });
+    });
+
+    // ===== REAL SEND - Firebase me save karo =====
+    window.sendToFirebase = async function(text){
+      try{
+        await addDoc(collection(db, "chats"), {
+          text: text,
+          sender: "Waqas",
+          uid: user.uid,
+          chat: curChat,
+          time: new Date().toLocaleTimeString(),
+          createdAt: serverTimestamp()
+        });
+        console.log("Sent to Firebase:", text);
+      }catch(e){ console.log("Send Error:", e.message); toast("Send me masla: " + e.message); }
+    };
+
+    // Purana sendMsg ko REAL karo - Local + Firebase dono
+    var oldSend = window.sendMsg;
+    window.sendMsg = function(){
+      var ti = document.getElementById("ti");
+      if(!ti) return;
+      var t = ti.value.trim();
+      if(!t) return;
+      if(window.sendToFirebase) window.sendToFirebase(t);
+      if(oldSend) oldSend();
+    };
+  });
+}catch(e){
+  console.log("Firebase Error:", e.message);
+  toast("Firebase Error: " + e.message);
+}
 </script></body></html>
